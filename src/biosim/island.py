@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+from biosim.animals import Animal
+
 # TODO: error handling and bitmap to plot map
 
 class Island:
@@ -65,15 +67,21 @@ class Island:
         for i in range(1, len(map_processed)+1):
             map[i] = {}
             for j in range(1, line_length + 1):
-                map[i][j] = self.geography[map_processed[i-1][j-1]]
+                geography = self.geography[map_processed[i-1][j-1]]
+                map[i][j] = {'geography': geography, 'Herbivore':[], 'Harnivore':[]}
 
-        map = pd.DataFrame.from_dict(map)
+        map_df = pd.DataFrame.from_dict(map)
 
         return map
 
     #METHODS for adding animals
 
     def add_population(self, population):
+        for item in population:
+            x, y = item["loc"]
+            for animal in item['pop']:
+                self.map[x][y][animal['species']].append(Animal(animal, (x,y)))
+
 
     #METHODS for creating bitmap and plotting
     def create_bitmap(self, map_processed):
@@ -111,13 +119,13 @@ if __name__ == "__main__":
     HWW"""
 
     A = Island(map)
-    pop = [{'loc': (10, 10),
+    pop = [{'loc': (1, 1),
                   'pop': [{'species': 'Herbivore',
                            'age': 5,
                            'weight': 20}
                           for _ in range(150)]},
 
-           {'loc': (10, 11),
+           {'loc': (2, 2),
             'pop': [{'species': 'Herbivore',
                      'age': 5,
                      'weight': 20}
@@ -125,6 +133,8 @@ if __name__ == "__main__":
 
 
            ]
+
+    A.add_population(pop)
 
 
 
