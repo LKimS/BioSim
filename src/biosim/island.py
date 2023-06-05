@@ -68,7 +68,7 @@ class Island:
             map[i] = {}
             for j in range(1, line_length + 1):
                 geography = self.geography[map_processed[i-1][j-1]]
-                map[i][j] = {'geography': geography, 'Herbivore':[], 'Harnivore':[]}
+                map[i][j] = {'geography': geography, 'Herbivore':[], 'Carnivore':[]}
 
         map_df = pd.DataFrame.from_dict(map)
 
@@ -118,7 +118,7 @@ if __name__ == "__main__":
     WDL
     HWW"""
 
-    A = Island(map)
+    island = Island(map)
     pop = [{'loc': (1, 1),
                   'pop': [{'species': 'Herbivore',
                            'age': 5,
@@ -134,7 +134,7 @@ if __name__ == "__main__":
 
            ]
 
-    A.add_population(pop)
+    island.add_population(pop)
 
 
 
