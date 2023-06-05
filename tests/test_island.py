@@ -18,8 +18,21 @@ Requirements violated
 '''
 
 from biosim.island import Island
+def test_process_input_map():
+    map_string = """\
+                    WHLD
+                    WLDH
+                    WWWW
+                    HHHH
+                    
+                    """
 
+    island = Island(map_string)
 
+    expected = ["WHLD", "WLDH", "WWWW", "HHHH"]
+    assert island.map_processed == expected
+
+"""
 def test_all_lines_same_length():
     pass
 
@@ -37,3 +50,4 @@ def test_each_cell_must_have_characteristics_information():
 
 def test_no_animals_in_water():
     pass
+"""
