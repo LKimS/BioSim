@@ -1,0 +1,1 @@
+her prøver vi og feiler vi så mye vi klarar
