@@ -35,10 +35,25 @@ class Animal:
         self.baby = None
 
     def procreation(self):
-        baby ={}
 
-        self.baby = baby
-        return baby
+        # lager en baby hvis
+        if self.weight >= self.const[self.species]["zeta"]*(self.const[self.species]["w_birth"]+self.const[self.species]["sigma_birth"]):
+            #probility of procreation
+            animal_in_pos = 1 #hvor mange dyr som er i samme posisjon
+            babyweight = 5
+            probility_of_procreation = min(1, self.const[self.species]["gamma"]*self.fitness*(animal_in_pos)) #minus dyret jeg ser på?
+            #print(f'probility_of_procreation: {probility_of_procreation}')
+            if random.random() <= probility_of_procreation:
+                #print("baby")
+                self.weight -= self.const[self.species]["xi"]*babyweight
+                if not self.weight <= 0:
+                    self.baby = {"species": self.species, "age": 0, "weight": babyweight}
+        else:
+            #animal does not procreate
+            pass
+
+        #self.baby = baby
+        #return baby
 
     def calc_fitness(self):
         if self.const["Herbivore"]["w_birth"] < 0:
@@ -50,7 +65,7 @@ class Animal:
         self.age += 1
 
     def feeding(self):
-        self.weight += self.const["Herbivore"]["beta"]*self.const["Landskap"]["Lowland"]
+        self.weight += self.const["Herbivore"]["beta"]*self.const["Landskap"]["Lowland"] #bytte ut med celltype/geografi
 
     def loss_of_weight(self):
         self.weight -= self.const["Herbivore"]["eta"]*self.weight
@@ -77,11 +92,11 @@ def main(file):
             animals.append(Animal(row,item["loc"]))
 
 #Annual cycle
-    for year in range(1, 11):
+    for year in range(1, 100):
         print(f'År: {year} Antall dyr: {len(animals)} Dyr[0]alder: {animals[0].age} Dyr[0]vekt: {animals[0].weight}, Dyr[0]fitness: {animals[0].fitness} ')
         for animal in animals:
 
-            #animal.procreation()
+            animal.procreation()
             animal.feeding() #husk å sortere etter fitness før mating
             animal.calc_fitness()
             #animal.migration()
@@ -107,7 +122,7 @@ if __name__ == "__main__":
                   'pop': [{'species': 'Herbivore',
                            'age': 5,
                            'weight': 20}
-                          for _ in range(20)]}]
+                          for _ in range(1)]}]
 
     animals = main(file)
 
