@@ -140,6 +140,6 @@ if __name__ == "__main__":
 
     #bitmap = A.bitmap
 
-    print(repr(A.map))
-    print(A.map[1][1])
+    print(repr(island.map))
+    print(island.map[1][1])
 
