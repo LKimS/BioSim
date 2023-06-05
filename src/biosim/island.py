@@ -6,6 +6,14 @@ from biosim.animals import Animal
 
 # TODO: error handling and bitmap to plot map
 
+"""
+ERROR HANDLING: 
+- All lines must have same length
+- No other letters than W, L, H, D
+- Geography must be surrounded by W (water)
+- No animals in water
+"""
+
 class Island:
 
     # Dictionary of landscape types
@@ -58,6 +66,7 @@ class Island:
     def process_input_map(self, input_island_map):
         lines = input_island_map.split("\n")
         processed_lines = [line.strip() for line in lines]
+        processed_lines = [line for line in processed_lines if line != '']
         return processed_lines
 
     def map_processed_to_dict(self, map_processed):
