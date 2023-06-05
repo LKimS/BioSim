@@ -8,6 +8,10 @@ from biosim.cell import Cell
 # TODO: error handling and bitmap to plot map
 
 """
+Vizualization of island map
+- Plot heatmap of population density
+- Animate simulation
+
 ERROR HANDLING: 
 - All lines must have same length
 - No other letters than W, L, H, D

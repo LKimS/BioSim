@@ -1,5 +1,13 @@
 from biosim.animals import Animal
 
+"""
+core methods:
+- remove animal when dead
+- sort animals by fitness
+- update fodder
+- feed animals
+"""
+
 class Cell:
     geography = {
         "W": {
