@@ -28,28 +28,27 @@ class Animal:
 
     def __init__(self, row, loc,seed=0):
         random.seed(seed)
+        self.row = row
         self.loc = loc
-        self.species = row["species"]
-        self.age = row["age"]
-        self.weight = row["weight"]
-        self.fitness = self.calc_fitness(row, self.const[self.species]["w_birth"])
+        self.species = self.row["species"]
+        self.age = self.row["age"]
+        self.weight = self.row["weight"]
+        self.fitness = self.calc_fitness()
         self.alive = True
 
 
-    def calc_fitness(self, row, w_birth):
-        fitness = 0
-        if w_birth < 0:
-            fitness = 0
+    def calc_fitness(self):
+        if self.const["Herbivore"]["w_birth"] < 0:
+            self.fitness = 0
         else:
-            fitness = 1/(1+math.exp(self.const["Herbivore"]["phi_age"]*(row["age"]-self.const["Herbivore"]["a_half"]))) * 1/(1+math.exp(-self.const["Herbivore"]["phi_weight"]*(row["weight"]-self.const["Herbivore"]["w_half"])))
-        return fitness
+            self.fitness = 1/(1+math.exp(self.const["Herbivore"]["phi_age"]*(self.age-self.const["Herbivore"]["a_half"]))) * 1/(1+math.exp(-self.const["Herbivore"]["phi_weight"]*(self.weight-self.const["Herbivore"]["w_half"])))
+
 
     def aging(self):
         self.age += 1
 
     def feeding(self):
         self.weight += self.const["Herbivore"]["beta"]*self.const["Landskap"]["Lowland"]
-
 
     def loss_of_weight(self):
         self.weight -= self.const["Herbivore"]["eta"]*self.weight
@@ -80,7 +79,7 @@ def main(file):
 
             #animal.procreation()
             animal.feeding()
-            #animal.calc_fitness(animal)
+            animal.calc_fitness()
             #animal.migration()
             animal.aging()
             animal.loss_of_weight()
