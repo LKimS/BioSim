@@ -35,13 +35,17 @@ class Animal:
         self.baby = None
 
     def procreation(self):
-
-        # lager en baby hvis
+        '''Krav til procreation:
+        - vekten er tung nok
+        - større sannsynling het med samme art i samme posisjon
+        - Kun et barn per år
+        - Moren mister vekt etter fødsel
+        - Mister moren mer vekt enn hun veier, blir det ikke født noen barn
+        '''
         if self.weight >= self.const[self.species]["zeta"]*(self.const[self.species]["w_birth"]+self.const[self.species]["sigma_birth"]):
-            #probility of procreation
             animal_in_pos = 1 #hvor mange dyr som er i samme posisjon
-            babyweight = 5
-            probility_of_procreation = min(1, self.const[self.species]["gamma"]*self.fitness*(animal_in_pos)) #minus dyret jeg ser på?
+            babyweight = 5 #antatt vekt på baby
+            probility_of_procreation = min(1, self.const[self.species]["gamma"]*self.fitness*(animal_in_pos)) #sannsynlighet minus dyret jeg ser på?
             #print(f'probility_of_procreation: {probility_of_procreation}')
             if random.random() <= probility_of_procreation:
                 #print("baby")
@@ -78,6 +82,7 @@ class Animal:
         elif random.random() <= probility_of_death:
             #print((f'Status:"død", Random(1-0): {random.random()}, Probility of death: {probility_of_death}'))
             self.alive = False
+
         else:
             #print((f'Status:"levende", Random(1-0): {random.random()}, Probility of death: {probility_of_death}'))
             #self.alive = True
@@ -93,7 +98,7 @@ def main(file):
 
 #Annual cycle
     for year in range(1, 100):
-        print(f'År: {year} Antall dyr: {len(animals)} Dyr[0]alder: {animals[0].age} Dyr[0]vekt: {animals[0].weight}, Dyr[0]fitness: {animals[0].fitness} ')
+        print(f'År: {year} Antall dyr: {len(animals)} Dyr[0]alder: {animals[0].age} Dyr[0]vekt: {animals[0].weight}, Dyr[0]fitness: {animals[0].fitness},Dyr[0]Alive: {animals[0].alive} ')
         for animal in animals:
 
             animal.procreation()
