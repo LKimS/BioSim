@@ -32,14 +32,19 @@ class Animal:
         self.weight = self.row["weight"]
         self.calc_fitness()
         self.alive = True
+        self.baby = None
 
+    def procreation(self):
+        baby ={}
+
+        self.baby = baby
+        return baby
 
     def calc_fitness(self):
         if self.const["Herbivore"]["w_birth"] < 0:
             self.fitness = 0
         else:
             self.fitness = 1/(1+math.exp(self.const["Herbivore"]["phi_age"]*(self.age-self.const["Herbivore"]["a_half"]))) * 1/(1+math.exp(-self.const["Herbivore"]["phi_weight"]*(self.weight-self.const["Herbivore"]["w_half"])))
-
 
     def aging(self):
         self.age += 1
@@ -53,13 +58,15 @@ class Animal:
     def death(self):
         probility_of_death = self.const["Herbivore"]["omega"]*(1-self.fitness)
         if self.weight <= 0:
-            return print(f'status:"død", vekt ved død {self.weight}')
+            print(f'status:"død", vekt ved død {self.weight}')
+            self.alive = False
         elif random.random() <= probility_of_death:
             #print((f'Status:"død", Random(1-0): {random.random()}, Probility of death: {probility_of_death}'))
-            return
+            self.alive = False
         else:
             #print((f'Status:"levende", Random(1-0): {random.random()}, Probility of death: {probility_of_death}'))
-            return
+            #self.alive = True
+            pass
 
 def main(file):
     animals = []
@@ -75,7 +82,7 @@ def main(file):
         for animal in animals:
 
             #animal.procreation()
-            animal.feeding() # husk å sortere etter fitness før mating
+            animal.feeding() #husk å sortere etter fitness før mating
             animal.calc_fitness()
             #animal.migration()
             animal.aging()
