@@ -1,9 +1,6 @@
 import math
 import random
 
-
-
-
 class Animal:
     const = {}
     const["Herbivore"] = {'w_birth': 8.0,
@@ -33,7 +30,7 @@ class Animal:
         self.species = self.row["species"]
         self.age = self.row["age"]
         self.weight = self.row["weight"]
-        self.fitness = self.calc_fitness()
+        self.calc_fitness()
         self.alive = True
 
 
@@ -58,10 +55,10 @@ class Animal:
         if self.weight <= 0:
             return print(f'status:"død", vekt ved død {self.weight}')
         elif random.random() <= probility_of_death:
-            print((f'Status:"død", Random(1-0): {random.random()}, Probility of death: {probility_of_death}'))
+            #print((f'Status:"død", Random(1-0): {random.random()}, Probility of death: {probility_of_death}'))
             return
         else:
-            print((f'Status:"levende", Random(1-0): {random.random()}, Probility of death: {probility_of_death}'))
+            #print((f'Status:"levende", Random(1-0): {random.random()}, Probility of death: {probility_of_death}'))
             return
 
 def main(file):
@@ -78,7 +75,7 @@ def main(file):
         for animal in animals:
 
             #animal.procreation()
-            animal.feeding()
+            animal.feeding() # husk å sortere etter fitness før mating
             animal.calc_fitness()
             #animal.migration()
             animal.aging()
@@ -103,7 +100,7 @@ if __name__ == "__main__":
                   'pop': [{'species': 'Herbivore',
                            'age': 5,
                            'weight': 20}
-                          for _ in range(1)]}]
+                          for _ in range(20)]}]
 
     animals = main(file)
 
