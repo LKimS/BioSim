@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 class Island:
 
+    # Dictionary of landscape types
     geography = {
         "W": {
             "type": "Water",
@@ -38,6 +39,7 @@ class Island:
     }
 
 
+    #INIT METHOD
     def __init__(self, input_island_map):
         self.map_processed = self.process_input_map(input_island_map)
 
@@ -50,6 +52,7 @@ class Island:
 
         self.map = map
 
+    #METHODS for input and processing
     def process_input_map(self, input_island_map):
         lines = input_island_map.split("\n")
         processed_lines = [line.strip() for line in lines]
@@ -64,10 +67,15 @@ class Island:
             for j in range(1, line_length + 1):
                 map[i][j] = self.geography[map_processed[i-1][j-1]]
 
-        map = map
+        map = pd.DataFrame.from_dict(map)
 
         return map
 
+    #METHODS for adding animals
+
+    def add_population(self, population):
+
+    #METHODS for creating bitmap and plotting
     def create_bitmap(self, map_processed):
 
         height = len(map_processed)
@@ -87,6 +95,7 @@ class Island:
         plt.show()
 
 
+    # ERROR HANDLING
     def check_line_length(self, island_map_processed):
         line1 = island_map_processed[0]
         for line in island_map_processed[1:]:
@@ -96,21 +105,29 @@ class Island:
 
 if __name__ == "__main__":
     map = """\
-               WWWWWWWWWWWWWWWWWWWWW
-               WWWWWWWWHWWWWLLLLLLLW
-               WHHHHHLLLLWWLLLLLLLWW
-               WHHHHHHHHHWWLLLLLLWWW
-               WHHHHHLLLLLLLLLLLLWWW
-               WHHHHHLLLDDLLLHLLLWWW
-               WHHLLLLLDDDLLLHHHHWWW
-               WWHHHHLLLDDLLLHWWWWWW
-               WHHHLLLLLDDLLLLLLLWWW
-               WHHHHLLLLDDLLLLWWWWWW
-               WWHHHHLLLLLLLLWWWWWWW
-               WWWHHHHLLLLLLLWWWWWWW
-               WWWWWWWWWWWWWWWWWWWWW"""
+    WHW
+    LHL
+    WDL
+    HWW"""
 
     A = Island(map)
+    pop = [{'loc': (10, 10),
+                  'pop': [{'species': 'Herbivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(150)]},
+
+           {'loc': (10, 11),
+            'pop': [{'species': 'Herbivore',
+                     'age': 5,
+                     'weight': 20}
+                    for _ in range(150)]},
+
+
+           ]
+
+
+
     #bitmap = A.bitmap
 
     print(repr(A.map))
