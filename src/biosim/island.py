@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from biosim.animals import Animal
+from biosim.cell import Cell
 
 # TODO: error handling and bitmap to plot map
 
@@ -16,51 +17,18 @@ ERROR HANDLING:
 
 class Island:
 
-    # Dictionary of landscape types
-    geography = {
-        "W": {
-            "type": "Water",
-            "fodder": 0,
-            "herbivore": 0,
-            "carnivore": 0,
-            "color": (0.13, 0.00, 1.00)
-        },
-        "L": {
-            "type": "Lowland",
-            "fodder": 0,
-            "herbivore": 0,
-            "carnivore": 0,
-            "color": (0.00, 0.62, 0.00)
-        },
-        "H": {
-            "type": "Highland",
-            "fodder": 0,
-            "herbivore": 0,
-            "carnivore": 0,
-            "color": (0.20, 1.00, 0.42)
-        },
-        "D": {
-            "type": "Desert",
-            "fodder": 0,
-            "herbivore": 0,
-            "carnivore": 0,
-            "color": (1.00, 1.00, 0.40)
-        }
-    }
-
-
     #INIT METHOD
     def __init__(self, input_island_map):
         self.map_processed = self.process_input_map(input_island_map)
+        self.map_height = self.get_map_height(self.map_processed)
+        self.map_width = self.get_map_width(self.map_processed)
 
         bool = self.check_line_length(self.map_processed)
 
-        map = self.map_processed_to_dict(self.map_processed)
+        self.map = self.map_processed_to_dict(self.map_processed)
 
         self.bitmap = self.create_bitmap(self.map_processed)
 
-
-        self.map = map
 
     #METHODS for input and processing
     def process_input_map(self, input_island_map):
@@ -69,15 +37,20 @@ class Island:
         processed_lines = [line for line in processed_lines if line != '']
         return processed_lines
 
+    def get_map_height(self, map_processed):
+        return len(map_processed)
+
+    def get_map_width(self, map_processed):
+        return len(map_processed[0])
+
     def map_processed_to_dict(self, map_processed):
         map = {}
-        line_length = len(map_processed[0])
 
-        for i in range(1, len(map_processed)+1):
-            map[i] = {}
-            for j in range(1, line_length + 1):
-                geography = self.geography[map_processed[i-1][j-1]]
-                map[i][j] = {'geography': geography, 'Herbivore':[], 'Carnivore':[]}
+        for x in range(1, self.map_height+1):
+            map[x] = {}
+            for y in range(1, self.map_width + 1):
+                cell_letter = map_processed[x-1][y-1]
+                map[x][y] = Cell(cell_letter, (x,y))
 
         map_df = pd.DataFrame.from_dict(map)
 
@@ -88,8 +61,10 @@ class Island:
     def add_population(self, population):
         for item in population:
             x, y = item["loc"]
-            for animal in item['pop']:
-                self.map[x][y][animal['species']].append(Animal(animal, (x,y)))
+            for animal_info in item['pop']:
+                self.map[x][y].add_animal(animal_info)
+
+            self.map[x][y].count_animals()
 
 
     #METHODS for creating bitmap and plotting
@@ -102,7 +77,7 @@ class Island:
 
         for i in range(height):
             for j in range(width):
-                bitmap[i,j] = self.geography[map_processed[i][j]]["color"]
+                bitmap[i,j] = self.map[i+1][j+1].color
 
         return bitmap
 
