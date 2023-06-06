@@ -57,10 +57,10 @@ class Cell:
 
     def update_fitness(self):
         for animal in self.herbivore:
-            animal.update_fitness()
+            animal.calc_fitness()
 
         for animal in self.carnivore:
-            animal.update_fitness()
+            animal.calc_fitness()
 
     def age_animals(self):
         for animal in self.herbivore:
