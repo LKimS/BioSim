@@ -62,10 +62,8 @@ class Cell:
         for animal in self.carnivore:
             animal.calc_fitness()
 
-    def sort_fitness(self, animal_list):
-        animal_list.sort(key=lambda animal: animal.fitness, reverse=True)
-        return animal_list
-
+    def sort_herbivore_after_fitness(self):
+        self.herbivore.sort(key=lambda animal: animal.fitness, reverse=True)
     def age_animals(self):
         for animal in self.herbivore:
             animal.aging()
