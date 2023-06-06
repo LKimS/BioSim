@@ -98,7 +98,12 @@ def main(file):
 
 #Annual cycle
     for year in range(1, 100):
-        print(f'År: {year} Antall dyr: {len(animals)} Dyr[0]alder: {animals[0].age} Dyr[0]vekt: {animals[0].weight}, Dyr[0]fitness: {animals[0].fitness},Dyr[0]Alive: {animals[0].alive} ')
+        #print(f'Basics År: {year} Antall dyr: {len(animals)}')
+        #print(f'Species: {animals[0].species}, loc: {animals[0].loc} Dyr[0]alder: {animals[0].age} Dyr[0]vekt: {animals[0].weight}')
+        #print(f'Dyr[0]feeding: {animals[0].feeding}') #weight change?
+        #print(f'Dyr[0]baby: {animals[0].baby}, Dyr[0]weight: {animals[0].weight}')
+        #print(f'Dyr[0]fitness: {animals[0].fitness}')
+        #print(f'Dyr[0]Alive: {animals[0].alive}')
         for animal in animals:
 
             animal.procreation()
