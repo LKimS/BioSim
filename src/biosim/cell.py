@@ -80,15 +80,15 @@ class Cell:
             if not animal.alive:
                 self.carnivore.remove(animal)
 
-        def reset_fodder(self):
-            self.fodder = self.max_fodder
-        @property
-        def num_herbivore(self):
-            return self.count_herbivore
+    def reset_fodder(self):
+        self.fodder = self.max_fodder
+    @property
+    def num_herbivore(self):
+        return self.count_herbivore
 
-        @property
-        def num_carnivore(self):
-            return self.count_carnivore
+    @property
+    def num_carnivore(self):
+        return self.count_carnivore
 
 
 class Water(Cell):
