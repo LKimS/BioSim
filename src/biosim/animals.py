@@ -107,15 +107,6 @@ def main(file):
             animal.loss_of_weight()
             animal.death()
 
-
-    #procreation
-    #feeding
-    #migration
-    #aging
-    #loss of weight
-    #death
-
-
     return animals
 
 
