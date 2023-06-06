@@ -55,6 +55,13 @@ class Cell:
             # TODO: implement feeding for carnivores
             pass
 
+    def update_fitness(self):
+        for animal in self.herbivore:
+            animal.update_fitness()
+
+        for animal in self.carnivore:
+            animal.update_fitness()
+
     def age_animals(self):
         for animal in self.herbivore:
             animal.aging()
