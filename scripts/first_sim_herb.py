@@ -38,6 +38,7 @@ for year in range(1,N+1):
             lost.add_population(newborn_carnivores)
             lost.add_population(newborn_herbivores)
             cell.feed_animals()
+            cell.update_fitness()
             #ceel.migration()
             cell.age_animals()
             cell.loss_of_weight()
