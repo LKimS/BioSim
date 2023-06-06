@@ -36,20 +36,20 @@ class Animal:
 
     def procreation(self, animal_in_pos=100):
         self.newborn = None
-        vekt = self.weight
-        verdi = self.const[self.species]["zeta"]*(self.const[self.species]["w_birth"]+self.const[self.species]["sigma_birth"])
-        if self.weight >= self.const[self.species]["zeta"]*(self.const[self.species]["w_birth"]+self.const[self.species]["sigma_birth"]):
-            probility_of_procreation = min(1, self.const[self.species]["gamma"]*self.fitness*animal_in_pos) #sannsynlighet minus dyret jeg ser på?
+
+        offspring_value = self.const[self.species]["zeta"] * (self.const[self.species]["w_birth"] + self.const[self.species]["sigma_birth"])
+        if self.weight >= offspring_value:
+            probility_of_procreation = min(1, self.const[self.species]["gamma"] * self.fitness * animal_in_pos) #sannsynlighet minus dyret jeg ser på?
             if random.random() < probility_of_procreation:
                 newborn_weight = math.log(random.lognormvariate(self.const[self.species]["w_birth"], self.const[self.species]["sigma_birth"]))
-                parent_loss = self.const[self.species]["xi"]*newborn_weight
+                parent_loss = self.const[self.species]["xi"] * newborn_weight
                 if self.weight > parent_loss:
                     self.weight -= parent_loss
                     self.newborn = True
                     return {"species": self.species, "age": 0, "weight": newborn_weight}
         else:
             #animal does not procreate
-            pass
+            return None
 
     def calc_fitness(self):
         if self.const["Herbivore"]["w_birth"] <= 0:
@@ -59,7 +59,7 @@ class Animal:
         else:
             age_parameter = 1/(1+math.exp(self.const["Herbivore"]["phi_age"]*(self.age-self.const["Herbivore"]["a_half"])))
             weight_parameter = 1/(1+math.exp(-self.const["Herbivore"]["phi_weight"]*(self.weight-self.const["Herbivore"]["w_half"])))
-            self.fitness = age_parameter*weight_parameter
+            self.fitness = age_parameter * weight_parameter
 
     def aging(self):
         self.age += 1
