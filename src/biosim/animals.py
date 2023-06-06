@@ -20,7 +20,7 @@ class Animal:
                           'DeltaPhiMax': None}
 
     const["Carnivore"] = {}
-    const["Landskap"] = {"Lowland": 800, "Highland": 300}
+    const["Landskap"] = {"Lowland": 100, "Highland": 300}
 
 
     def __init__(self, row, loc,seed=0):
@@ -33,6 +33,7 @@ class Animal:
         self.calc_fitness()
         self.alive = True
         self.baby = None
+        self.baby1 = None
 
     def procreation(self):
         '''Krav til procreation:
@@ -42,16 +43,18 @@ class Animal:
         - Moren mister vekt etter fødsel
         - Mister moren mer vekt enn hun veier, blir det ikke født noen barn
         '''
+        self.baby1 = False
         if self.weight >= self.const[self.species]["zeta"]*(self.const[self.species]["w_birth"]+self.const[self.species]["sigma_birth"]):
             animal_in_pos = 1 #hvor mange dyr som er i samme posisjon
             babyweight = 5 #antatt vekt på baby
             probility_of_procreation = min(1, self.const[self.species]["gamma"]*self.fitness*(animal_in_pos)) #sannsynlighet minus dyret jeg ser på?
             #print(f'probility_of_procreation: {probility_of_procreation}')
-            if random.random() <= probility_of_procreation:
+            if random.random() < probility_of_procreation:
                 #print("baby")
                 self.weight -= self.const[self.species]["xi"]*babyweight
                 if not self.weight <= 0:
                     self.baby = {"species": self.species, "age": 0, "weight": babyweight}
+                    self.baby1 = True
         else:
             #animal does not procreate
             pass
@@ -79,12 +82,9 @@ class Animal:
         if self.weight <= 0:
             print(f'status:"død", vekt ved død {self.weight}')
             self.alive = False
-        elif random.random() <= probility_of_death:
-            #print((f'Status:"død", Random(1-0): {random.random()}, Probility of death: {probility_of_death}'))
+        elif random.random() < probility_of_death:
             self.alive = False
-
         else:
-            #print((f'Status:"levende", Random(1-0): {random.random()}, Probility of death: {probility_of_death}'))
             #self.alive = True
             pass
 
@@ -97,15 +97,9 @@ def main(file):
             animals.append(Animal(row,item["loc"]))
 
 #Annual cycle
-    for year in range(1, 100):
-        #print(f'Basics År: {year} Antall dyr: {len(animals)}')
-        #print(f'Species: {animals[0].species}, loc: {animals[0].loc} Dyr[0]alder: {animals[0].age} Dyr[0]vekt: {animals[0].weight}')
-        #print(f'Dyr[0]feeding: {animals[0].feeding}') #weight change?
-        #print(f'Dyr[0]baby: {animals[0].baby}, Dyr[0]weight: {animals[0].weight}')
-        #print(f'Dyr[0]fitness: {animals[0].fitness}')
-        #print(f'Dyr[0]Alive: {animals[0].alive}')
+    for year in range(1, 20):
+        print(f'Basics År: {year} Antall dyr: {len(animals)}, Dyr[0]år: {animals[0].age}, Dyr[0]vekt: {animals[0].weight}, Dyr[0]fitness: {animals[0].fitness}, Dyr[0]status: {animals[0].alive}, Dyr[0]baby1: {animals[0].baby1}')
         for animal in animals:
-
             animal.procreation()
             animal.feeding() #husk å sortere etter fitness før mating
             animal.calc_fitness()
@@ -135,31 +129,3 @@ if __name__ == "__main__":
                           for _ in range(1)]}]
 
     animals = main(file)
-
-#tilfeldig tall mellom 0 og 1
-
-
-
-    '''
-        
-    
-        def migration(self):
-            pass
-
-        def birth(self, N, w_birth, sigma_birth, gamma):
-            if self.weight >= w_birth+sigma_birth:
-                probility = min(1, gamma * self.fitness*N)
-                #newborn
-                #add to population
-                #update weight
-                pass
-            pass
-
-        def death(self):
-            if self.weight <= 0:
-                #remove from population
-                pass
-            else:
-                #remove from population with probability
-                pass
-    '''
