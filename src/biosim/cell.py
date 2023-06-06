@@ -79,6 +79,9 @@ class Cell:
             animal.death()
             if not animal.alive:
                 self.carnivore.remove(animal)
+
+        def reset_fodder(self):
+            self.fodder = self.max_fodder
         @property
         def num_herbivore(self):
             return self.count_herbivore
