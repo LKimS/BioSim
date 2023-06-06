@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from biosim.animals import Animal
-from biosim.cell import Cell
+from biosim.cell import Water, Lowland, Highland, Desert
 
 # TODO: error handling and bitmap to plot map
 
@@ -54,11 +54,22 @@ class Island:
             map[x] = {}
             for y in range(1, self.map_width + 1):
                 cell_letter = map_processed[x-1][y-1]
-                map[x][y] = Cell(cell_letter, (x,y))
+                map[x][y] = self.add_cell(cell_letter, (x,y))
 
         map_df = pd.DataFrame.from_dict(map)
 
         return map
+
+    def add_cell(self, cell_letter, loc):
+        cells = {
+            'W': Water,
+            'L': Lowland,
+            'H': Highland,
+            'D': Desert
+        }
+        cell = cells[cell_letter](loc)
+
+        return cell
 
     #METHODS for adding animals
 
