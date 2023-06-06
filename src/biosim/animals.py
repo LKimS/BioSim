@@ -41,7 +41,7 @@ class Animal:
         if self.weight >= self.const[self.species]["zeta"]*(self.const[self.species]["w_birth"]+self.const[self.species]["sigma_birth"]):
             probility_of_procreation = min(1, self.const[self.species]["gamma"]*self.fitness*animal_in_pos) #sannsynlighet minus dyret jeg ser på?
             if random.random() < probility_of_procreation:
-                newborn_weight = random.lognormvariate(self.const[self.species]["w_birth"], self.const[self.species]["sigma_birth"])
+                newborn_weight = math.log(random.lognormvariate(self.const[self.species]["w_birth"], self.const[self.species]["sigma_birth"]))
                 parent_loss = self.const[self.species]["xi"]*newborn_weight
                 if self.weight > parent_loss:
                     self.weight -= parent_loss
@@ -96,7 +96,7 @@ def main(file):
             animals.append(Animal(row,item["loc"]))
 
 #Annual cycle
-    for year in range(1, 50):
+    for year in range(1, 10):
         print(f'Basics År: {year} Antall dyr: {len(animals)}, Dyr[0]år: {animals[0].age}, Dyr[0]vekt: {animals[0].weight}, Dyr[0]fitness: {animals[0].fitness}, Dyr[0]status: {animals[0].alive}, Dyr[0]baby: {animals[0].newborn}')
         for animal in animals:
             animal.procreation()
