@@ -11,7 +11,7 @@ ini_herbs = [{'loc': (2, 2),
               'pop': [{'species': 'Herbivore',
                        'age': 5,
                        'weight': 20}
-                      for _ in range(20)]}]
+                      for _ in range(25)]}]
 
 lost = Island(geogr)
 lost.add_population(ini_herbs)
@@ -42,6 +42,7 @@ for year in range(1,N+1):
             cell.age_animals()
             cell.loss_of_weight()
             cell.animal_death()
+            cell.reset_fodder()
 
 
 plt.plot(pop_animals[(2,2)])
