@@ -32,47 +32,46 @@ class Animal:
         self.weight = self.row["weight"]
         self.calc_fitness()
         self.alive = True
-        self.baby = None
-        self.baby1 = None
+        self.newborn = None
 
-    def procreation(self):
-        '''Krav til procreation:
-        - vekten er tung nok
-        - større sannsynling het med samme art i samme posisjon
-        - Kun et barn per år
-        - Moren mister vekt etter fødsel
-        - Mister moren mer vekt enn hun veier, blir det ikke født noen barn
-        '''
-        self.baby1 = False
+    def procreation(self, animal_in_pos=100):
+        self.newborn = None
+        vekt = self.weight
+        verdi = self.const[self.species]["zeta"]*(self.const[self.species]["w_birth"]+self.const[self.species]["sigma_birth"])
         if self.weight >= self.const[self.species]["zeta"]*(self.const[self.species]["w_birth"]+self.const[self.species]["sigma_birth"]):
-            animal_in_pos = 1 #hvor mange dyr som er i samme posisjon
-            babyweight = 5 #antatt vekt på baby
-            probility_of_procreation = min(1, self.const[self.species]["gamma"]*self.fitness*(animal_in_pos)) #sannsynlighet minus dyret jeg ser på?
-            #print(f'probility_of_procreation: {probility_of_procreation}')
+            probility_of_procreation = min(1, self.const[self.species]["gamma"]*self.fitness*animal_in_pos) #sannsynlighet minus dyret jeg ser på?
             if random.random() < probility_of_procreation:
-                #print("baby")
-                self.weight -= self.const[self.species]["xi"]*babyweight
-                if not self.weight <= 0:
-                    self.baby = {"species": self.species, "age": 0, "weight": babyweight}
-                    self.baby1 = True
+                newborn_weight = random.lognormvariate(self.const[self.species]["w_birth"], self.const[self.species]["sigma_birth"])
+                parent_loss = self.const[self.species]["xi"]*newborn_weight
+                if self.weight > parent_loss:
+                    self.weight -= parent_loss
+                    self.newborn = True
+                    return {"species": self.species, "age": 0, "weight": newborn_weight}
         else:
             #animal does not procreate
             pass
 
-        #self.baby = baby
-        #return baby
-
     def calc_fitness(self):
-        if self.const["Herbivore"]["w_birth"] < 0:
+        if self.const["Herbivore"]["w_birth"] <= 0:
+            self.fitness = 0
+        if self.weight <= 0:
             self.fitness = 0
         else:
-            self.fitness = 1/(1+math.exp(self.const["Herbivore"]["phi_age"]*(self.age-self.const["Herbivore"]["a_half"]))) * 1/(1+math.exp(-self.const["Herbivore"]["phi_weight"]*(self.weight-self.const["Herbivore"]["w_half"])))
+            age_parameter = 1/(1+math.exp(self.const["Herbivore"]["phi_age"]*(self.age-self.const["Herbivore"]["a_half"])))
+            weight_parameter = 1/(1+math.exp(-self.const["Herbivore"]["phi_weight"]*(self.weight-self.const["Herbivore"]["w_half"])))
+            self.fitness = age_parameter*weight_parameter
 
     def aging(self):
         self.age += 1
 
-    def feeding(self):
-        self.weight += self.const["Herbivore"]["beta"]*self.const["Landskap"]["Lowland"] #bytte ut med celltype/geografi
+    def feeding(self, fodder=300):
+        if fodder < self.const["Herbivore"]["F"]:
+            amount_eaten = fodder
+        else:
+            amount_eaten = self.const["Herbivore"]["F"] #bytte ut med celltype/geografi
+
+        self.weight += (amount_eaten*self.const["Herbivore"]["beta"])
+        return amount_eaten
 
     def loss_of_weight(self):
         self.weight -= self.const["Herbivore"]["eta"]*self.weight
@@ -97,8 +96,8 @@ def main(file):
             animals.append(Animal(row,item["loc"]))
 
 #Annual cycle
-    for year in range(1, 20):
-        print(f'Basics År: {year} Antall dyr: {len(animals)}, Dyr[0]år: {animals[0].age}, Dyr[0]vekt: {animals[0].weight}, Dyr[0]fitness: {animals[0].fitness}, Dyr[0]status: {animals[0].alive}, Dyr[0]baby1: {animals[0].baby1}')
+    for year in range(1, 50):
+        print(f'Basics År: {year} Antall dyr: {len(animals)}, Dyr[0]år: {animals[0].age}, Dyr[0]vekt: {animals[0].weight}, Dyr[0]fitness: {animals[0].fitness}, Dyr[0]status: {animals[0].alive}, Dyr[0]baby: {animals[0].newborn}')
         for animal in animals:
             animal.procreation()
             animal.feeding() #husk å sortere etter fitness før mating
