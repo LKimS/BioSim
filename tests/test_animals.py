@@ -119,7 +119,41 @@ def test_death(species, age, weight, seed):
         expected = True
 
     assert animal.alive == expected
-# eat
+# Feeding Herbivore
+
+@pytest.mark.parametrize("weight, fodder", [(20, 10),
+                                            (1,1),
+                                            (200, 100),
+                                            (100, 1),
+                                            (100, 2),
+                                            (100, 3),
+                                            (100, 4),
+                                            (100, 5),
+                                            (100, 6),
+                                            (100, 7),
+                                            (100, 8),
+                                            (100, 9),
+                                            (100, 10),
+                                            (100, 11),
+                                            (100, 12)])
+def test_feeding_herbivore(weight, fodder):
+    loc = (1, 1)
+    stat = {'species': 'Herbivore',
+            'age': 10,
+            'weight': weight}
+
+    animal = Herbivore(stat, loc)
+    amount_eaten = animal.feeding(fodder)
+    result = (animal.weight, amount_eaten)
+
+    expected_amount_eaten = min(animal.F, fodder)
+    expected_weight = weight + expected_amount_eaten * animal.beta
+    expected = (expected_weight, expected_amount_eaten)
+
+    assert result == expected
+
+
+# Feeding Carnivore
 
 
 # procreate
