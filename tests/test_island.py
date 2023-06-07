@@ -24,13 +24,12 @@ def test_process_input_map():
                     WLDH
                     WWWW
                     HHHH
-                    
                     """
 
     island = Island(map_string)
 
     expected = ["WHLD", "WLDH", "WWWW", "HHHH"]
-    assert island.map_processed == expected
+    assert island.process_input_map(map_string) == expected
 
 """
 def test_all_lines_same_length():
