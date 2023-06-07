@@ -40,25 +40,16 @@ def test_init(loc, species, age, weight):
        #animal = Carnivore(stat, loc)
         pass
 
-    result = {'loc': animal.loc,
-              'species': animal.species,
-              'age': animal.age,
-              'weight': animal.weight,
-              #"fitness": animal.fitness,
-              "alive": animal.alive,
-              "newborn": animal.newborn
-              }
+    result = (animal.loc[0], animal.loc[1], animal.species, animal.age, animal.weight, animal.fitness, animal.alive, animal.newborn)
 
+    fitness_age_param = 1/(1 + math.exp(animal.phi_age * (age - animal.a_half)))
+    fitness_weight_param = 1/(1 + math.exp(-animal.phi_weight * (weight - animal.w_half)))
 
-    expected = {'loc': loc,
-                'species': 'Herbivore',
-                'age': age,
-                'weight': weight,
-                #"fitness": 0,
-                "alive": True,
-                "newborn": None
-                }
-    assert result == expected
+    fitness = fitness_age_param * fitness_weight_param
+
+    expected = (loc[0], loc[1], species, age, weight, fitness, True, None)
+
+    assert result == approx(expected)
 
 
 # TODO: Procreation
