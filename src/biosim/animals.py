@@ -24,7 +24,6 @@ class Animal:
 
 
     def __init__(self, row, loc,seed=0):
-        random.seed(seed)
         self.row = row
         self.loc = loc
         self.species = self.row["species"]
