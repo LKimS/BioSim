@@ -1,4 +1,5 @@
-from biosim.animals import Herbivore, Carnivore
+from .animals import Animal
+from .animals import Herbivore, Carnivore
 
 """
 core methods:

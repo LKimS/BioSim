@@ -1,9 +1,10 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import random
 
 from biosim.animals import Animal
-from biosim.cell import Water, Lowland, Highland, Desert
+from .cell import Water, Lowland, Highland, Desert
 
 # TODO: error handling and bitmap to plot map
 
@@ -22,7 +23,9 @@ ERROR HANDLING:
 class Island:
 
     #INIT METHOD
-    def __init__(self, input_island_map):
+    def __init__(self, input_island_map, random_seed=0):
+        random.seed(random_seed)
+
         self.map_processed = self.process_input_map(input_island_map)
         self.map_height = self.get_map_height(self.map_processed)
         self.map_width = self.get_map_width(self.map_processed)

@@ -19,8 +19,7 @@ class Animal:
     F = None
     DeltaPhiMax = None
 
-    def __init__(self, row, loc, seed=0):
-        random.seed(seed)
+    def __init__(self, row, loc):
         self.row = row
         self.loc = loc
         self.species = self.row["species"]
