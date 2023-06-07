@@ -19,7 +19,7 @@ lost.add_population(ini_herbs)
 
 pop_animals = {}
 
-N = 900
+N = 100
 for x in range(1, lost.map_height+1):
     for y in range(1, lost.map_width+1):
         pop_animals[(x,y)] = []
