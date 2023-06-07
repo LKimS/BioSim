@@ -1,4 +1,4 @@
-from biosim.animals import Animal
+from biosim.animals import Herbivore, Carnivore
 
 """
 core methods:
@@ -24,9 +24,9 @@ class Cell:
 
     def add_animal(self, animal_info):
         if animal_info["species"] == "Herbivore":
-            self.herbivore.append(Animal(animal_info, self.location))
+            self.herbivore.append(Herbivore(animal_info, self.location))
         elif animal_info["species"] == "Carnivore":
-            self.carnivore.append(Animal(animal_info, self.location))
+            self.carnivore.append(Carnivore(animal_info, self.location))
         else:
             raise ValueError("Invalid animal species")
 
