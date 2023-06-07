@@ -1,6 +1,9 @@
-from biosim.animals import Animal, Herbivore
 import pytest
+from pytest import approx
 import random
+import math
+from biosim.animals import Animal, Herbivore
+
 
 '''
 Tests-structure for island-class
@@ -33,7 +36,8 @@ def test_init(loc, species, age, weight):
 
     if species == "Herbivore":
         animal = Herbivore(stat, loc)
-    else:
+    elif species == "Carnivore":
+       #animal = Carnivore(stat, loc)
         pass
 
     result = {'loc': animal.loc,
@@ -57,11 +61,35 @@ def test_init(loc, species, age, weight):
     assert result == expected
 
 
-# Procreation
+# TODO: Procreation
 
 # Calc_fitness
+@pytest.mark.parametrize("species, age, weight", [["Herbivore", 5, 20],
+                                                   ["Herbivore", 0, 1],
+                                                   ["Herbivore", 150, 2000]])
+def test_calc_fitness(species, age, weight):
+    """Test that fitness is calculated correctly"""
+    loc = (1, 1)
+    stat = {'species': species,
+            'age': age,
+            'weight': weight}
 
+    if species == "Herbivore":
+        animal = Herbivore(stat, loc)
+    elif species == "Carnivore":
+        #animal = Carnivore(stat, loc)
+        pass
 
+    animal.calc_fitness()
+
+    result = animal.fitness
+
+    fitness_age_param = 1/(1 + math.exp(animal.phi_age * (animal.age - animal.a_half)))
+    fitness_weight_param = 1/(1 + math.exp(-animal.phi_weight * (animal.weight - animal.w_half)))
+
+    expected = fitness_age_param * fitness_weight_param
+
+    assert result == approx(expected)
 # age / aging
 
 @pytest.mark.parametrize("age", [-100,-1,0 ,1 , 2, 3, 4, 5, 6, 100, 1000])
@@ -87,7 +115,7 @@ def test_loss_of_weight(weight):
             'weight': weight}
     animal = Herbivore(stat, loc)
     animal.loss_of_weight()
-    assert animal.weight == weight - animal.eta * weight
+    assert animal.weight == approx(weight - animal.eta * weight)
 
 
 
@@ -100,6 +128,7 @@ def test_loss_of_weight(weight):
                                                         ("Herbivore", 100, 40, 1)])
 
 def test_death(species, age, weight, seed):
+    """Test that animal dies when weight is 0 or less and that it dies with the correct probability"""
     loc = (1, 1)
     stat = {'species': species,
             'age': age,
@@ -137,6 +166,7 @@ def test_death(species, age, weight, seed):
                                             (100, 11),
                                             (100, 12)])
 def test_feeding_herbivore(weight, fodder):
+    """Test that herbivore eats the correct amount of fodder and that weight is increased by the correct amount"""
     loc = (1, 1)
     stat = {'species': 'Herbivore',
             'age': 10,
@@ -150,7 +180,7 @@ def test_feeding_herbivore(weight, fodder):
     expected_weight = weight + expected_amount_eaten * animal.beta
     expected = (expected_weight, expected_amount_eaten)
 
-    assert result == expected
+    assert result == approx(expected)
 
 
 # Feeding Carnivore
