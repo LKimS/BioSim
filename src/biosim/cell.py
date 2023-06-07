@@ -83,9 +83,12 @@ class Cell:
             animal.loss_of_weight()
 
     def animal_death(self):
-
+        for animal in self.herbivore:
+            animal.death()
         self.herbivore = [animal for animal in self.herbivore if animal.alive]
 
+        for animal in self.carnivore:
+            animal.death()
         self.carnivore = [animal for animal in self.carnivore if animal.alive]
 
     def reset_fodder(self):
