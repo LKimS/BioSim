@@ -50,7 +50,7 @@ class Cell:
         self.sort_herbivore_after_fitness()
         for animal in self.herbivore:
             while self.fodder > 0:
-                self.fodder -= animal.feeding(self.fodder)
+                self.fodder -= animal.feedideng(self.fodder)
 
         for animal in self.carnivore:
             # TODO: implement feeding for carnivores
