@@ -1,4 +1,3 @@
-from .animals import Animal
 from .animals import Herbivore, Carnivore
 
 """
