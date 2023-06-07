@@ -49,8 +49,11 @@ class Cell:
     def feed_animals(self):
         self.sort_herbivore_after_fitness()
         for animal in self.herbivore:
-            while self.fodder > 0:
+            if self.fodder > 0:
                 self.fodder -= animal.feeding(self.fodder)
+
+            else:
+                break
 
         for animal in self.carnivore:
             # TODO: implement feeding for carnivores
