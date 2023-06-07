@@ -13,20 +13,23 @@ ini_herbs = [{'loc': (2, 2),
                        'age': 5,
                        'weight': 20}
                       for _ in range(2)]}]
-
+# Create island
 lost = Island(geogr)
+
+# Add population to island
 lost.add_population(ini_herbs)
 
+# Create dictionary for population
 pop_animals = {}
-
-N = 200
 for x in range(1, lost.map_height+1):
     for y in range(1, lost.map_width+1):
         pop_animals[(x,y)] = []
 
+# Simulate for N years
+N = 200
 for year in range(1,N+1):
-    for x in range(1, lost.map_height+1):
-        for y in range(1, lost.map_width+1):
+    for x in range(1, lost.map_height+1):           #Actually y axsis
+        for y in range(1, lost.map_width+1):        #Actually x axsis
             # tile/cell work
             #print(lost.map[x][y].type)
             cell = lost.map[x][y]
@@ -46,6 +49,6 @@ for year in range(1,N+1):
             cell.animal_death()
             cell.reset_fodder()
 
-
+# Plot population
 plt.plot(pop_animals[(2,2)])
 plt.show()
