@@ -2,7 +2,7 @@ import pytest
 from pytest import approx
 import random
 import math
-from biosim.animals import Animal, Herbivore
+from biosim.animals import Animal, Herbivore #, Carnivore
 
 
 '''
