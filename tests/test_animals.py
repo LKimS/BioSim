@@ -23,8 +23,8 @@ Requirements violated
 #TEST ANIMAL
 # create
 @pytest.mark.parametrize("loc, species, age, weight", [[(1, 2), "Herbivore", 5, 20],
-                                              [(2, 1), "Herbivore", 0, 1],
-                                              [(10, 3), "Herbivore", 150, 2000]])
+                                                       [(2, 1), "Herbivore", 0, 1],
+                                                       [(10, 3), "Herbivore", 150, 2000]])
 def test_init(loc, species, age, weight):
     """Test that animal is created with correct attributes"""
     stat = {'species': species,
@@ -57,7 +57,9 @@ def test_init(loc, species, age, weight):
     assert result == expected
 
 
-# fitness
+# Procreation
+
+# Calc_fitness
 
 
 # age / aging
@@ -87,11 +89,9 @@ def test_loss_of_weight(weight):
     animal.loss_of_weight()
     assert animal.weight == weight - animal.eta * weight
 
-# fittness
 
-# migration: wait
 
-# birth
+
 
 # death
 @pytest.mark.parametrize("species, age, weight, seed", [("Herbivore", 5, 20, 1),
@@ -156,17 +156,10 @@ def test_feeding_herbivore(weight, fodder):
 # Feeding Carnivore
 
 
-# procreate
+# Migration
 
-# die
+
+# procreate
 
 # error handling
 
-
-
-
-
-# TEST Herbivore
-
-
-# TEST Carnivore
