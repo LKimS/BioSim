@@ -18,7 +18,7 @@ ini_herbs = [{'loc': (2, 2),
 pop_sims = []
 
 sim = 10
-for seed in range(sim):
+for seed in range(1):
 
     lost = Island(geogr, seed)
     lost.add_population(ini_herbs)
