@@ -41,8 +41,13 @@ class Animal:
         if self.weight >= offspring_value:
             probility_of_procreation = min(1, self.const[self.species]["gamma"] * self.fitness * animal_in_pos) #sannsynlighet minus dyret jeg ser på?
             if random.random() < probility_of_procreation:
-                #newborn
-                newborn_weight = math.log(random.lognormvariate(self.const[self.species]["w_birth"], self.const[self.species]["sigma_birth"]))
+                #newborn log calc
+                sigma_birth = self.const[self.species]["sigma_birth"]
+                omega_birth = self.const[self.species]["omega"]
+                sigma_birth_log = math.log((sigma_birth)**2 / math.sqrt(sigma_birth**2 + omega_birth**2))
+                omega_birth_log = math.sqrt(math.log(1 + (omega_birth**2 / sigma_birth**2)))
+                newborn_weight = math.log(random.lognormvariate(sigma_birth_log, omega_birth_log))
+
                 parent_loss = self.const[self.species]["xi"] * newborn_weight
                 if self.weight > parent_loss:
                     self.weight -= parent_loss
