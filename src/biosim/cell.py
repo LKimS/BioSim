@@ -1,4 +1,4 @@
-from .biosim.animals import Animal
+from .animals import Animal
 
 """
 core methods:
