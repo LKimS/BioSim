@@ -156,10 +156,8 @@ class BioSim:
                     self.cell_history[(x, y)].append(cell.count_herbivore)
                     #pop_animals[(x, y)].append(cell.count_carnivore)
                     # newborn in cell
-                    newborn_herbivores = cell.get_newborns(cell.herbivore)
-                    newborn_carnivores = cell.get_newborns(cell.carnivore)
-                    self.island.add_population(newborn_carnivores)
-                    self.island.add_population(newborn_herbivores)
+                    cell.add_newborns(cell.herbivore)
+                    cell.add_newborns(cell.carnivore)
                     cell.feed_animals()
                     cell.update_fitness()
                     # ceel.migration()

@@ -34,17 +34,23 @@ class Cell:
         self.count_herbivore = len(self.herbivore)
         self.count_carnivore = len(self.carnivore)
 
-    def get_newborns(self, animal_list):
-        newborns = [{
-            'loc': self.location,
-            'pop': []
-        }]
+    def add_newborns(self, animal_list):
+
+        newborn_list = []
+
         for animal in animal_list:
             newborn = animal.procreation(len(animal_list))
             if newborn is not None:
-                newborns[0]['pop'].append(newborn)
+                newborn_list.append(newborn)
 
-        return newborns
+        if len(newborn_list) > 0:
+            species = newborn_list[0].species
+
+            if species == "Herbivore":
+                self.herbivore.extend(newborn_list)
+            elif species == "Carnivore":
+                self.carnivore.extend(newborn_list)
+
 
     def feed_animals(self):
         self.sort_herbivore_after_fitness()
