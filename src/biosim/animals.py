@@ -45,7 +45,8 @@ class Animal:
                 if self.weight > parent_loss:
                     self.weight -= parent_loss
                     self.newborn = True
-                    return {"species": self.species, "age": 0, "weight": newborn_weight}
+                    newborn_info = {"species": self.species, "age": 0, "weight": newborn_weight}
+                    return type(self)(newborn_info, self.loc)
         else:
             'animal does not procreate'
             return None
