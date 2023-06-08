@@ -14,14 +14,14 @@ class BioSim:
     Top-level interface to BioSim package.
     """
 
-    def __init__(self, island_map, ini_herb, seed,
+    def __init__(self, island_map, population, seed,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_years=None, img_dir=None, img_base=None, img_fmt='png',
                  log_file=None):
 
-        self.island_map = island_map
-        self.ini_herb = ini_herb
-        self.seed = seed
+        self.island = Island(island_map, seed)
+        self.island.add_population(population)
+
         self.img_dir = img_dir
         self.img_base = img_base
         self.img_years = img_years
@@ -86,11 +86,7 @@ class BioSim:
         """
 
     def set_animal_parameters(self, species, params):
-
-        if species == 'Herbivore':
-            Herbivore.set_params(params)
-        else:
-            raise ValueError('Invalid species')
+        pass
         """
         Set parameters for animal species.
 
@@ -108,7 +104,6 @@ class BioSim:
         """
 
     def set_landscape_parameters(self, landscape, params):
-
         pass
 
         """
@@ -127,6 +122,10 @@ class BioSim:
             If invalid parameter values are passed.
         """
 
+    def plot_population_history(self):
+        plt.plot(self.island_history)
+
+
     def simulate(self, num_years):
         """
         Run simulation while visualizing the result.
@@ -136,54 +135,41 @@ class BioSim:
         num_years : int
             Number of years to simulate
         """
-        pop_sims = []
 
+        self.pop_history = {}
+        self.island_history = []
 
-        sim = 10
-        for seed in range(10):
+        for x in range(1, self.island.map_height + 1):
+            for y in range(1, self.island.map_width + 1):
+                self.pop_history[(x, y)] = []
 
-            # Create island
-            self.island_map = Island(self.island_map,self.seed)
+        for year in range(1, num_years + 1):
+            sum_herbivore = 0
+            for x in range(1, self.island.map_height + 1):  # Actually y axsis
+                for y in range(1, self.island.map_width + 1):  # Actually x axsis
+                    # tile/cell work
+                    cell = self.island.map[x][y]
+                    cell.count_animals()
+                    sum_herbivore += cell.count_herbivore
+                    #sum_carnivore += cell.count_carnivore
+                    # teller dyr i cellen
+                    self.pop_history[(x, y)].append(cell.count_herbivore)
+                    #pop_animals[(x, y)].append(cell.count_carnivore)
+                    # newborn in cell
+                    newborn_herbivores = cell.get_newborns(cell.herbivore)
+                    newborn_carnivores = cell.get_newborns(cell.carnivore)
+                    self.island.add_population(newborn_carnivores)
+                    self.island.add_population(newborn_herbivores)
+                    cell.feed_animals()
+                    cell.update_fitness()
+                    # ceel.migration()
+                    cell.age_animals()
+                    cell.loss_of_weight()
+                    cell.animal_death()
+                    cell.reset_fodder()
 
-            # Add population to island
-            self.island_map.add_population(self.ini_herb)
-
-            # Create dictionary for population
-            pop_animals = {}
-            for x in range(1, self.island_map.map_height + 1):
-                for y in range(1, self.island_map.map_width + 1):
-                    pop_animals[(x, y)] = []
-
-            # Simulate for N years
-            N = 200
-            for year in range(1, N + 1):
-                for x in range(1, self.island_map.map_height + 1):  # Actually y axsis
-                    for y in range(1, self.island_map.map_width + 1):  # Actually x axsis
-                        # tile/cell work
-                        # print(lost.map[x][y].type)
-                        cell = self.island_map.map[x][y]
-                        cell.count_animals()
-                        # teller dyr i cellen
-                        pop_animals[(x, y)].append(cell.count_herbivore)
-                        # newborn in cell
-                        newborn_herbivores = cell.get_newborns(cell.herbivore)
-                        newborn_carnivores = cell.get_newborns(cell.carnivore)
-                        self.island_map.add_population(newborn_carnivores)
-                        self.island_map.add_population(newborn_herbivores)
-                        cell.feed_animals()
-                        cell.update_fitness()
-                        # ceel.migration()
-                        cell.age_animals()
-                        cell.loss_of_weight()
-                        cell.animal_death()
-                        cell.reset_fodder()
-
-            pop_sims.append(pop_animals[(2, 2)])
-
-        for pop in pop_sims:
-            plt.plot(pop)
-
-        plt.show()
+            self.island_history.append(sum_herbivore)
+        self.plot_population_history()
 
 
     def add_population(self, population):
@@ -195,7 +181,7 @@ class BioSim:
         population : List of dictionaries
             See BioSim Task Description, Sec 3.3.3 for details.
         """
-        add_population(ini_herbs)
+        pass
 
 
     @property
