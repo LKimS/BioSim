@@ -1,6 +1,8 @@
 """
 Template for BioSim class.
 """
+from biosim.island import Island
+import matplotlib.pyplot as plt
 
 # The material in this file is licensed under the BSD 3-clause license
 # https://opensource.org/licenses/BSD-3-Clause
@@ -12,11 +14,17 @@ class BioSim:
     Top-level interface to BioSim package.
     """
 
-    def __init__(self, island_map, ini_pop, seed,
+    def __init__(self, island_map, ini_herb, seed,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_years=None, img_dir=None, img_base=None, img_fmt='png',
                  log_file=None):
 
+        self.island_map = island_map
+        self.ini_herb = ini_herb
+        self.seed = seed
+        self.img_dir = img_dir
+        self.img_base = img_base
+        self.img_years = img_years
         """
         Parameters
         ----------
@@ -78,6 +86,11 @@ class BioSim:
         """
 
     def set_animal_parameters(self, species, params):
+
+        if species == 'Herbivore':
+            Herbivore.set_params(params)
+        else:
+            raise ValueError('Invalid species')
         """
         Set parameters for animal species.
 
@@ -95,6 +108,9 @@ class BioSim:
         """
 
     def set_landscape_parameters(self, landscape, params):
+
+        pass
+
         """
         Set parameters for landscape type.
 
@@ -120,7 +136,53 @@ class BioSim:
         num_years : int
             Number of years to simulate
         """
+        pop_sims = []
 
+        sim = 10
+        for seed in range(10):
+
+            # Create island
+            self.island_map = Island(self.island_map,self.seed)
+
+            # Add population to island
+            self.island_map.add_population(self.ini_herb)
+
+            # Create dictionary for population
+            pop_animals = {}
+            for x in range(1, self.island_map.map_height + 1):
+                for y in range(1, self.island_map.map_width + 1):
+                    pop_animals[(x, y)] = []
+
+            # Simulate for N years
+            N = 200
+            for year in range(1, N + 1):
+                for x in range(1, self.island_map.map_height + 1):  # Actually y axsis
+                    for y in range(1, self.island_map.map_width + 1):  # Actually x axsis
+                        # tile/cell work
+                        # print(lost.map[x][y].type)
+                        cell = self.island_map.map[x][y]
+                        cell.count_animals()
+                        # teller dyr i cellen
+                        pop_animals[(x, y)].append(cell.count_herbivore)
+                        # newborn in cell
+                        newborn_herbivores = cell.get_newborns(cell.herbivore)
+                        newborn_carnivores = cell.get_newborns(cell.carnivore)
+                        self.island_map.add_population(newborn_carnivores)
+                        self.island_map.add_population(newborn_herbivores)
+                        cell.feed_animals()
+                        cell.update_fitness()
+                        # ceel.migration()
+                        cell.age_animals()
+                        cell.loss_of_weight()
+                        cell.animal_death()
+                        cell.reset_fodder()
+
+            pop_sims.append(pop_animals[(2, 2)])
+
+        for pop in pop_sims:
+            plt.plot(pop)
+
+        plt.show()
 
 
     def add_population(self, population):
@@ -132,7 +194,7 @@ class BioSim:
         population : List of dictionaries
             See BioSim Task Description, Sec 3.3.3 for details.
         """
-
+        add_population(ini_herbs)
 
 
     @property
