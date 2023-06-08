@@ -61,10 +61,10 @@ class Cell:
 
     def update_fitness(self):
         for animal in self.herbivore:
-            animal.calc_fitness()
+            animal.fitness = animal.calc_fitness()
 
         for animal in self.carnivore:
-            animal.calc_fitness()
+            animal.fitness = animal.calc_fitness()
 
     def sort_herbivore_after_fitness(self):
         self.herbivore.sort(key=lambda animal: animal.fitness, reverse=True)
