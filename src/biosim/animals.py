@@ -2,6 +2,7 @@ import math
 import random
 
 
+
 class Animal:
     w_birth = None
     sigma_birth = None
@@ -45,7 +46,8 @@ class Animal:
                 if self.weight > parent_loss:
                     self.weight -= parent_loss
                     self.newborn = True
-                    return {"species": self.species, "age": 0, "weight": newborn_weight}
+                    newborn_info = {"species": self.species, "age": 0, "weight": newborn_weight}
+                    return type(self)(newborn_info, self.loc)
         else:
             'animal does not procreate'
             return None
@@ -59,7 +61,6 @@ class Animal:
             age_parameter = 1 / (1 + math.exp(
                 self.phi_age * (self.age - self.a_half)))
             weight_parameter = 1 / (1 + math.exp(-self.phi_weight * (self.weight - self.w_half)))
-
             return age_parameter * weight_parameter
 
     def aging(self):
