@@ -137,7 +137,7 @@ class BioSim:
         """
 
         self.cell_history = {}
-        self.island_history = []
+        self.island_history = [] #gjøre om dict med lister under
 
         for x in range(1, self.island.map_height + 1):
             for y in range(1, self.island.map_width + 1):
