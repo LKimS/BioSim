@@ -43,8 +43,9 @@ class Cell:
             if newborn is not None:
                 newborn_list.append(newborn)
 
-        if len(newborn_list) > 0:
+        if newborn_list != []:
             species = newborn_list[0].species
+
 
             if species == "Herbivore":
                 self.herbivore.extend(newborn_list)
