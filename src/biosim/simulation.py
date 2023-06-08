@@ -136,12 +136,12 @@ class BioSim:
             Number of years to simulate
         """
 
-        self.pop_history = {}
+        self.cell_history = {}
         self.island_history = []
 
         for x in range(1, self.island.map_height + 1):
             for y in range(1, self.island.map_width + 1):
-                self.pop_history[(x, y)] = []
+                self.cell_history[(x, y)] = []
 
         for year in range(1, num_years + 1):
             sum_herbivore = 0
@@ -153,7 +153,7 @@ class BioSim:
                     sum_herbivore += cell.count_herbivore
                     #sum_carnivore += cell.count_carnivore
                     # teller dyr i cellen
-                    self.pop_history[(x, y)].append(cell.count_herbivore)
+                    self.cell_history[(x, y)].append(cell.count_herbivore)
                     #pop_animals[(x, y)].append(cell.count_carnivore)
                     # newborn in cell
                     newborn_herbivores = cell.get_newborns(cell.herbivore)
