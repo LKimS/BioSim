@@ -25,7 +25,7 @@ class Animal:
         self.species = self.row["species"]
         self.age = self.row["age"]
         self.weight = self.row["weight"]
-        self.calc_fitness()
+        self.fitness = self.calc_fitness()
         self.alive = True
         self.newborn = None
 
@@ -52,14 +52,14 @@ class Animal:
 
     def calc_fitness(self):
         if self.w_birth <= 0:
-            self.fitness = 0
+            return 0
         if self.weight <= 0:
-            self.fitness = 0
+            return 0
         else:
             age_parameter = 1 / (1 + math.exp(
                 self.phi_age * (self.age - self.a_half)))
             weight_parameter = 1 / (1 + math.exp(-self.phi_weight * (self.weight - self.w_half)))
-            self.fitness = age_parameter * weight_parameter
+            return age_parameter * weight_parameter
 
     def aging(self):
         self.age += 1
