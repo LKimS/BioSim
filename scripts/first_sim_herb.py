@@ -35,15 +35,13 @@ for seed in range(10):
             for y in range(1, lost.map_width+1):
                 # tile/cell work
                 #print(lost.map[x][y].type)
-                cell = lost.map[x][y]
+                cell = lost.map[(x,y)]
                 cell.count_animals()
                 #teller dyr i cellen
                 pop_animals[(x,y)].append(cell.count_herbivore)
                 #newborn in cell
-                newborn_herbivores = cell.get_newborns(cell.herbivore)
-                newborn_carnivores = cell.get_newborns(cell.carnivore)
-                lost.add_population(newborn_carnivores)
-                lost.add_population(newborn_herbivores)
+                cell.add_newborns(cell.herbivore)
+                cell.add_newborns(cell.carnivore)
                 cell.feed_animals()
                 cell.update_fitness()
                 #ceel.migration()

@@ -54,12 +54,9 @@ class Island:
         map = {}
 
         for x in range(1, self.map_height+1):
-            map[x] = {}
             for y in range(1, self.map_width + 1):
                 cell_letter = map_processed[x-1][y-1]
-                map[x][y] = self.add_cell(cell_letter, (x,y))
-
-        map_df = pd.DataFrame.from_dict(map)
+                map[(x,y)] = self.add_cell(cell_letter, (x,y))
 
         return map
 
@@ -80,9 +77,9 @@ class Island:
         for item in population:
             x, y = item["loc"]
             for animal_info in item['pop']:
-                self.map[x][y].add_animal(animal_info)
+                self.map[(x,y)].add_animal(animal_info)
 
-            self.map[x][y].count_animals()
+            self.map[(x,y)].count_animals()
 
 
     #METHODS for creating bitmap and plotting
@@ -93,9 +90,10 @@ class Island:
 
         bitmap = np.empty((height,width, 3), dtype=np.float32)
 
-        for i in range(height):
-            for j in range(width):
-                bitmap[i,j] = self.map[i+1][j+1].color
+        for x in range(height):
+            for y in range(width):
+                loc = (x+1,y+1)
+                bitmap[x,y] = self.map[loc].color
 
         return bitmap
 
