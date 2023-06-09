@@ -114,8 +114,7 @@ class Cell_with_animals(Cell):
             animal.death()
         self.carnivore = [animal for animal in self.carnivore if animal.alive]
 
-    def reset_fodder(self):
-        self.fodder = self.f_max
+
 
 
 class Cell_with_fodder(Cell_with_animals):
@@ -160,11 +159,16 @@ class Cell_with_fodder(Cell_with_animals):
         for animal in self.herbivore:
             if self.fodder > 0:
                 self.fodder -= animal.feeding(self.fodder)
-
             else:
                 break
 
         super().feed_animals()
+
+        self.reset_fodder()
+
+
+    def reset_fodder(self):
+        self.fodder = self.f_max
 
 class Water(Cell):
     type = "Water"
