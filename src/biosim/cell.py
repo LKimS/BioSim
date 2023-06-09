@@ -10,13 +10,28 @@ core methods:
 """
 
 class Cell:
+    """
+    Class for a cell in the island
+    """
     type = None
-    max_fodder = None
     color = None
+
 
     def __init__(self, location):
         self.location = location
-        self.fodder = self.max_fodder
+
+    def add_animal(self, animal_info):
+        raise ValueError(f"Cannot add animal to {type(self)} cell")
+
+    @classmethod
+    def set_parameters(cls, params):
+        raise ValueError(f"{type(self)} cell has no changeable parameters")
+
+
+class Cell_with_animals(Cell):
+
+    def __init__(self, location):
+        super().__init__(location)
         self.herbivore = []
         self.carnivore = []
         self.count_herbivore = 0
@@ -55,12 +70,6 @@ class Cell:
 
     def feed_animals(self):
         self.sort_herbivore_after_fitness()
-        for animal in self.herbivore:
-            if self.fodder > 0:
-                self.fodder -= animal.feeding(self.fodder)
-
-            else:
-                break
 
         for animal in self.carnivore:
             # TODO: implement feeding for carnivores
@@ -99,35 +108,76 @@ class Cell:
         self.carnivore = [animal for animal in self.carnivore if animal.alive]
 
     def reset_fodder(self):
-        self.fodder = self.max_fodder
-    @property
-    def num_herbivore(self):
-        return self.count_herbivore
+        self.fodder = self.f_max
 
-    @property
-    def num_carnivore(self):
-        return self.count_carnivore
 
+class Cell_with_fodder(Cell_with_animals):
+    """
+    Class for a cell in the island
+    """
+    f_max =None
+
+    default_parameters = {'f_max': f_max}
+
+    @classmethod
+    def set_parameters(cls, new_parameters):
+        """
+        Set the default parameters for the cell
+        Parameters
+        ----------
+        new_parameters
+
+        """
+        for key in new_parameters:
+            if key not in (cls.default_parameters.keys()):
+                raise ValueError("Invalid parameter: " + key)
+
+        if 'f_max' in new_parameters:
+            if new_parameters['f_max'] < 0:
+                raise ValueError("Invalid parameter: f_max must be positive")
+            cls.f_max = new_parameters['f_max']
+
+    @classmethod
+    def get_parameters(cls):
+        """
+        Get the default parameters for the cell
+        :return: dict
+        """
+        return {'f_max': cls.f_max}
+    def __init__(self, location):
+        super().__init__(location)
+        self.fodder = None
+
+    def feed_animals(self):
+        self.sort_herbivore_after_fitness()
+        for animal in self.herbivore:
+            if self.fodder > 0:
+                self.fodder -= animal.feeding(self.fodder)
+
+            else:
+                break
+
+        super().feed_animals()
 
 class Water(Cell):
     type = "Water"
-    max_fodder = 0
     color = (0.13, 0.00, 1.00)
+
+class Desert(Cell_with_animals):
+    type = "Desert"
+    color = (1.00, 1.00, 0.40)
     
-class Lowland(Cell):
+class Lowland(Cell_with_fodder):
     type = "Lowland"
-    max_fodder = 800
+    f_max = 800
     color = (0.00, 0.62, 0.00)
     
-class Highland(Cell):
+class Highland(Cell_with_fodder):
     type = "Highland"
-    max_fodder = 300
+    f_max = 300
     color = (0.20, 1.00, 0.42)
     
-class Desert(Cell):
-    type = "Desert"
-    max_fodder = 0
-    color = (1.00, 1.00, 0.40)
+
 
 
 """

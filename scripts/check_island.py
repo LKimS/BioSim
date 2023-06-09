@@ -6,14 +6,14 @@ WDL
 HWW"""
 
 island = Island(map)
-pop = [{'loc': (1, 1),
+pop = [{'loc': (3, 2),
         'pop': [{'species': 'Herbivore',
                  'age': 5,
                  'weight': 20}
                 for _ in range(150)]},
 
        {'loc': (2, 2),
-        'pop': [{'species': 'Carnivore',
+        'pop': [{'species': 'Herbivore',
                  'age': 5,
                  'weight': 20}
                 for _ in range(150)]},
@@ -21,7 +21,7 @@ pop = [{'loc': (1, 1),
        ]
 
 island.add_population(pop)
-island.plot_map()
+#island.plot_map()
 # bitmap = A.bitmap
 
 print(repr(island.map))
