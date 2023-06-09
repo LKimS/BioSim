@@ -148,7 +148,7 @@ class BioSim:
             for x in range(1, self.island.map_height + 1):  # Actually y axsis
                 for y in range(1, self.island.map_width + 1):  # Actually x axsis
                     # tile/cell work
-                    cell = self.island.map[x][y]
+                    cell = self.island.map[(x, y)]
                     cell.count_animals()
                     sum_herbivore += cell.count_herbivore
                     #sum_carnivore += cell.count_carnivore
