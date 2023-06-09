@@ -21,7 +21,7 @@ pop = [{'loc': (1, 1),
        ]
 
 island.add_population(pop)
-
+island.plot_map()
 # bitmap = A.bitmap
 
 print(repr(island.map))
