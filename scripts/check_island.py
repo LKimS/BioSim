@@ -25,6 +25,6 @@ island.add_population(pop)
 # bitmap = A.bitmap
 
 print(repr(island.map))
-print(island.map[1][1])
+print(island.map[(1,1)])
 
 

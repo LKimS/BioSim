@@ -15,6 +15,7 @@ class Cell:
     """
     type = None
     color = None
+    _habitable = False
 
 
     def __init__(self, location):
@@ -27,8 +28,14 @@ class Cell:
     def set_parameters(cls, params):
         raise ValueError(f"{type(self)} cell has no changeable parameters")
 
+    @property
+    def is_habitable(self):
+        return self._habitable
+
 
 class Cell_with_animals(Cell):
+
+    _habitable = True
 
     def __init__(self, location):
         super().__init__(location)
@@ -146,7 +153,7 @@ class Cell_with_fodder(Cell_with_animals):
         return {'f_max': cls.f_max}
     def __init__(self, location):
         super().__init__(location)
-        self.fodder = None
+        self.fodder = self.f_max
 
     def feed_animals(self):
         self.sort_herbivore_after_fitness()

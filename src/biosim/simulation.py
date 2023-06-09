@@ -143,28 +143,29 @@ class BioSim:
             for y in range(1, self.island.map_width + 1):
                 self.cell_history[(x, y)] = []
 
+        habital_map = self.island.habital_map
+
         for year in range(1, num_years + 1):
             sum_herbivore = 0
-            for x in range(1, self.island.map_height + 1):  # Actually y axsis
-                for y in range(1, self.island.map_width + 1):  # Actually x axsis
-                    # tile/cell work
-                    cell = self.island.map[(x, y)]
-                    cell.count_animals()
-                    sum_herbivore += cell.count_herbivore
-                    #sum_carnivore += cell.count_carnivore
-                    # teller dyr i cellen
-                    self.cell_history[(x, y)].append(cell.count_herbivore)
-                    #pop_animals[(x, y)].append(cell.count_carnivore)
-                    # newborn in cell
-                    cell.add_newborns(cell.herbivore)
-                    cell.add_newborns(cell.carnivore)
-                    cell.feed_animals()
-                    cell.update_fitness()
-                    # ceel.migration()
-                    cell.age_animals()
-                    cell.loss_of_weight()
-                    cell.animal_death()
-                    cell.reset_fodder()
+
+            for loc, cell in habital_map.items():
+                # tile/cell work
+                cell.count_animals()
+                sum_herbivore += cell.count_herbivore
+                # sum_carnivore += cell.count_carnivore
+                # teller dyr i cellen
+                self.cell_history[loc].append(cell.count_herbivore)
+                # pop_animals[(x, y)].append(cell.count_carnivore)
+                # newborn in cell
+                cell.add_newborns(cell.herbivore)
+                cell.add_newborns(cell.carnivore)
+                cell.feed_animals()
+                cell.update_fitness()
+                # ceel.migration()
+                cell.age_animals()
+                cell.loss_of_weight()
+                cell.animal_death()
+                cell.reset_fodder()
 
             self.island_history.append(sum_herbivore)
         self.plot_population_history()

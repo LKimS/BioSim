@@ -34,6 +34,8 @@ class Island:
 
         self.map = self.map_processed_to_dict(self.map_processed)
 
+        self.habital_map = self.get_map_with_animals()
+
         self.bitmap = self.create_bitmap(self.map_processed)
 
 
@@ -59,6 +61,17 @@ class Island:
                 map[(x,y)] = self.add_cell(cell_letter, (x,y))
 
         return map
+
+    def get_map_with_animals(self):
+        map_with_animals = {}
+        for x in range(1, self.map_height+1):
+            for y in range(1, self.map_width + 1):
+                loc = (x,y)
+                if self.map[loc].is_habitable:
+                    map_with_animals[(x,y)] = self.map[(x,y)]
+
+        return map_with_animals
+
 
     def add_cell(self, cell_letter, loc):
         cells = {
@@ -110,3 +123,5 @@ class Island:
             if len(line) != len(line1):
 
                 return False
+
+
