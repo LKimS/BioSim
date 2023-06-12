@@ -53,8 +53,6 @@ class Animal:
             return None
 
     def calc_fitness(self):
-        if self.w_birth <= 0:
-            return 0
         if self.weight <= 0:
             return 0
         else:
