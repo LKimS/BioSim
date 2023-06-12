@@ -52,7 +52,7 @@ class Cell_with_animals(Cell):
         else:
             raise ValueError("Invalid animal species")
 
-    def count_animals(self):
+    def update_animal_count(self):
         self.count_herbivore = len(self.herbivore)
         self.count_carnivore = len(self.carnivore)
 

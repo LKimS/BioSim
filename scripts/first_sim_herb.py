@@ -36,7 +36,7 @@ for seed in range(10):
                 # tile/cell work
                 #print(lost.map[x][y].type)
                 cell = lost.map[(x,y)]
-                cell.count_animals()
+                cell.update_animal_count()
                 #teller dyr i cellen
                 pop_animals[(x,y)].append(cell.count_herbivore)
                 #newborn in cell

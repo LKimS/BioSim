@@ -123,7 +123,7 @@ class BioSim:
         """
 
     def plot_population_history(self):
-        plt.plot(self.island_history)
+        plt.plot(self.island_pop_history['Herbivore'])
 
 
     def simulate(self, num_years):
@@ -136,25 +136,28 @@ class BioSim:
             Number of years to simulate
         """
 
-        self.cell_history = {}
-        self.island_history = [] #gjøre om dict med lister under
+        self.cell_pop_history = {}
+        self.island_pop_history = {'Herbivore': [], 'Carnivore': []}
 
         for x in range(1, self.island.map_height + 1):
             for y in range(1, self.island.map_width + 1):
-                self.cell_history[(x, y)] = []
+                self.cell_pop_history[(x, y)] = {'Herbivore': [], 'Carnivore': []}
 
         habital_map = self.island.habital_map
 
         for year in range(1, num_years + 1):
             sum_herbivore = 0
+            sum_carnivore = 0
 
+            # tile/cell work
             for loc, cell in habital_map.items():
-                # tile/cell work
-                cell.count_animals()
+                # Teller dyr i cellen
+                cell.update_animal_count()
                 sum_herbivore += cell.count_herbivore
-                # sum_carnivore += cell.count_carnivore
-                # teller dyr i cellen
-                self.cell_history[loc].append(cell.count_herbivore)
+                sum_carnivore += cell.count_carnivore
+                self.cell_pop_history[loc]['Herbivore'].append(cell.count_herbivore)
+                self.cell_pop_history[loc]['Carnivore'].append(cell.count_carnivore)
+
                 # pop_animals[(x, y)].append(cell.count_carnivore)
                 # newborn in cell
                 cell.add_newborns(cell.herbivore)
@@ -167,8 +170,17 @@ class BioSim:
                 cell.animal_death()
                 cell.reset_fodder()
 
-            self.island_history.append(sum_herbivore)
+            self.island_pop_history['Herbivore'].append(sum_herbivore)
+            self.island_pop_history['Carnivore'].append(sum_carnivore)
         self.plot_population_history()
+
+
+    def update_animal_count(self, cell):
+        """
+        Update the number of animals on the island
+        """
+        cell.update_animal_count()
+
 
 
     def add_population(self, population):

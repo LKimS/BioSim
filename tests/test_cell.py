@@ -55,7 +55,7 @@ def test_count_animals():
                    'weight': 20}
 
     cell.add_animal(animal_info)
-    cell.count_animals()
+    cell.update_animal_count()
 
     assert  cell.count_herbivore == 1
 
