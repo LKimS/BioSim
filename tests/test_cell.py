@@ -1,11 +1,10 @@
 """Test the Cell-class."""
 import pytest
 from pytest import approx
-import random
 import math
-from biosim.animals import Animal, Herbivore #, Carnivore
-from biosim.cell import Cell_with_animals, Cell
-from biosim.island import Island
+
+from biosim.cell import Cell_with_animals, Cell_with_fodder
+
 
 
 def test_init():
@@ -75,6 +74,7 @@ def test_add_newborns():
 
     assert cell.herbivore[1].species == 'Herbivore'
     assert cell.herbivore[1].age == 0
+    assert cell.herbivore
 
 def test_feed_animals():
     """Test that all animals in the cell have their weight updated correctly."""
@@ -88,10 +88,10 @@ def test_feed_animals():
     for animal_info in list:
         cell.add_animal(animal_info)
 
+    cell.herbivore[0].weight = 30
+
     amount_eaten = cell.herbivore[0].F
-
     amount_eaten = cell.feed_animals(cell.fodder)
-
     assert cell.herbivore[0].weight > 20
 
 
