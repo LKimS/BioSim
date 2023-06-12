@@ -92,6 +92,15 @@ class Cell_with_animals(Cell):
     def sort_herbivore_after_fitness(self):
         self.herbivore.sort(key=lambda animal: animal.fitness, reverse=True)
 
+
+    def migrate_animals(self):
+        """
+        Migrates animals to a random neighboring cell.
+        """
+
+        for animal in self.herbivore + self.carnivore:
+            print(animal)
+
     def age_animals(self):
         for animal in self.herbivore:
             animal.aging()

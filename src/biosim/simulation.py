@@ -19,12 +19,6 @@ class BioSim:
                  img_years=None, img_dir=None, img_base=None, img_fmt='png',
                  log_file=None):
 
-        self.island = Island(island_map, seed)
-        self.island.add_population(population)
-
-        self.img_dir = img_dir
-        self.img_base = img_base
-        self.img_years = img_years
         """
         Parameters
         ----------
@@ -84,6 +78,12 @@ class BioSim:
 
         - `img_dir` and `img_base` must either be both None or both strings.
         """
+        self.island = Island(island_map, seed)
+        self.island.add_population(population)
+
+        self.img_dir = img_dir
+        self.img_base = img_base
+        self.img_years = img_years
 
     def set_animal_parameters(self, species, params):
         pass
@@ -192,7 +192,8 @@ class BioSim:
         population : List of dictionaries
             See BioSim Task Description, Sec 3.3.3 for details.
         """
-        pass
+
+        self.island.add_population(population)
 
 
     @property
