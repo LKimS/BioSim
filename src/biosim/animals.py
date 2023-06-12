@@ -105,7 +105,6 @@ class Herbivore(Animal):
 
         self.weight += (amount_eaten*self.beta)
         return amount_eaten
-    pass
 
 class Carnivore(Animal):
     w_birth = 6.0

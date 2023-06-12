@@ -81,9 +81,8 @@ class Cell_with_animals(Cell):
         random.shuffle(self.carnivore)
         for animal in self.carnivore:
             animal.feeding(self.herbivore)
-
-        #remove dead animals
-        self.herbivore = [animal for animal in self.herbivore if animal.alive]
+            #remove dead animals
+            self.herbivore = [animal for animal in self.herbivore if animal.alive]
 
 
     def update_fitness(self):
