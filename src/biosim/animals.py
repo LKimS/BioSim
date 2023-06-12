@@ -102,6 +102,7 @@ class Herbivore(Animal):
             amount_eaten = self.F
 
         self.weight += (amount_eaten*self.beta)
+        self.fitness = self.calc_fitness()
         return amount_eaten
 
 class Carnivore(Animal):
@@ -139,7 +140,7 @@ class Carnivore(Animal):
                 probility_of_killing = 1
 
             if random.random() < probility_of_killing:
-                self.weight += (herbivore.weight*self.beta)
+                self.weight += herbivore.weight*self.beta
                 herbivore.alive = False
                 self.fitness = self.calc_fitness()
                 amount_eaten += herbivore.weight
