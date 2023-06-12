@@ -1,24 +1,51 @@
 from biosim.island import Island
-
-SIM_YEARS = 10
+import matplotlib.pyplot as plt
+SIM_YEARS = 100
 
 geogr = """\
-           WWWWWWWWWWWWWWWWWWW
-           WDDDDDDDDDDDDDDDDDW
-           WDDDDDDDDDDDDDDDDDW
-           WDDDDDDDDDDDDDDDDDW
-           WDDDDDDDDDDDDDDDDDW
-           WDDDDDDDDDDDDDDDDDW
-           WDDDDDDDDDDDDDDDDDW
-           WWWWWWWWWWWWWWWWWWW"""
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           """
 
 
 
-ini_herbs = [{'loc': (2, 2),
+ini_herbs = [{'loc': (15,15),
               'pop': [{'species': 'Herbivore',
                        'age': 5,
                        'weight': 20}
-                      for _ in range(1)]}]
+                      for _ in range(800)]}]
 """
 ini_carn = [{'loc': (2, 2),
               'pop': [{'species': 'Carnivore',
@@ -30,17 +57,24 @@ island = Island(geogr)
 island.add_population(ini_herbs)
 #island.add_population(ini_carn)
 
-cell_pop_history = {}
-island_pop_history = {'Herbivore': [], 'Carnivore': []}
+map_rgb = [[(0,0,0) for _ in range(island.map_width)] for _ in range(island.map_height)]
 
-for x in range(1, island.map_height + 1):
-    for y in range(1, island.map_width + 1):
-        cell_pop_history[(x, y)] = {'Herbivore': [], 'Carnivore': []}
 
 habital_map = island.habital_map
+plt.imshow(map_rgb)
+
+
 
 for year in range(1, SIM_YEARS + 1):
+    for loc, cell in island.habital_map.items():
+        if len(cell.herbivore) > 0:
+            map_rgb[loc[0]-1][loc[1]-1] = (0, 255, 0)
+        else:
+            map_rgb[loc[0]-1][loc[1]-1] = (0, 0, 0)
 
 
     island.migrate_animals()
+    plt.imshow(map_rgb)
+    plt.pause(3)
+
 

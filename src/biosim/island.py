@@ -95,28 +95,24 @@ class Island:
             self.map[(x,y)].update_animal_count()
 
     def migrate_animals(self):
-        for loc in self.habital_map:
+        moving_animals = []
+        for old_location in self.habital_map:
             remove_animals = []
-            for animal in self.habital_map[loc].animals:
+            for animal in self.habital_map[old_location].animals:
                 if True:
-                    new_loc = self.get_random_neighboring_cell(loc)
+                    new_location = self.get_random_neighboring_cell(old_location)
 
-                    if new_loc in self.habital_map:
-                        self.habital_map[new_loc].add_animal_object(animal)
-                        remove_animals.append(animal)
-                        print('from', loc, 'to', new_loc)
+                    if new_location in self.habital_map:
+                        moving_animals.append((animal, old_location, new_location))
 
-                        for l in [loc, new_loc]:
+
+                        for l in [old_location, new_location]:
                             self.habital_map[l].update_animal_count()
 
                     else:
-                        print('no migration' + str(loc))
+                        print('no migration' + str(old_location))
 
-
-
-
-            for animal in remove_animals:
-                self.habital_map[loc].remove_animal(animal)
+        self.move_all_animals(moving_animals)
 
 
 
@@ -132,6 +128,18 @@ class Island:
         new_location[dim] += random.choice([-1, 1])
 
         return tuple(new_location)
+
+    def move_all_animals(self,list_of_moving_animals):
+        """
+        Moves animals from old location to new location.
+        """
+        for animal, old_location, new_location in list_of_moving_animals:
+            self.habital_map[new_location].add_animal_object(animal)
+            self.habital_map[old_location].remove_animal(animal)
+            print('from', old_location, 'to', new_location)
+
+
+
 
 
     #METHODS for creating bitmap and plotting
