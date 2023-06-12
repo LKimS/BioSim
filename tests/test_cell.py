@@ -3,7 +3,7 @@ import pytest
 from pytest import approx
 import math
 
-from biosim.cell import Cell_with_animals, Cell_with_fodder
+from biosim.cell import Cell_with_animals, Lowland, Highland, Desert, Water
 
 
 
@@ -55,8 +55,9 @@ def test_count_animals():
                    'weight': 20}
 
     cell.add_animal(animal_info)
+    cell.count_animals()
 
-    assert cell.count_animals() == len(cell.herbivore)
+    assert  cell.count_herbivore == 1
 
 def test_add_newborns():
     """Test that the newborns are added to the cell."""
@@ -68,30 +69,26 @@ def test_add_newborns():
                    'age': 6,
                    'weight': 3000}
     cell.add_animal(animal_info)
+    cell.herbivore[0].fitness = 1
+    cell.herbivore[0].gamma = 1
 
     animal_list = cell.herbivore
     cell.add_newborns(animal_list)
 
     assert cell.herbivore[1].species == 'Herbivore'
     assert cell.herbivore[1].age == 0
-    assert cell.herbivore
 
 def test_feed_animals():
     """Test that all animals in the cell have their weight updated correctly."""
     loc = (2, 2)
-    cell = Cell_with_animals(loc)
-    cell.type = 'Lowland'
-    cell.f_max = 800
-    cell.fodder = 300
+    cell = Lowland(loc)
 
     list = [{'species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(1)]
     for animal_info in list:
         cell.add_animal(animal_info)
 
-    cell.herbivore[0].weight = 30
+    cell.feed_animals()
 
-    amount_eaten = cell.herbivore[0].F
-    amount_eaten = cell.feed_animals(cell.fodder)
     assert cell.herbivore[0].weight > 20
 
 
