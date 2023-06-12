@@ -102,7 +102,7 @@ class Herbivore(Animal):
             amount_eaten = self.F
 
         self.weight += (amount_eaten*self.beta)
-        self.fitness = self.calc_fitness()
+        #self.fitness = self.calc_fitness()
         return amount_eaten
 
 class Carnivore(Animal):
@@ -134,7 +134,7 @@ class Carnivore(Animal):
             diff_fitness = self.fitness - herbivore.fitness
             if diff_fitness < 0:
                 probility_of_killing = 0
-            elif 0 < diff_fitness < self.DeltaPhiMax:
+            elif 0 < diff_fitness and diff_fitness < self.DeltaPhiMax:
                 probility_of_killing = (self.fitness-herbivore.fitness)/self.DeltaPhiMax
             else:
                 probility_of_killing = 1
