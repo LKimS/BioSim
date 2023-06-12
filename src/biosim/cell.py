@@ -76,11 +76,11 @@ class Cell_with_animals(Cell):
 
 
     def feed_animals(self):
-        self.sort_herbivore_after_fitness()
-
+        self.sort_herbivore_after_fitness(descending=False)
+        self.carnivore.shuffle()
         for animal in self.carnivore:
-            # TODO: implement feeding for carnivores
-            pass
+            carnivore.feeding(self.herbivore)
+
 
     def update_fitness(self):
         for animal in self.herbivore:
@@ -89,8 +89,8 @@ class Cell_with_animals(Cell):
         for animal in self.carnivore:
             animal.fitness = animal.calc_fitness()
 
-    def sort_herbivore_after_fitness(self):
-        self.herbivore.sort(key=lambda animal: animal.fitness, reverse=True)
+    def sort_herbivore_after_fitness(self, descending=True):
+        self.herbivore.sort(key=lambda animal: animal.fitness, reverse=descending)
 
     def age_animals(self):
         for animal in self.herbivore:

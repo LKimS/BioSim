@@ -108,5 +108,41 @@ class Herbivore(Animal):
     pass
 
 class Carnivore(Animal):
-    w_birth = None
-    pass
+    w_birth = 6.0
+    sigma_birth = 1.0
+    beta = 0.75
+    eta = 0.125
+    a_half = 40.0
+    phi_age = 0.3
+    w_half = 4.0
+    phi_weight = 0.4
+    mu = 0.4
+    gamma = 0.8
+    zeta = 3.5
+    xi = 1.1
+    omega = 0.8
+    F = 50.0
+    DeltaPhiMax = 10.0
+
+    def feeding(self, sorted_lowest_fitness_herbivore):
+        """Carnivore tries to kill the weakest herbivore first, then the next weakest and so on."""
+
+        amount_eaten = 0
+
+        for herbivore in sorted_lowest_fitness_herbivore:
+            if amount_eaten >= self.F:
+                break
+
+            diff_fitness = herbivore.fitness - self.fitness
+            if diff_fitness < 0:
+                probility_of_killing = 0
+            elif 0 < diff_fitness < self.DeltaPhiMax:
+                probility_of_killing = (herbivore.fitness-self.fitness)/self.DeltaPhiMax
+            else:
+                probility_of_killing = 1
+
+            if random.random() < probility_of_killing:
+                self.weight += (herbivore.weight*self.beta)
+                herbivore.alive = False
+                self.fitness = self.calc_fitness()
+                amount_eaten += herbivore.weight
