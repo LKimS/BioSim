@@ -124,6 +124,7 @@ class BioSim:
 
     def plot_population_history(self):
         plt.plot(self.island_pop_history['Herbivore'])
+        plt.plot(self.island_pop_history['Carnivore'])
 
 
     def simulate(self, num_years):
@@ -192,7 +193,8 @@ class BioSim:
         population : List of dictionaries
             See BioSim Task Description, Sec 3.3.3 for details.
         """
-        pass
+
+        self.island.add_population(population)
 
 
     @property

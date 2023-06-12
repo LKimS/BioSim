@@ -1,4 +1,5 @@
 from .animals import Herbivore, Carnivore
+import random
 
 """
 core methods:
@@ -77,9 +78,12 @@ class Cell_with_animals(Cell):
 
     def feed_animals(self):
         self.sort_herbivore_after_fitness(descending=False)
-        self.carnivore.shuffle()
+        random.shuffle(self.carnivore)
         for animal in self.carnivore:
-            carnivore.feeding(self.herbivore)
+            animal.feeding(self.herbivore)
+
+        #remove dead animals
+        self.herbivore = [animal for animal in self.herbivore if animal.alive]
 
 
     def update_fitness(self):
