@@ -90,9 +90,48 @@ class Island:
         for item in population:
             x, y = item["loc"]
             for animal_info in item['pop']:
-                self.map[(x,y)].add_animal(animal_info)
+                self.map[(x,y)].add_animal_from_dict(animal_info)
 
             self.map[(x,y)].update_animal_count()
+
+    def migrate_animals(self):
+        for loc in self.habital_map:
+            remove_animals = []
+            for animal in self.habital_map[loc].animals:
+                if True:
+                    new_loc = self.get_random_neighboring_cell(loc)
+
+                    if new_loc in self.habital_map:
+                        self.habital_map[new_loc].add_animal_object(animal)
+                        remove_animals.append(animal)
+                        print('from', loc, 'to', new_loc)
+
+                        for l in [loc, new_loc]:
+                            self.habital_map[l].update_animal_count()
+
+                    else:
+                        print('no migration' + str(loc))
+
+
+
+
+            for animal in remove_animals:
+                self.habital_map[loc].remove_animal(animal)
+
+
+
+
+
+
+    def get_random_neighboring_cell(self, location):
+        """
+        Returns a random neighboring cell.
+        """
+        new_location = list(location)
+        dim = random.choice([0, 1])
+        new_location[dim] += random.choice([-1, 1])
+
+        return tuple(new_location)
 
 
     #METHODS for creating bitmap and plotting
