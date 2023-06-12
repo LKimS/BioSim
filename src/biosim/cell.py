@@ -91,6 +91,7 @@ class Cell_with_animals(Cell):
 
     def sort_herbivore_after_fitness(self):
         self.herbivore.sort(key=lambda animal: animal.fitness, reverse=True)
+
     def age_animals(self):
         for animal in self.herbivore:
             animal.aging()
