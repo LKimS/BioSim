@@ -133,11 +133,11 @@ class Carnivore(Animal):
             if amount_eaten >= self.F:
                 break
 
-            diff_fitness = herbivore.fitness - self.fitness
+            diff_fitness = self.fitness - herbivore.fitness
             if diff_fitness < 0:
                 probility_of_killing = 0
             elif 0 < diff_fitness < self.DeltaPhiMax:
-                probility_of_killing = (herbivore.fitness-self.fitness)/self.DeltaPhiMax
+                probility_of_killing = (self.fitness-herbivore.fitness)/self.DeltaPhiMax
             else:
                 probility_of_killing = 1
 
