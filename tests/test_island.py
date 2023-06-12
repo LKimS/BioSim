@@ -18,6 +18,13 @@ Requirements violated
 '''
 
 from biosim.island import Island
+
+def test_init():
+    """Test that the init method works as expected"""
+    pass
+
+
+
 def test_process_input_map():
     map_string = """\
                     WHLD
@@ -30,6 +37,25 @@ def test_process_input_map():
 
     expected = ["WHLD", "WLDH", "WWWW", "HHHH"]
     assert island.process_input_map(map_string) == expected
+
+def test_add_population():
+    """Test that the add_population puts animals in right cell with information"""
+
+    map_string = """\
+                    WHLD
+                    WLDH
+                    WWWW
+                    HHHH
+                    """
+    number = 5
+    island = Island(map_string)
+    ini_herbs = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(number)]}]
+
+    island.add_population(ini_herbs)
+
+    assert len(island.map[(2,2)].herbivore) == number
+
+
 
 """
 def test_all_lines_same_length():
