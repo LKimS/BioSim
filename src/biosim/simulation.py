@@ -21,6 +21,7 @@ class BioSim:
 
         self.island = Island(island_map, seed)
         self.island.add_population(population)
+        self.start_year = 1
 
         self.img_dir = img_dir
         self.img_base = img_base
@@ -122,8 +123,8 @@ class BioSim:
             If invalid parameter values are passed.
         """
 
-    def plot_population_history(self):
-        plt.plot(self.island_pop_history['Herbivore'])
+    def plot_population_history(self, years, start_year):
+        plt.plot(years, self.island_pop_history['Herbivore'][start_year - 1:])
 
 
     def simulate(self, num_years):
@@ -144,8 +145,9 @@ class BioSim:
                 self.cell_pop_history[(x, y)] = {'Herbivore': [], 'Carnivore': []}
 
         habital_map = self.island.habital_map
+        years = range(self.start_year, self.start_year + num_years + 1)
 
-        for year in range(1, num_years + 1):
+        for year in range(self.start_year, num_years + 1):
             sum_herbivore = 0
             sum_carnivore = 0
 
@@ -172,7 +174,15 @@ class BioSim:
 
             self.island_pop_history['Herbivore'].append(sum_herbivore)
             self.island_pop_history['Carnivore'].append(sum_carnivore)
-        self.plot_population_history()
+
+
+
+        self.plot_population_history(years, self.start_year)
+
+        self.start_year += num_years
+
+
+        # plt.plot(self.island_pop_history['Herbivore'], years)
 
 
     def update_animal_count(self, cell):

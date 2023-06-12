@@ -14,5 +14,6 @@ ini_herbs = [{'loc': (2, 2),
                       for _ in range(50)]}]
 
 sim = BioSim(geogr, ini_herbs, seed=0)
-sim.simulate(200)
+sim.simulate(100)
+sim.simulate(50)
 
