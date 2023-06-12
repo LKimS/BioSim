@@ -92,7 +92,7 @@ class Island:
             for animal_info in item['pop']:
                 self.map[(x,y)].add_animal(animal_info)
 
-            self.map[(x,y)].count_animals()
+            self.map[(x,y)].update_animal_count()
 
 
     #METHODS for creating bitmap and plotting
