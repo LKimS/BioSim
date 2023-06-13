@@ -46,6 +46,7 @@ class Animal:
                 if self.weight > parent_loss:
                     self.weight -= parent_loss
                     self.newborn = True
+                    self.update_fitness()
                     newborn_info = {"species": self.species, "age": 0, "weight": newborn_weight}
                     return type(self)(newborn_info, self.loc)
         else:
@@ -61,6 +62,9 @@ class Animal:
             weight_parameter = 1 / (1 + math.exp(-self.phi_weight * (self.weight - self.w_half)))
             return age_parameter * weight_parameter
 
+    def update_fitness(self):
+        self.fitness = self.calc_fitness()
+
     def aging(self):
         self.age += 1
 
@@ -68,6 +72,7 @@ class Animal:
         self.weight -= self.eta * self.weight
 
     def death(self):
+        self.update_fitness()
         probility_of_death = self.omega * (1 - self.fitness)
         if self.weight <= 0:
             self.alive = False
@@ -102,7 +107,7 @@ class Herbivore(Animal):
             amount_eaten = self.F
 
         self.weight += (amount_eaten*self.beta)
-        #self.fitness = self.calc_fitness()
+        self.update_fitness()
         return amount_eaten
 
 class Carnivore(Animal):
@@ -120,7 +125,7 @@ class Carnivore(Animal):
     xi = 1.1
     omega = 0.8
     F = 50.0
-    DeltaPhiMax = 10.0
+    DeltaPhiMax = 15.0
 
     def feeding(self, sorted_lowest_fitness_herbivore):
         """Carnivore tries to kill the weakest herbivore first, then the next weakest and so on."""
@@ -140,7 +145,13 @@ class Carnivore(Animal):
                 probility_of_killing = 1
 
             if random.random() < probility_of_killing:
-                self.weight += herbivore.weight*self.beta
+                desiered_food = self.F - amount_eaten
+                if herbivore.weight > desiered_food:
+                    eating = desiered_food
+                else:
+                    eating = herbivore.weight
+
+                self.weight += eating*self.beta
                 herbivore.alive = False
-                self.fitness = self.calc_fitness()
-                amount_eaten += herbivore.weight
+                self.update_fitness()
+                amount_eaten += eating
