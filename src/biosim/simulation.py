@@ -147,10 +147,8 @@ class BioSim:
         habital_map = self.island.habital_map
 
         for year in range(1, num_years + 1):
-            sum_herbivore = 0
-            sum_carnivore = 0
-            Island.yearly_island_cycle()
-            Island.yearly_sum_animals()
+            island.yearly_island_cycle()
+
         self.plot_population_history()
 
 

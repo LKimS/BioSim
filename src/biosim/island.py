@@ -38,6 +38,8 @@ class Island:
 
         self.bitmap = self.create_bitmap(self.map_processed)
 
+        self.island_pop_history = {'Herbivore': [], 'Carnivore': []}
+
 
     #METHODS for input and processing
     def process_input_map(self, input_island_map):
@@ -111,9 +113,33 @@ class Island:
             if new_location in self.habital_map:
                 self.habital_map[new_location].add_animal_object(animal)
                 self.habital_map[old_location].remove_animal(animal)
+
     def yearly_island_cycle(self):
+        sum_herbivore = 0
+        sum_carnivore = 0
         for loc, cell in self.habital_map.items():
-            cell.yearly_cell_cycle(loc)
+            # Teller dyr i cellen
+            cell.update_animal_count()
+
+            sum_herbivore += cell.count_herbivore
+            sum_carnivore += cell.count_carnivore
+            self.island_pop_history['Herbivore'].append(sum_herbivore)
+            self.island_pop_history['Carnivore'].append(sum_carnivore)
+
+            #heatmap
+            #self.cell_pop_history[loc]['Herbivore'].append(cell.count_herbivore)
+            #self.cell_pop_history[loc]['Carnivore'].append(cell.count_carnivore)
+
+            # pop_animals[(x, y)].append(cell.count_carnivore)
+            # newborn in cell
+            cell.add_newborns(cell.herbivore)
+            cell.add_newborns(cell.carnivore)
+            cell.feed_animals()
+            # ceel.migration()
+            cell.age_animals()
+            cell.loss_of_weight()
+            cell.animal_death()
+            cell.reset_fodder()
 
     def yearly_sum_animals(self):
         self.island_pop_history['Herbivore'].append(sum_herbivore)
