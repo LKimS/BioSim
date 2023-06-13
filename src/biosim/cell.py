@@ -44,8 +44,14 @@ class Cell_with_animals(Cell):
         super().__init__(location)
         self.herbivore = []
         self.carnivore = []
-        self.count_herbivore = 0
-        self.count_carnivore = 0
+        self.amount_herbivore = 0
+        self.amount_carnivore = 0
+        self.cell_pop_history = {'Herbivore': [], 'Carnivore': []}
+
+
+    def update_cell_history(self):
+        self.cell_pop_history['Herbivore'].append(len(herbivore))
+        self.cell_pop_history['Carnivore'].append(len(carnivore))
 
     def add_animal_from_dict(self, animal_info):
         if animal_info["species"] == "Herbivore":

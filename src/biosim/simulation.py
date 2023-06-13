@@ -142,9 +142,10 @@ class BioSim:
 
         for x in range(1, self.island.map_height + 1):
             for y in range(1, self.island.map_width + 1):
+
                 self.cell_pop_history[(x, y)] = {'Herbivore': [], 'Carnivore': []}
 
-        habital_map = self.island.habital_map
+
 
         for year in range(1, num_years + 1):
             island.yearly_island_cycle()

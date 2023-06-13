@@ -126,6 +126,8 @@ class Island:
             self.island_pop_history['Herbivore'].append(sum_herbivore)
             self.island_pop_history['Carnivore'].append(sum_carnivore)
 
+            cell.update_cell_history()
+
             #heatmap
             #self.cell_pop_history[loc]['Herbivore'].append(cell.count_herbivore)
             #self.cell_pop_history[loc]['Carnivore'].append(cell.count_carnivore)
