@@ -111,7 +111,13 @@ class Island:
             if new_location in self.habital_map:
                 self.habital_map[new_location].add_animal_object(animal)
                 self.habital_map[old_location].remove_animal(animal)
+    def yearly_island_cycle(self):
+        for loc, cell in self.habital_map.items():
+            cell.yearly_cell_cycle(loc)
 
+    def yearly_sum_animals(self):
+        self.island_pop_history['Herbivore'].append(sum_herbivore)
+        self.island_pop_history['Carnivore'].append(sum_carnivore)
 
 
 

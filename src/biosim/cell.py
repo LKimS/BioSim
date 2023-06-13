@@ -47,6 +47,23 @@ class Cell_with_animals(Cell):
         self.count_herbivore = 0
         self.count_carnivore = 0
 
+    def update_animal_count(self):
+        sum_herbivore += self.count_herbivore
+        sum_carnivore += self.count_carnivore
+        self.cell_pop_history[loc]['Herbivore'].append(self.count_herbivore)
+        self.cell_pop_history[loc]['Carnivore'].append(self.count_carnivore)
+
+        # pop_animals[(x, y)].append(cell.count_carnivore)
+        # newborn in cell
+        self.add_newborns(self.herbivore)
+        self.add_newborns(self.carnivore)
+        self.feed_animals()
+        # ceel.migration()
+        self.age_animals()
+        self.loss_of_weight()
+        self.animal_death()
+        self.reset_fodder()
+
     def add_animal_from_dict(self, animal_info):
         if animal_info["species"] == "Herbivore":
             self.herbivore.append(Herbivore(animal_info, self.location))
