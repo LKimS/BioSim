@@ -42,7 +42,6 @@ geogr = """\
 
 
 ini_herbs = [{'loc': (30,15),
-
               'pop': [{'species': 'Herbivore',
                        'age': 5,
                        'weight': 20}
@@ -68,10 +67,12 @@ plt.imshow(map_rgb)
 
 for year in range(1, SIM_YEARS + 1):
     for loc, cell in island.habital_map.items():
-        if len(cell.herbivore) > 0 or len(cell.carnivore) > 0:
-            map_rgb[loc[0]-1][loc[1]-1] = (0, 255, 0)
-        else:
-            map_rgb[loc[0]-1][loc[1]-1] = (0, 0, 0)
+        map_rgb[loc[0] - 1][loc[1] - 1] = (0, 0, 0)
+        if len(cell.herbivore) > 0:
+            map_rgb[loc[0]-1][loc[1]-1] = (0,0, 255)
+        if len(cell.carnivore) > 0:
+            map_rgb[loc[0]-1][loc[1]-1] = (255, 0, 0)
+
 
 
     island.migrate_animals()
