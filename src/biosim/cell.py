@@ -133,6 +133,28 @@ class Cell_with_animals(Cell):
         new_location[dim] += random.choice([-1, 1])
 
         return tuple(new_location)
+
+    def moving_animals_list(self):
+        """
+        Returns a list of animals that will move
+        """
+        moving_animals = []
+        for animal in self.animals:
+            if animal.migrate():
+                new_location = self.get_random_neighboring_cell(self.location)
+                moving_animals.append((animal, self.location, new_location))
+
+        return moving_animals
+
+    def get_random_neighboring_cell(self, location):
+        """
+        Returns a random neighboring cell.
+        """
+        new_location = list(location)
+        dim = random.choice([0, 1])
+        new_location[dim] += random.choice([-1, 1])
+
+        return tuple(new_location)
     def age_animals(self):
         for animal in self.herbivore:
             animal.aging()
