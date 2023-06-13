@@ -59,13 +59,31 @@ class Graphics:
         self._img_step = 1
 
         # the following will be initialized by _setup_graphics
-        self._fig = None
-        self._map_ax = None
-        self._img_axis = None
-        self._mean_ax = None
-        self._mean_line = None
+        self.fig = None
+        self.ax = None
+        self.map_ax = None
+        self.map_img = None
+        self.herbivore_heatmap_ax = None
+        self.herbivore_heatmap_img = None
+        self.carnivore_heatmap_ax = None
+        self.carnivore_heatmap_img = None
+        self.population_ax = None
+        self.population_line = None
 
-    def update(self, step, sys_map, sys_mean):
+        self.hist1_ax = None
+        self.hist1_data = None
+        self.hist2_ax = None
+        self.hist2_data = None
+
+        self.year_ax = None
+        self.year_str = None
+        self.year_text = None
+
+        self.landscape_ax = None
+
+
+
+    def update(self, step, population):
         """
         Updates graphics with current data and save to file if necessary.
 
@@ -74,9 +92,9 @@ class Graphics:
         :param sys_mean: current mean value of system
         """
 
-        self._update_system_map(sys_map)
-        self._update_mean_graph(step, sys_mean)
-        self._fig.canvas.flush_events()  # ensure every thing is drawn
+
+        self.update_population_graph(step, population)
+        self.fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
 
         self._save_graphics(step)
@@ -136,36 +154,55 @@ class Graphics:
         self._img_step = img_step
 
         # create new figure window
-        if self._fig is None:
-            self._fig = plt.figure()
+        if self.fig is None:
+            img_size = (10, 10)
+            self.fig = plt.figure(figsize=img_size)
 
-        # Add left subplot for images created with imshow().
-        # We cannot create the actual ImageAxis object before we know
-        # the size of the image, so we delay its creation.
-        if self._map_ax is None:
-            self._map_ax = self._fig.add_subplot(1, 2, 1)
-            self._img_axis = None
+        if self.ax is None:
+            self.ax = self.fig.add_gridspec(3, 3)
 
-        # Add right subplot for line graph of mean.
-        if self._mean_ax is None:
-            self._mean_ax = self._fig.add_subplot(1, 2, 2)
-            self._mean_ax.set_ylim(-0.05, 0.05)
+            # Add left subplot for images created with imshow().
+            # We cannot create the actual ImageAxis object before we know
+            # the size of the image, so we delay its creation.
+        if self.map_ax is None:
+            self.map_ax = self.fig.add_subplot(self.ax[0, 1])
+            self.map_img = None
 
-        # needs updating on subsequent calls to simulate()
-        # add 1 so we can show values for time zero and time final_step
-        self._mean_ax.set_xlim(0, final_step+1)
+            # Repeat for heatmap of the animals
+        if self.herbivore_heatmap_ax is None:
+            self.herbivore_heatmap_ax = self.fig.add_subplot(self.ax[1, 0])
+            self.herbivore_heatmap_img = None
 
-        if self._mean_line is None:
-            mean_plot = self._mean_ax.plot(np.arange(0, final_step+1),
+        if self.carnivore_heatmap_ax is None:
+            self.carnivore_heatmap_ax = self.fig.add_subplot(self.ax[1, 1])
+            self.carnivore_heatmap_img = None
+
+        if self.population_ax is None:
+            self.population_ax = self.fig.add_subplot(self.ax[1, :])
+            self.population_ax.set_ylim(-0.05, 0.05)
+
+        if self.population_line is None:
+            population_plot = self.population_ax.plot(np.arange(0, final_step+1),
                                            np.full(final_step+1, np.nan))
-            self._mean_line = mean_plot[0]
+            self.population_line = population_plot[0]
+            self.population_ax.set_title('Population')
         else:
-            x_data, y_data = self._mean_line.get_data()
+            x_data, y_data = self.population_line.get_data()
             x_new = np.arange(x_data[-1] + 1, final_step+1)
             if len(x_new) > 0:
                 y_new = np.full(x_new.shape, np.nan)
-                self._mean_line.set_data(np.hstack((x_data, x_new)),
+                self.population_line.set_data(np.hstack((x_data, x_new)),
                                          np.hstack((y_data, y_new)))
+
+        if self.hist1_ax is None:
+            self.hist1_ax = self.fig.add_subplot(self.ax[2, 0:2])
+            self.hist1_data = None
+
+        if self.hist2_ax is None:
+            self.hist2_ax = self.fig.add_subplot(self.ax[2, 2])
+            self.hist2_data = None
+
+
 
     def _update_system_map(self, sys_map):
         """Update the 2D-view of the system."""
@@ -183,6 +220,11 @@ class Graphics:
         y_data = self._mean_line.get_ydata()
         y_data[step] = mean
         self._mean_line.set_ydata(y_data)
+
+    def update_population_graph(self, step, population):
+        y_data = self.population_line.get_ydata()
+        y_data[step] = population
+        self.population_line.set_ydata(y_data)
 
     def _save_graphics(self, step):
         """Saves graphics to file if file name given."""
