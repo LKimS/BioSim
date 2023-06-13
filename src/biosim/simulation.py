@@ -123,7 +123,8 @@ class BioSim:
         """
 
     def plot_population_history(self):
-        plt.plot(self.island_pop_history['Herbivore'])
+        plt.plot(self.island_pop_history['Herbivore'],'b')
+        plt.plot(self.island_pop_history['Carnivore'], 'r')
 
 
     def simulate(self, num_years):
@@ -163,7 +164,6 @@ class BioSim:
                 cell.add_newborns(cell.herbivore)
                 cell.add_newborns(cell.carnivore)
                 cell.feed_animals()
-                cell.update_fitness()
                 # ceel.migration()
                 cell.age_animals()
                 cell.loss_of_weight()

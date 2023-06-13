@@ -1,4 +1,5 @@
 from .animals import Herbivore, Carnivore
+import random
 
 import random
 
@@ -105,11 +106,13 @@ class Cell_with_animals(Cell):
 
 
     def feed_animals(self):
-        self.sort_herbivore_after_fitness()
-
+        self.sort_herbivore_after_fitness(descending=False)
+        random.shuffle(self.carnivore)
         for animal in self.carnivore:
-            # TODO: implement feeding for carnivores
-            pass
+            animal.feeding(self.herbivore)
+            #remove dead animals
+            self.herbivore = [animal for animal in self.herbivore if animal.alive]
+
 
     def update_fitness(self):
         for animal in self.herbivore:
@@ -118,8 +121,8 @@ class Cell_with_animals(Cell):
         for animal in self.carnivore:
             animal.fitness = animal.calc_fitness()
 
-    def sort_herbivore_after_fitness(self):
-        self.herbivore.sort(key=lambda animal: animal.fitness, reverse=True)
+    def sort_herbivore_after_fitness(self, descending=True):
+        self.herbivore.sort(key=lambda animal: animal.fitness, reverse=descending)
 
     def get_random_neighboring_cell(self, location):
         """
