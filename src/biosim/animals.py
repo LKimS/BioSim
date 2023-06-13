@@ -37,10 +37,10 @@ class Animal:
         if self.weight >= offspring_value:
             probility_of_procreation = min(1, self.gamma * self.fitness * animal_in_pos)
             if random.random() < probility_of_procreation:
-                'newborn log calc'
-                sigma_birth_log = math.log((self.sigma_birth)**2 / math.sqrt(self.sigma_birth**2 + self.w_birth**2))
-                omega_birth_log = math.sqrt(math.log(1 + (self.w_birth**2 / self.sigma_birth**2)))
-                newborn_weight = random.lognormvariate(sigma_birth_log, omega_birth_log)
+                #'newborn log calc'
+                mu = math.log(self.w_birth**2/(math.sqrt(self.w_birth**2 + self.sigma_birth**2)))
+                sigma = math.sqrt(math.log(1 + (self.sigma_birth**2/self.w_birth**2)))
+                newborn_weight = random.lognormvariate(mu, sigma)
 
                 parent_loss = self.xi * newborn_weight
                 if self.weight > parent_loss:
@@ -50,7 +50,7 @@ class Animal:
                     newborn_info = {"species": self.species, "age": 0, "weight": newborn_weight}
                     return type(self)(newborn_info, self.loc)
         else:
-            'animal does not procreate'
+            #'animal does not procreate'
             return None
 
     def calc_fitness(self):
