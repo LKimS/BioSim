@@ -30,7 +30,7 @@ class Animal:
         self.alive = True
         self.newborn = None
 
-    def procreation(self, animal_in_pos=100):
+    def procreation(self, animal_in_pos):
         self.newborn = None
 
         offspring_value = self.zeta * (self.w_birth + self.sigma_birth)
@@ -40,7 +40,7 @@ class Animal:
                 'newborn log calc'
                 sigma_birth_log = math.log((self.sigma_birth)**2 / math.sqrt(self.sigma_birth**2 + self.w_birth**2))
                 omega_birth_log = math.sqrt(math.log(1 + (self.w_birth**2 / self.sigma_birth**2)))
-                newborn_weight = math.log(random.lognormvariate(sigma_birth_log, omega_birth_log))
+                newborn_weight = random.lognormvariate(sigma_birth_log, omega_birth_log)
 
                 parent_loss = self.xi * newborn_weight
                 if self.weight > parent_loss:
