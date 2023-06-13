@@ -149,29 +149,8 @@ class BioSim:
         for year in range(1, num_years + 1):
             sum_herbivore = 0
             sum_carnivore = 0
-
-            # tile/cell work
-            for loc, cell in habital_map.items():
-                # Teller dyr i cellen
-                cell.update_animal_count()
-                sum_herbivore += cell.count_herbivore
-                sum_carnivore += cell.count_carnivore
-                self.cell_pop_history[loc]['Herbivore'].append(cell.count_herbivore)
-                self.cell_pop_history[loc]['Carnivore'].append(cell.count_carnivore)
-
-                # pop_animals[(x, y)].append(cell.count_carnivore)
-                # newborn in cell
-                cell.add_newborns(cell.herbivore)
-                cell.add_newborns(cell.carnivore)
-                cell.feed_animals()
-                # ceel.migration()
-                cell.age_animals()
-                cell.loss_of_weight()
-                cell.animal_death()
-                cell.reset_fodder()
-
-            self.island_pop_history['Herbivore'].append(sum_herbivore)
-            self.island_pop_history['Carnivore'].append(sum_carnivore)
+            Island.yearly_island_cycle()
+            Island.yearly_sum_animals()
         self.plot_population_history()
 
 
