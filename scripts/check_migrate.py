@@ -41,21 +41,22 @@ geogr = """\
 
 
 
-ini_herbs = [{'loc': (15,15),
+ini_herbs = [{'loc': (30,15),
+
               'pop': [{'species': 'Herbivore',
                        'age': 5,
                        'weight': 20}
                       for _ in range(800)]}]
-"""
+
 ini_carn = [{'loc': (2, 2),
               'pop': [{'species': 'Carnivore',
                        'age': 5,
                        'weight': 20}
-                      for _ in range(50)]}]
-"""
+                      for _ in range(400)]}]
+
 island = Island(geogr)
 island.add_population(ini_herbs)
-#island.add_population(ini_carn)
+island.add_population(ini_carn)
 
 map_rgb = [[(0,0,0) for _ in range(island.map_width)] for _ in range(island.map_height)]
 
