@@ -85,6 +85,8 @@ class Animal:
         probility_of_migration = self.mu * self.fitness
         if random.random() < probility_of_migration:
             return True
+        else:
+            return False
 
 
 class Herbivore(Animal):
