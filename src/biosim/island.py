@@ -90,9 +90,30 @@ class Island:
         for item in population:
             x, y = item["loc"]
             for animal_info in item['pop']:
-                self.map[(x,y)].add_animal(animal_info)
+                self.map[(x,y)].add_animal_from_dict(animal_info)
 
             self.map[(x,y)].update_animal_count()
+
+    def migrate_animals(self):
+        all_moving_animals = []
+        for old_location, cell in self.habital_map.items():
+            all_moving_animals.extend(cell.moving_animals_list())
+
+        self.move_all_animals(all_moving_animals)
+
+
+    def move_all_animals(self,list_of_moving_animals):
+        """
+        Moves animals from old location to new location.
+        """
+        for animal, old_location, new_location in list_of_moving_animals:
+
+            if new_location in self.habital_map:
+                self.habital_map[new_location].add_animal_object(animal)
+                self.habital_map[old_location].remove_animal(animal)
+
+
+
 
 
     #METHODS for creating bitmap and plotting

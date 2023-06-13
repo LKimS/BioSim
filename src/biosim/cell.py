@@ -1,4 +1,7 @@
 from .animals import Herbivore, Carnivore
+import random
+
+import random
 
 """
 core methods:
@@ -21,12 +24,12 @@ class Cell:
     def __init__(self, location):
         self.location = location
 
-    def add_animal(self, animal_info):
+    def add_animal_from_dict(self, animal_info):
         raise ValueError(f"Cannot add animal to {type(self)} cell")
 
     @classmethod
     def set_parameters(cls, params):
-        raise ValueError(f"{type(self)} cell has no changeable parameters")
+        raise ValueError(f"{type(cls)} cell has no changeable parameters")
 
     @property
     def is_habitable(self):
@@ -44,13 +47,40 @@ class Cell_with_animals(Cell):
         self.count_herbivore = 0
         self.count_carnivore = 0
 
-    def add_animal(self, animal_info):
+    def add_animal_from_dict(self, animal_info):
         if animal_info["species"] == "Herbivore":
             self.herbivore.append(Herbivore(animal_info, self.location))
         elif animal_info["species"] == "Carnivore":
             self.carnivore.append(Carnivore(animal_info, self.location))
         else:
             raise ValueError("Invalid animal species")
+
+    def add_animal_object(self, animal):
+        """
+        Adds an animal object to the cell
+        Parameters
+        ----------
+        animal
+
+        Returns
+        -------
+
+        """
+        if animal.species == "Herbivore":
+            self.herbivore.append(animal)
+        elif animal.species == "Carnivore":
+            self.carnivore.append(animal)
+        else:
+            raise ValueError("Invalid animal species")
+
+    def remove_animal(self, animal):
+        if animal.species == "Herbivore":
+            self.herbivore.remove(animal)
+        elif animal.species == "Carnivore":
+            self.carnivore.remove(animal)
+        else:
+            raise ValueError("Invalid animal species")
+
 
     def update_animal_count(self):
         self.count_herbivore = len(self.herbivore)
@@ -76,11 +106,13 @@ class Cell_with_animals(Cell):
 
 
     def feed_animals(self):
-        self.sort_herbivore_after_fitness()
-
+        self.sort_herbivore_after_fitness(descending=False)
+        random.shuffle(self.carnivore)
         for animal in self.carnivore:
-            # TODO: implement feeding for carnivores
-            pass
+            animal.feeding(self.herbivore)
+            #remove dead animals
+            self.herbivore = [animal for animal in self.herbivore if animal.alive]
+
 
     def update_fitness(self):
         for animal in self.herbivore:
@@ -89,9 +121,40 @@ class Cell_with_animals(Cell):
         for animal in self.carnivore:
             animal.fitness = animal.calc_fitness()
 
-    def sort_herbivore_after_fitness(self):
-        self.herbivore.sort(key=lambda animal: animal.fitness, reverse=True)
+    def sort_herbivore_after_fitness(self, descending=True):
+        self.herbivore.sort(key=lambda animal: animal.fitness, reverse=descending)
 
+    def get_random_neighboring_cell(self, location):
+        """
+        Returns a random neighboring cell.
+        """
+        new_location = list(location)
+        dim = random.choice([0, 1])
+        new_location[dim] += random.choice([-1, 1])
+
+        return tuple(new_location)
+
+    def moving_animals_list(self):
+        """
+        Returns a list of animals that will move
+        """
+        moving_animals = []
+        for animal in self.animals:
+            if animal.migrate():
+                new_location = self.get_random_neighboring_cell(self.location)
+                moving_animals.append((animal, self.location, new_location))
+
+        return moving_animals
+
+    def get_random_neighboring_cell(self, location):
+        """
+        Returns a random neighboring cell.
+        """
+        new_location = list(location)
+        dim = random.choice([0, 1])
+        new_location[dim] += random.choice([-1, 1])
+
+        return tuple(new_location)
     def age_animals(self):
         for animal in self.herbivore:
             animal.aging()
@@ -114,6 +177,10 @@ class Cell_with_animals(Cell):
         for animal in self.carnivore:
             animal.death()
         self.carnivore = [animal for animal in self.carnivore if animal.alive]
+
+    @property
+    def animals(self):
+        return self.herbivore + self.carnivore
 
 
 

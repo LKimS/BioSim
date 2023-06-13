@@ -27,7 +27,7 @@ def test_add_animal():
                    'age': 5,
                    'weight': 20}
 
-    cell.add_animal(animal_info)
+    cell.add_animal_from_dict(animal_info)
 
     assert cell.herbivore[0].species == 'Herbivore'
     assert cell.herbivore[0].age == 5
@@ -43,7 +43,7 @@ def test_add_animal_wrong_species():
                    'weight': 20}
 
     with pytest.raises(ValueError):
-        cell.add_animal(animal_info)
+        cell.add_animal_from_dict(animal_info)
 
 def test_count_animals():
     """Test that the number of animals in the cell is counted correctly."""
@@ -54,7 +54,7 @@ def test_count_animals():
                    'age': 5,
                    'weight': 20}
 
-    cell.add_animal(animal_info)
+    cell.add_animal_from_dict(animal_info)
     cell.update_animal_count()
 
     assert  cell.count_herbivore == 1
@@ -68,7 +68,7 @@ def test_add_newborns():
     animal_info = {'species': 'Herbivore',
                    'age': 6,
                    'weight': 3000}
-    cell.add_animal(animal_info)
+    cell.add_animal_from_dict(animal_info)
     cell.herbivore[0].fitness = 1
     cell.herbivore[0].gamma = 1
 
@@ -85,7 +85,7 @@ def test_feed_animals():
 
     list = [{'species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(1)]
     for animal_info in list:
-        cell.add_animal(animal_info)
+        cell.add_animal_from_dict(animal_info)
 
     cell.feed_animals()
 
@@ -100,7 +100,7 @@ def test_update_fitness():
     animal_info = {'species': 'Herbivore',
                    'age': 6,
                    'weight': 3000}
-    cell.add_animal(animal_info)
+    cell.add_animal_from_dict(animal_info)
     old_fitness = cell.herbivore[0].fitness
 
     cell.herbivore[0].weight = 20
@@ -122,7 +122,7 @@ def test_age_animals():
 
     list = [{'species': 'Herbivore', 'age': 5,'weight': 20} for _ in range(3)]
     for animal_info in list:
-        cell.add_animal(animal_info)
+        cell.add_animal_from_dict(animal_info)
 
     cell.age_animals()
 
@@ -139,7 +139,7 @@ def test_loss_of_weight():
     weight = 20
     list = [{'species': 'Herbivore', 'age': 5,'weight': weight} for _ in range(3)]
     for animal_info in list:
-        cell.add_animal(animal_info)
+        cell.add_animal_from_dict(animal_info)
 
     cell.loss_of_weight()
 
@@ -155,7 +155,7 @@ def test_animal_death():
     n_dead = 2
     list = [{'species': 'Herbivore', 'age': 5,'weight': 20} for _ in range(n_herbivore)]
     for animal_info in list:
-        cell.add_animal(animal_info)
+        cell.add_animal_from_dict(animal_info)
 
     for _ in range(n_dead):
         cell.herbivore[_].weight = 0
