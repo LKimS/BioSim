@@ -81,6 +81,10 @@ class Animal:
         else:
             # self.alive = True
             pass
+    def migrate(self):
+        probility_of_migration = self.mu * self.fitness
+        if random.random() < probility_of_migration:
+            return True
 
 
 class Herbivore(Animal):
