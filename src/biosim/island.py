@@ -97,7 +97,6 @@ class Island:
     def migrate_animals(self):
         moving_animals = []
         for old_location in self.habital_map:
-            remove_animals = []
             for animal in self.habital_map[old_location].animals:
                 if True:
                     new_location = self.get_random_neighboring_cell(old_location)
