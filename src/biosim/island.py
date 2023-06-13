@@ -111,7 +111,6 @@ class Island:
             if new_location in self.habital_map:
                 self.habital_map[new_location].add_animal_object(animal)
                 self.habital_map[old_location].remove_animal(animal)
-                print('from', old_location, 'to', new_location)
 
 
 
