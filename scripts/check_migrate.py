@@ -1,47 +1,34 @@
 from biosim.island import Island
 import matplotlib.pyplot as plt
-SIM_YEARS = 100
+SIM_YEARS = 3
 
 geogr = """\
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDWDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDWDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDWDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDWDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDWDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDWDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           """
+           WWWWWWWWWWWWWWWWWWWWW
+           WHHHHHLLLLWWLLLLLLLWW
+           WHHHHHLLLLWWLLLLLLLWW
+           WHHHHHLLLLWWLLLLLLLWW
+           WWHHLLLLLLLWWLLLLLLLW
+           WWHHLLLLLLLWWLLLLLLLW
+           WWWWWWWWHWWWWLLLLLLLW
+           WHHHHHLLLLWWLLLLLLLWW
+           WHHHHHHHHHWWLLLLLLWWW
+           WHHHHHDDDDDLLLLLLLWWW
+           WHHHHHDDDDDLLLLLLLWWW
+           WHHHHHDDDDDLLLLLLLWWW
+           WHHHHHDDDDDWWLLLLLWWW
+           WHHHHDDDDDDLLLLWWWWWW
+           WWHHHHDDDDDDLWWWWWWWW
+           WWHHHHDDDDDLLLWWWWWWW
+           WHHHHHDDDDDLLLLLLLWWW
+           WHHHHDDDDDDLLLLWWWWWW
+           WWHHHHDDDDDLLLWWWWWWW
+           WWWHHHHLLLLLLLWWWWWWW
+           WWWHHHHHHWWWWWWWWWWWW
+           WWWWWWWWWWWWWWWWWWWWW"""
 
 
 
-ini_herbs = [{'loc': (30,15),
+ini_herbs = [{'loc': (2,2),
               'pop': [{'species': 'Herbivore',
                        'age': 5,
                        'weight': 20}
@@ -61,7 +48,38 @@ map_rgb = [[(0,0,0) for _ in range(island.map_width)] for _ in range(island.map_
 
 
 habital_map = island.habital_map
-plt.imshow(map_rgb)
+
+
+
+img_size = (16/1.3,9/1.3)
+fig = plt.figure(figsize=img_size)
+
+map_lly = 0.05
+map_spaceing = .17
+map_start_llx = -.04
+
+map_ax = fig.add_axes([map_start_llx,map_lly,.3,.3]) # llx, lly, w, h
+map_img = map_ax.imshow(island.bitmap)
+map_ax.set_title('Map')
+map_ax.set_xticks([])
+map_ax.set_yticks([])
+
+herb_heat_ax = fig.add_axes([map_start_llx + map_spaceing,map_lly,.3,.3]) # llx, lly, w, h
+herb_heat_img = herb_heat_ax.imshow(island.bitmap,vmin=0,vmax=1)
+plt.colorbar(herb_heat_img, ax=herb_heat_ax)
+herb_heat_ax.set_title('Herbivores')
+herb_heat_ax.set_xticks([])
+herb_heat_ax.set_yticks([])
+
+carn_heat_ax = fig.add_axes([map_start_llx + 2* map_spaceing,map_lly,.3,.3]) # llx, lly, w, h
+carn_heat_img = carn_heat_ax.imshow(island.bitmap)
+carn_heat_ax.set_title('Carnivores')
+carn_heat_ax.set_xticks([])
+carn_heat_ax.set_yticks([])
+
+pop_plot_llx = .63
+pop_ax = fig.add_axes([pop_plot_llx,map_lly,.35,.3]) # llx, lly, w, h
+pop_plot = pop_ax.plot([0,1,2,3,4,5,6,7,8,9,10], [0,1,2,3,4,5,6,7,8,9,10])
 
 
 
@@ -73,10 +91,11 @@ for year in range(1, SIM_YEARS + 1):
         if len(cell.carnivore) > 0:
             map_rgb[loc[0]-1][loc[1]-1] = (255, 0, 0)
 
-
-
     island.migrate_animals()
-    plt.imshow(map_rgb)
-    plt.pause(3)
+    #img_ax.set_data(map_rgb)
+    #plt.pause(0.0001)
+
+plt.show()
+
 
 

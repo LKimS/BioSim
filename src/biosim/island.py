@@ -106,7 +106,7 @@ class Island:
         """
         for animal, old_location, new_location in list_of_moving_animals:
 
-            if new_location in self.habital_map:
+            if new_location in self.habital_map and animal.alive:
                 self.habital_map[new_location].add_animal_object(animal)
                 self.habital_map[old_location].remove_animal(animal)
 
