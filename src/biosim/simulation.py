@@ -2,7 +2,8 @@
 Implements a complete simulation for BioSim class.
 """
 from .cell import Lowland, Highland, Water, Desert
-from .animal import Animal
+from .animals import Herbivore, Carnivore
+
 from biosim.island import Island
 import matplotlib.pyplot as plt
 
