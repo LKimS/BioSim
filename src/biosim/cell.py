@@ -140,7 +140,7 @@ class Cell_with_animals(Cell):
         """
         moving_animals = []
         for animal in self.animals:
-            if animal.migrate():
+            if True:
                 new_location = self.get_random_neighboring_cell(self.location)
                 moving_animals.append((animal, self.location, new_location))
 
