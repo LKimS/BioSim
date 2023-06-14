@@ -8,12 +8,17 @@ the INF200 project June 2023.
 __author__ = "Hans Ekkehard Plesser, NMBU"
 __email__ = "hans.ekkehard.plesser@nmbu.no"
 
+#Time elapsed: 202.3926 seconds for 500 years
+
 import textwrap
 import matplotlib.pyplot as plt
+import time
 
 from biosim.simulation import BioSim
 
 if __name__ == '__main__':
+
+    start = time.perf_counter()
 
     geogr = """\
                WWWWWWWWWWWWWWWWWWWWW
@@ -61,9 +66,11 @@ if __name__ == '__main__':
 
     sim.simulate(num_years=100)
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=100)
-    sim.simulate(num_years=100)
-    sim.simulate(num_years=100)
+    sim.simulate(num_years=400)
+
+    end = time.perf_counter()
+    print(f"Time elapsed: {end - start:0.4f} seconds")
 
     plt.show()
+
     sim.make_movie()
