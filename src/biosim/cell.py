@@ -151,7 +151,10 @@ class Cell_with_animals(Cell):
         Returns a random neighboring cell.
         """
         new_location = list(location)
+
+        # get a random dimension. 0: moves vertically, 1: moves horizontally
         dim = random.choice([0, 1])
+        # get a random direction. -1: moves down/left, 1: moves up/right
         new_location[dim] += random.choice([-1, 1])
 
         return tuple(new_location)
