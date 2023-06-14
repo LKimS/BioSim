@@ -64,6 +64,8 @@ while year < 50:
     sum_herbivore = 0
     sum_carnivore = 0
 
+    migrating_animals = []
+
     # tile/cell work
     for loc, cell in habital_map.items():
         # Teller dyr i cellen
@@ -76,10 +78,7 @@ while year < 50:
         cell.add_newborns(cell.herbivore)
         cell.add_newborns(cell.carnivore)
         cell.feed_animals()
-
-    island.migrate_animals()
-
-    for loc, cell in habital_map.items():
+        migrating_animals.extend(cell.moving_animals_list())
         cell.age_animals()
         cell.loss_of_weight()
         cell.animal_death()
@@ -92,6 +91,7 @@ while year < 50:
                     carnivore_population= sum_carnivore,
                     herbivore_dict_map = cell_pop_history['Herbivore'])
     print(year)
+
 
 ini_carns = [{'loc': (2,8),
                 'pop': [{'species': 'Carnivore',
