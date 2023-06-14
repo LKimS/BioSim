@@ -36,6 +36,8 @@ class Island:
         self.habital_map = self.get_map_with_animals()
         self.bitmap = self.create_bitmap(self.map_processed)
 
+        self.pop_cell_herbivore = []
+
 
     #METHODS for input and processing
     def process_input_map(self, input_island_map):
@@ -139,6 +141,7 @@ class Island:
 
 
 #METHODS for yearly cycle
+
     def yearly_island_cycle(self):
         for loc , cell in self.habital_map.items():
             #self.make_visualization_data(cell)
@@ -150,6 +153,8 @@ class Island:
             cell.loss_of_weight()
             cell.animal_death()
             cell.reset_fodder()
+            self.pop_cell_herbivore.append(len(cell.herbivore))
+
 
     #def make_visualization_data(self, cell):
         """Create data for visualization of island map."""
