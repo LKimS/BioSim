@@ -159,15 +159,6 @@ class BioSim:
             island.get_visualization_data()
 
 
-
-    def update_animal_count(self, cell):
-        """
-        Update the number of animals on the island
-        """
-        cell.update_animal_count()
-
-
-
     def add_population(self, population):
         """
         Add a population to the island

@@ -95,7 +95,7 @@ class Island:
             for animal_info in item['pop']:
                 self.map[(x,y)].add_animal_from_dict(animal_info)
 
-            self.map[(x,y)].update_animal_count()
+            #self.map[(x,y)].update_animal_count()
 
     def migrate_animals(self):
         all_moving_animals = []
@@ -123,8 +123,8 @@ class Island:
 
 
     def yearly_island_cycle(self):
-        self.pop_history = {'Herbivore': [], 'Carnivore': []}
-        self.cell_pop_history = {'loc'}
+        #self.pop_history = {'Herbivore': [], 'Carnivore': []}
+        #self.cell_pop_history = {'loc'}
         sum_herbivore = 0
         sum_carnivore = 0
         for loc , cell in self.habital_map.items():
