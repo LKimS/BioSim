@@ -88,6 +88,7 @@ class BioSim:
         self.pop_history_herbivore = []
         self.pop_history_carnivore = []
         self.graphics = Graphics()
+        self.current_year = 1
 
 
 
@@ -149,12 +150,17 @@ class BioSim:
             Number of years to simulate
         """
 
+
+
         self.graphics.setup(self.island.bitmap, num_years, 1)
 
-        for year in range(1, num_years + 1):
+        start_year = self.current_year
+
+        while self.current_year < start_year + num_years + 1:
             self.island.yearly_island_cycle()
             self.update_history_data()
-            self.graphics.update(year, self.island.pop_herbivore, self.island.pop_carnivore)
+            self.graphics.update(self.current_year, self.island.pop_herbivore, self.island.pop_carnivore)
+            self.current_year += 1
 
 
 
