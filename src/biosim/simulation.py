@@ -1,6 +1,8 @@
 """
-Template for BioSim class.
+Implements a complete simulation for BioSim class.
 """
+from .cell import Lowland, Highland, Water, Desert
+from .animal import Animal
 from biosim.island import Island
 import matplotlib.pyplot as plt
 
@@ -85,7 +87,7 @@ class BioSim:
         self.img_base = img_base
         self.img_years = img_years
 
-    def set_animal_parameters(self, species, params):
+    def set_animal_parameters(self, species, parameters):
         pass
         """
         Set parameters for animal species.
@@ -103,9 +105,28 @@ class BioSim:
             If invalid parameter values are passed.
         """
 
-    def set_landscape_parameters(self, landscape, params):
-        pass
+        if species == "Herbivore":
+            Herbivore.set_parameters(
+                    {'w_birth': w_birth, 'sigma_birth': sigma_birth,
+                     'beta': beta, 'eta': eta, 'a_half': a_half,
+                     'phi_age': phi_age, 'w_half': w_half,
+                     'phi_weight': phi_weight, 'mu': mu,
+                     'gamma': gamma, 'zeta': zeta, 'xi': xi,
+                     'omega': omega, 'F': F, 'DeltaPhiMax': DeltaPhiMax})
 
+        elif species == "Carnivore":
+            Carnivore.set_parameters(
+                    {'w_birth': w_birth, 'sigma_birth': sigma_birth,
+                     'beta': beta, 'eta': eta, 'a_half': a_half,
+                     'phi_age': phi_age, 'w_half': w_half,
+                     'phi_weight': phi_weight, 'mu': mu,
+                     'gamma': gamma, 'zeta': zeta, 'xi': xi,
+                     'omega': omega, 'F': F, 'DeltaPhiMax': DeltaPhiMax})
+        else:
+            raise ValueError("Invalid species. Choose between Herbivore and Carnivore")
+
+
+    def set_landscape_parameters(self, landscape, params):
         """
         Set parameters for landscape type.
 
@@ -121,6 +142,17 @@ class BioSim:
         ValueError
             If invalid parameter values are passed.
         """
+        if landscape == "L":
+            Lowland.set_parameters({'f_max': f_max})
+        elif landscape == "H":
+            Highland.set_parameters({'f_max': f_max})
+        elif landscape == "W":
+            Water.set_parameters({'f_max': f_max})
+        elif landscape == "D":
+            Desert.set_parameters({'f_max': f_max})
+        else:
+            raise ValueError("Invalid landscape. Choose between L, H, W, D")
+
 
     def plot_population_history(self):
         plt.plot(self.island_pop_history['Herbivore'],'b')
