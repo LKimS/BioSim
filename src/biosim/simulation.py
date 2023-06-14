@@ -154,20 +154,10 @@ class BioSim:
             Number of years to simulate
         """
 
-        self.cell_pop_history = {}
-        self.island_pop_history = {'Herbivore': [], 'Carnivore': []}
-
-        for x in range(1, self.island.map_height + 1):
-            for y in range(1, self.island.map_width + 1):
-
-                self.cell_pop_history[(x, y)] = {'Herbivore': [], 'Carnivore': []}
-
-
-
         for year in range(1, num_years + 1):
             island.yearly_island_cycle()
+            island.get_visualization_data()
 
-        self.plot_population_history()
 
 
     def update_animal_count(self, cell):

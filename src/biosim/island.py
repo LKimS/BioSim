@@ -115,30 +115,25 @@ class Island:
                 self.habital_map[new_location].add_animal_object(animal)
                 self.habital_map[old_location].remove_animal(animal)
 
+    def make_visualization_data(self):
+        """Create data for visualization of island map."""
+
+
+
+
+
     def yearly_island_cycle(self):
+        self.pop_history = {'Herbivore': [], 'Carnivore': []}
+        self.cell_pop_history = {'loc'}
         sum_herbivore = 0
         sum_carnivore = 0
-        for loc, cell in self.habital_map.items():
-            # Teller dyr i cellen
-            cell.update_animal_count()
+        for loc , cell in self.habital_map.items():
 
-            sum_herbivore += cell.count_herbivore
-            sum_carnivore += cell.count_carnivore
-            self.island_pop_history['Herbivore'].append(sum_herbivore)
-            self.island_pop_history['Carnivore'].append(sum_carnivore)
-
-            cell.update_cell_history()
-
-            #heatmap
-            #self.cell_pop_history[loc]['Herbivore'].append(cell.count_herbivore)
-            #self.cell_pop_history[loc]['Carnivore'].append(cell.count_carnivore)
-
-            # pop_animals[(x, y)].append(cell.count_carnivore)
-            # newborn in cell
+            make_visualization_data()
             cell.add_newborns(cell.herbivore)
             cell.add_newborns(cell.carnivore)
             cell.feed_animals()
-            # ceel.migration()
+            #migrate_animals()
             cell.age_animals()
             cell.loss_of_weight()
             cell.animal_death()
