@@ -2,6 +2,7 @@ from biosim.graphics import Graphics
 from biosim.island import Island
 import matplotlib.pyplot as plt
 import random
+from time import time
 random.seed(12345)
 
 SIM_YEARS = 600
@@ -61,6 +62,7 @@ for loc, cell in habital_map.items():
 year = 0
 
 while year < 50:
+    start = time()
     sum_herbivore = 0
     sum_carnivore = 0
 
@@ -89,8 +91,9 @@ while year < 50:
     graphics.update(step = year,
                     herbivore_population= sum_herbivore,
                     carnivore_population= sum_carnivore,
-                    herbivore_dict_map = cell_pop_history['Herbivore'])
-    print(year)
+                    herbivore_dict_map = cell_pop_history['Herbivore'],
+                    carnivore_dict_map = cell_pop_history['Carnivore'])
+    print(f"year: {year}, time: {time()-start}")
     island.move_all_animals(migrating_animals)
 
 
@@ -99,9 +102,9 @@ ini_carns = [{'loc': (2,8),
                         'age': 5,
                         'weight': 20}
                         for _ in range(2)]}]
-#island.add_population(ini_carns)
+island.add_population(ini_carns)
 
-while year < 300:
+while year < SIM_YEARS:
     sum_herbivore = 0
     sum_carnivore = 0
 
@@ -130,8 +133,9 @@ while year < 300:
     graphics.update(step = year,
                     herbivore_population= sum_herbivore,
                     carnivore_population= sum_carnivore,
-                    herbivore_dict_map = cell_pop_history['Herbivore'])
-    print(year)
+                    herbivore_dict_map = cell_pop_history['Herbivore'],
+                    carnivore_dict_map = cell_pop_history['Carnivore'])
+    print(f"year: {year}, time: {time()-start}")
     island.move_all_animals(migrating_animals)
 
 plt.show()

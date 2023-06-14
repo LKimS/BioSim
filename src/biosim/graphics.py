@@ -84,7 +84,7 @@ class Graphics:
 
 
 
-    def update(self, step, herbivore_population, carnivore_population, herbivore_dict_map):
+    def update(self, step, herbivore_population, carnivore_population, herbivore_dict_map, carnivore_dict_map):
         """
         Updates graphics with current data and save to file if necessary.
 
@@ -96,6 +96,7 @@ class Graphics:
 
         self.update_population_graph(step, herbivore_population, carnivore_population)
         self.update_hervibore_heatmap(herbivore_dict_map)
+        self.update_carnivore_heatmap(carnivore_dict_map)
         self.fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
 
@@ -219,22 +220,9 @@ class Graphics:
         if self.hist2_ax is None:
             self.hist2_ax = self.fig.add_subplot(self.ax[2, 2])
             self.hist2_data = None
-    def _update_system_map(self, sys_map):
-        """Update the 2D-view of the system."""
 
-        if self._img_axis is not None:
-            self._img_axis.set_data(sys_map)
-        else:
-            self._img_axis = self._map_ax.imshow(sys_map,
-                                                 interpolation='nearest',
-                                                 vmin=-0.25, vmax=0.25)
-            plt.colorbar(self._img_axis, ax=self._map_ax,
-                         orientation='horizontal')
 
-    def _update_mean_graph(self, step, mean):
-        y_data = self._mean_line.get_ydata()
-        y_data[step] = mean
-        self._mean_line.set_ydata(y_data)
+
 
     def update_population_graph(self, step, herbivore_population, carnivore_population):
         """Update the graph of the population.
@@ -250,6 +238,7 @@ class Graphics:
         if step > 300:
             self.population_ax.set_xlim(step-300, step)
 
+
         herbivore_y_data = self.herbivore_population_line.get_ydata()
         herbivore_y_data[step] = herbivore_population
         self.herbivore_population_line.set_ydata(herbivore_y_data)
@@ -257,6 +246,11 @@ class Graphics:
         carnivore_y_data = self.carnivore_population_line.get_ydata()
         carnivore_y_data[step] = carnivore_population
         self.carnivore_population_line.set_ydata(carnivore_y_data)
+
+        y_val = [num for num in herbivore_y_data + carnivore_y_data if not np.isnan(num)]
+
+        y_max = max(y_val)
+        self.population_ax.set_ylim(0, y_max*1.1)
 
     def update_hervibore_heatmap(self, herbivore_dict_map):
         if self.herbivore_heatmap_img is None:
@@ -266,19 +260,41 @@ class Graphics:
 
             self.herbivore_map = np.zeros((dimx, dimy))
 
-            for key, value in herbivore_dict_map.items():
-                x = key[0] - 1
-                y = key[1] - 1
-                self.herbivore_map[x][y] = value[-1]
+            for location, population_history in herbivore_dict_map.items():
+                x = location[0] - 1
+                y = location[1] - 1
+                self.herbivore_map[x][y] = population_history[-1]
             self.herbivore_heatmap_img = self.herbivore_heatmap_ax.imshow(self.herbivore_map,
                                                                            interpolation='nearest',
                                                                            vmin=0, vmax=100)
         else:
-            for key, value in herbivore_dict_map.items():
+            for location, population_history in herbivore_dict_map.items():
+                x = location[0] - 1
+                y = location[1] - 1
+                self.herbivore_map[x][y] = population_history[-1]
+            self.herbivore_heatmap_img.set_data(self.herbivore_map)
+
+    def update_carnivore_heatmap(self, carnivore_dict_map):
+        if self.carnivore_heatmap_img is None:
+
+            dimx = self.bitmap.shape[0]
+            dimy = self.bitmap.shape[1]
+
+            self.carnivore_map = np.zeros((dimx, dimy))
+
+            for key, value in carnivore_dict_map.items():
                 x = key[0] - 1
                 y = key[1] - 1
-                self.herbivore_map[x][y] = value[-1]
-            self.herbivore_heatmap_img.set_data(self.herbivore_map)
+                self.carnivore_map[x][y] = value[-1]
+            self.carnivore_heatmap_img = self.carnivore_heatmap_ax.imshow(self.carnivore_map,
+                                                                           interpolation='nearest',
+                                                                           vmin=0, vmax=100)
+        else:
+            for key, value in carnivore_dict_map.items():
+                x = key[0] - 1
+                y = key[1] - 1
+                self.carnivore_map[x][y] = value[-1]
+            self.carnivore_heatmap_img.set_data(self.carnivore_map)
 
 
     def _save_graphics(self, step):
