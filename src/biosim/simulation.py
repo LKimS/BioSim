@@ -87,7 +87,7 @@ class BioSim:
         self.island.add_population(ini_pop)
         self.pop_history_herbivore = []
         self.pop_history_carnivore = []
-        self.graphics = Graphics()
+        self.graphics = Graphics(img_dir, img_base, img_fmt)
         self.current_year = 1
 
 
@@ -140,26 +140,36 @@ class BioSim:
         else:
             raise ValueError("Invalid landscape. Only L and H has fodder")
 
-    def simulate(self, num_years):
+    def simulate(self, num_years, vis_years=1, img_years=None):
         """
         Run simulation while visualizing the result.
 
-        Parameters
-        ----------
-        num_years : int
-            Number of years to simulate
+        :param num_years: number of simulation steps to execute
+        :param vis_years: interval between visualization updates
+        :param img_years: interval between visualizations saved to files
+                          (default: vis_years)
+
+        .. note:: Image files will be numbered consecutively.
         """
 
+        if img_years is None:
+            img_years = vis_years
 
+        if img_years % vis_years != 0:
+            raise ValueError('img_years must be multiple of vis_steps')
 
-        self.graphics.setup(self.island.bitmap, num_years, 1)
+        self.final_year = self.current_year + num_years
+        self.graphics.setup(self.island.bitmap, self.final_year)
 
-        start_year = self.current_year
-
-        while self.current_year < start_year + num_years + 1:
+        while self.current_year < self.final_year + 1:
             self.island.yearly_island_cycle()
             self.update_history_data()
-            self.graphics.update(self.current_year, self.island.pop_herbivore, self.island.pop_carnivore)
+
+            if self.current_year % vis_years == 0:
+                self.graphics.update(self.current_year,
+                                     self.island.pop_herbivore,
+                                     self.island.pop_carnivore)
+
             self.current_year += 1
 
 
@@ -201,3 +211,4 @@ class BioSim:
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
+        self.graphics.make_movie()

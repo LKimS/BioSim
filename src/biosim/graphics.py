@@ -35,7 +35,7 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'   # alternatives: mp4, gif
 class Graphics:
     """Provides graphics support for RandVis."""
 
-    def __init__(self, img_dir=None, img_name=None, img_fmt=None):
+    def __init__(self, img_dir=None, img_name=None, img_fmt=None, img_years=None):
         """
         :param img_dir: directory for image files; no images if None
         :type img_dir: str
@@ -43,6 +43,8 @@ class Graphics:
         :type img_name: str
         :param img_fmt: image file format suffix
         :type img_fmt: str
+        :img_years: Years between visualizations saved to files (default: `vis_years`)
+        :type img_years: int
         """
 
         if img_name is None:
@@ -53,10 +55,14 @@ class Graphics:
         else:
             self._img_base = None
 
+        if img_years is not None:
+            self.img_years = img_years
+        else:
+            self.img_years = 1
+
         self._img_fmt = img_fmt if img_fmt is not None else _DEFAULT_IMG_FORMAT
 
         self._img_ctr = 0
-        self._img_step = 1
 
         # the following will be initialized by _setup_graphics
         self.fig = None
@@ -143,7 +149,7 @@ class Graphics:
         else:
             raise ValueError('Unknown movie format: ' + movie_fmt)
 
-    def setup(self, map, final_step, img_step):
+    def setup(self, map, final_step, img_step=1):
         """
         Prepare graphics.
 
@@ -154,7 +160,7 @@ class Graphics:
         :param img_step: interval between saving image to file
         """
 
-        self._img_step = img_step
+        self.img_years = img_step
 
         # create new figure window
         if self.fig is None:
@@ -300,7 +306,7 @@ class Graphics:
     def _save_graphics(self, step):
         """Saves graphics to file if file name given."""
 
-        if self._img_base is None or step % self._img_step != 0:
+        if self._img_base is None or step % self.img_years != 0:
             return
 
         plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,

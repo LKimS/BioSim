@@ -47,7 +47,11 @@ if __name__ == '__main__':
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60, 'delta': 2}},
-                 vis_years=1)
+                 vis_years=1,
+                 img_dir='mov',
+                 img_base='test',
+                 img_fmt='png',
+                 img_years=50)
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
     sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,
@@ -58,5 +62,8 @@ if __name__ == '__main__':
     sim.simulate(num_years=100)
     sim.add_population(population=ini_carns)
     sim.simulate(num_years=100)
+    sim.simulate(num_years=100)
+    sim.simulate(num_years=100)
 
-    plt.savefig('check_sim.pdf')
+    plt.show()
+    sim.make_movie()
