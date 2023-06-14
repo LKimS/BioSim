@@ -4,6 +4,7 @@ Implements a complete simulation for BioSim class.
 from .island import Island
 from .cell import Lowland, Highland
 from .animals import Herbivore, Carnivore
+from .graphics import Graphics
 
 
 import matplotlib.pyplot as plt
@@ -86,6 +87,8 @@ class BioSim:
         self.island.add_population(ini_pop)
         self.pop_history_herbivore = []
         self.pop_history_carnivore = []
+        self.graphics = Graphics()
+
 
 
     def set_animal_parameters(self, species, new_parameters):
@@ -146,9 +149,13 @@ class BioSim:
             Number of years to simulate
         """
 
+        self.graphics.setup(self.island.bitmap, num_years, 1)
+
         for year in range(1, num_years + 1):
             self.island.yearly_island_cycle()
             self.update_history_data()
+            self.graphics.update(year, self.island.pop_herbivore, self.island.pop_carnivore)
+
 
 
 

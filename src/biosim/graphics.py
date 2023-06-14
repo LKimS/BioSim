@@ -84,7 +84,7 @@ class Graphics:
 
 
 
-    def update(self, step, herbivore_population, carnivore_population, herbivore_dict_map, carnivore_dict_map):
+    def update(self, step, herbivore_population, carnivore_population, herbivore_dict_map = None, carnivore_dict_map=None):
         """
         Updates graphics with current data and save to file if necessary.
 
@@ -95,8 +95,8 @@ class Graphics:
 
 
         self.update_population_graph(step, herbivore_population, carnivore_population)
-        self.update_hervibore_heatmap(herbivore_dict_map)
-        self.update_carnivore_heatmap(carnivore_dict_map)
+        #self.update_hervibore_heatmap(herbivore_dict_map)
+        #self.update_carnivore_heatmap(carnivore_dict_map)
         self.fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
 
