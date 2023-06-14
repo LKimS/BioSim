@@ -84,6 +84,8 @@ class BioSim:
         """
         self.island = Island(island_map, seed)
         self.island.add_population(ini_pop)
+        self.pop_history_herbivore = []
+        self.pop_history_carnivore = []
 
 
     def set_animal_parameters(self, species, new_parameters):
@@ -146,7 +148,19 @@ class BioSim:
 
         for year in range(1, num_years + 1):
             self.island.yearly_island_cycle()
-            #self.data = self.island.get_visualization_data()
+            self.update_history_data()
+
+
+
+    def update_history_data(self):
+        """Update history data for visualization"""
+        self.pop_history_herbivore.append(self.island.pop_herbivore)
+        self.pop_history_carnivore.append(self.island.pop_carnivore)
+
+    def collect_history_data(self):
+        """Collect history data for visualization"""
+
+
 
     def add_population(self, population):
         """

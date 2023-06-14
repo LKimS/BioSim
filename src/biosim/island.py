@@ -36,7 +36,10 @@ class Island:
         self.habital_map = self.get_map_with_animals()
         self.bitmap = self.create_bitmap(self.map_processed)
 
-        self.pop_cell_herbivore = []
+        self.pop_cell_herbivore = {}
+        self.pop_cell_carnivore = {}
+        self.pop_herbivore = 0
+        self.pop_carnivore = 0
 
 
     #METHODS for input and processing
@@ -143,20 +146,29 @@ class Island:
 #METHODS for yearly cycle
 
     def yearly_island_cycle(self):
+        migrating_animals = []
+
         for loc , cell in self.habital_map.items():
-            #self.make_visualization_data(cell)
+            self.update_data(loc, cell)
             cell.add_newborns(cell.herbivore)
             cell.add_newborns(cell.carnivore)
             cell.feed_animals()
-            #migrate_animals()
+            migrating_animals.extend(cell.moving_animals_list())
             cell.age_animals()
             cell.loss_of_weight()
             cell.animal_death()
             cell.reset_fodder()
-            self.pop_cell_herbivore.append(len(cell.herbivore))
+        self.move_all_animals(migrating_animals)
+        self.collect_data()
+
+    def update_data(self, loc, cell):
+        """Update data for visualization of island map."""
+        self.pop_cell_herbivore[loc] = len(cell.herbivore)
+        self.pop_cell_carnivore[loc] = len(cell.carnivore)
+
+    def collect_data(self):
+        """Collects data from all cells on island."""
+        self.pop_herbivore = sum(self.pop_cell_herbivore.values())
+        self.pop_carnivore = sum(self.pop_cell_carnivore.values())
 
 
-    #def make_visualization_data(self, cell):
-        """Create data for visualization of island map."""
-    #    self.pop_total["Herbivore"].append(cell.herbivore_count)
-    #    self.pop_total["Carnivore"].append(cell.carnivore_count)
