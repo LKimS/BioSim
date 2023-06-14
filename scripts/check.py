@@ -10,10 +10,12 @@ __email__ = "hans.ekkehard.plesser@nmbu.no"
 
 import textwrap
 import matplotlib.pyplot as plt
+import time
 
 from biosim.simulation import BioSim
 
 if __name__ == '__main__':
+    start = time.perf_counter()
 
     geogr = """\
                WWWWWWWWWWWWWWWWWWWWW
@@ -48,7 +50,7 @@ if __name__ == '__main__':
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60, 'delta': 2}},
                  vis_years=1,
-                 img_dir='mov',
+                 img_dir='threaded',
                  img_base='test',
                  img_fmt='png',
                  img_years=50)
@@ -62,8 +64,8 @@ if __name__ == '__main__':
     sim.simulate(num_years=100)
     sim.add_population(population=ini_carns)
     sim.simulate(num_years=100)
-    sim.simulate(num_years=100)
-    sim.simulate(num_years=100)
+    end = time.perf_counter()
+    print(f"Time taken: {end - start:0.4f} seconds")
 
     plt.show()
     sim.make_movie()
