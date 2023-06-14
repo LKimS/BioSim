@@ -5,7 +5,6 @@ Implements the Animal class.
 import math
 import random
 
-
 class Animal:
     """Animals witch can be herbivore or carnivore with attributes and methods for both. """
 
@@ -32,6 +31,7 @@ class Animal:
                      'phi_weight': phi_weight, 'mu': mu,
                      'gamma': gamma, 'zeta': zeta, 'xi': xi,
                      'omega': omega, 'F': F, 'DeltaPhiMax': DeltaPhiMax}
+
     @classmethod
     def set_parameters(cls, new_parameters):
         """
@@ -165,7 +165,6 @@ class Animal:
         else:
             return False
 
-
 class Herbivore(Animal):
     w_birth = 8.0
     sigma_birth = 1.5
@@ -182,6 +181,7 @@ class Herbivore(Animal):
     omega = 0.4
     F = 10.0
     DeltaPhiMax = None
+
     default_parameters = {'w_birth': w_birth, 'sigma_birth': sigma_birth,
                      'beta': beta, 'eta': eta, 'a_half': a_half,
                      'phi_age': phi_age, 'w_half': w_half,

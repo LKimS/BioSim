@@ -1,8 +1,9 @@
+"""Implements of Island class."""
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-
 
 from .cell import Water, Lowland, Highland, Desert
 
@@ -30,16 +31,10 @@ class Island:
         self.map_processed = self.process_input_map(input_island_map)
         self.map_height = self.get_map_height(self.map_processed)
         self.map_width = self.get_map_width(self.map_processed)
-
         bool = self.check_line_length(self.map_processed)
-
         self.map = self.map_processed_to_dict(self.map_processed)
-
         self.habital_map = self.get_map_with_animals()
-
         self.bitmap = self.create_bitmap(self.map_processed)
-
-        self.island_pop_history = {'Herbivore': [], 'Carnivore': []}
 
 
     #METHODS for input and processing
@@ -75,7 +70,6 @@ class Island:
 
         return map_with_animals
 
-
     def add_cell(self, cell_letter, loc):
         cells = {
             'W': Water,
@@ -87,8 +81,8 @@ class Island:
 
         return cell
 
-    #METHODS for adding animals
 
+    #METHODS for adding animals
     def add_population(self, population):
         for item in population:
             x, y = item["loc"]
@@ -104,7 +98,6 @@ class Island:
 
         self.move_all_animals(all_moving_animals)
 
-
     def move_all_animals(self,list_of_moving_animals):
         """
         Moves animals from old location to new location.
@@ -114,36 +107,6 @@ class Island:
             if new_location in self.habital_map:
                 self.habital_map[new_location].add_animal_object(animal)
                 self.habital_map[old_location].remove_animal(animal)
-
-    def make_visualization_data(self):
-        """Create data for visualization of island map."""
-
-
-
-
-
-    def yearly_island_cycle(self):
-        #self.pop_history = {'Herbivore': [], 'Carnivore': []}
-        #self.cell_pop_history = {'loc'}
-        sum_herbivore = 0
-        sum_carnivore = 0
-        for loc , cell in self.habital_map.items():
-
-            make_visualization_data()
-            cell.add_newborns(cell.herbivore)
-            cell.add_newborns(cell.carnivore)
-            cell.feed_animals()
-            #migrate_animals()
-            cell.age_animals()
-            cell.loss_of_weight()
-            cell.animal_death()
-            cell.reset_fodder()
-
-    def yearly_sum_animals(self):
-        self.island_pop_history['Herbivore'].append(sum_herbivore)
-        self.island_pop_history['Carnivore'].append(sum_carnivore)
-
-
 
 
     #METHODS for creating bitmap and plotting
@@ -166,7 +129,6 @@ class Island:
         #plt.legend()
         plt.show()
 
-
     # ERROR HANDLING
     def check_line_length(self, island_map_processed):
         line1 = island_map_processed[0]
@@ -176,3 +138,20 @@ class Island:
                 return False
 
 
+#METHODS for yearly cycle
+    def yearly_island_cycle(self):
+        for loc , cell in self.habital_map.items():
+            #self.make_visualization_data(cell)
+            cell.add_newborns(cell.herbivore)
+            cell.add_newborns(cell.carnivore)
+            cell.feed_animals()
+            #migrate_animals()
+            cell.age_animals()
+            cell.loss_of_weight()
+            cell.animal_death()
+            cell.reset_fodder()
+
+    #def make_visualization_data(self, cell):
+        """Create data for visualization of island map."""
+    #    self.pop_total["Herbivore"].append(cell.herbivore_count)
+    #    self.pop_total["Carnivore"].append(cell.carnivore_count)

@@ -1,9 +1,10 @@
 """
 Implements a complete simulation for BioSim class.
 """
-from .cell import Lowland, Highland, Water, Desert
-from .animals import Herbivore, Carnivore
 from .island import Island
+from .cell import Lowland, Highland
+from .animals import Herbivore, Carnivore
+
 
 import matplotlib.pyplot as plt
 
@@ -84,12 +85,8 @@ class BioSim:
         self.island = Island(island_map, seed)
         self.island.add_population(ini_pop)
 
-        self.img_dir = img_dir
-        self.img_base = img_base
-        self.img_years = img_years
 
     def set_animal_parameters(self, species, new_parameters):
-        pass
         """
         Set parameters for animal species.
 
@@ -114,7 +111,6 @@ class BioSim:
         else:
             raise ValueError("Invalid species. Choose between Herbivore and Carnivore")
 
-
     def set_landscape_parameters(self, landscape, new_parameters):
         """
         Set parameters for landscape type.
@@ -138,12 +134,6 @@ class BioSim:
         else:
             raise ValueError("Invalid landscape. Only L and H has fodder")
 
-
-    def plot_population_history(self):
-        plt.plot(self.island_pop_history['Herbivore'],'b')
-        plt.plot(self.island_pop_history['Carnivore'], 'r')
-
-
     def simulate(self, num_years):
         """
         Run simulation while visualizing the result.
@@ -155,9 +145,8 @@ class BioSim:
         """
 
         for year in range(1, num_years + 1):
-            island.yearly_island_cycle()
-            island.get_visualization_data()
-
+            self.island.yearly_island_cycle()
+            #self.data = self.island.get_visualization_data()
 
     def add_population(self, population):
         """
@@ -170,7 +159,6 @@ class BioSim:
         """
 
         self.island.add_population(population)
-
 
     @property
     def year(self):

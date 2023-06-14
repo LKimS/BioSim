@@ -1,3 +1,5 @@
+"""Implements the Cell class."""
+
 from .animals import Herbivore, Carnivore
 import random
 
@@ -20,7 +22,6 @@ class Cell:
     color = None
     _habitable = False
 
-
     def __init__(self, location):
         self.location = location
 
@@ -35,7 +36,6 @@ class Cell:
     def is_habitable(self):
         return self._habitable
 
-
 class Cell_with_animals(Cell):
 
     _habitable = True
@@ -48,11 +48,7 @@ class Cell_with_animals(Cell):
         self.amount_carnivore = 0
         self.cell_pop_history = {'Herbivore': [], 'Carnivore': []}
 
-
-    def update_cell_history(self):
-        self.cell_pop_history['Herbivore'].append(len(herbivore))
-        self.cell_pop_history['Carnivore'].append(len(carnivore))
-
+    #General methods
     def add_animal_from_dict(self, animal_info):
         if animal_info["species"] == "Herbivore":
             self.herbivore.append(Herbivore(animal_info, self.location))
@@ -87,10 +83,17 @@ class Cell_with_animals(Cell):
         else:
             raise ValueError("Invalid animal species")
 
+    def sort_herbivore_after_fitness(self, descending=True):
+        self.herbivore.sort(key=lambda animal: animal.fitness, reverse=descending)
 
-    def update_animal_count(self):
-        self.count_herbivore = len(self.herbivore)
-        self.count_carnivore = len(self.carnivore)
+    def update_fitness(self):
+        for animal in self.herbivore:
+            animal.fitness = animal.calc_fitness()
+
+        for animal in self.carnivore:
+            animal.fitness = animal.calc_fitness()
+
+    #Annual cycle methods
 
     def add_newborns(self, animal_list):
 
@@ -110,7 +113,6 @@ class Cell_with_animals(Cell):
             elif species == "Carnivore":
                 self.carnivore.extend(newborn_list)
 
-
     def feed_animals(self):
         self.sort_herbivore_after_fitness(descending=False)
         random.shuffle(self.carnivore)
@@ -118,27 +120,6 @@ class Cell_with_animals(Cell):
             animal.feeding(self.herbivore)
             #remove dead animals
             self.herbivore = [animal for animal in self.herbivore if animal.alive]
-
-
-    def update_fitness(self):
-        for animal in self.herbivore:
-            animal.fitness = animal.calc_fitness()
-
-        for animal in self.carnivore:
-            animal.fitness = animal.calc_fitness()
-
-    def sort_herbivore_after_fitness(self, descending=True):
-        self.herbivore.sort(key=lambda animal: animal.fitness, reverse=descending)
-
-    def get_random_neighboring_cell(self, location):
-        """
-        Returns a random neighboring cell.
-        """
-        new_location = list(location)
-        dim = random.choice([0, 1])
-        new_location[dim] += random.choice([-1, 1])
-
-        return tuple(new_location)
 
     def moving_animals_list(self):
         """
@@ -164,6 +145,7 @@ class Cell_with_animals(Cell):
         new_location[dim] += random.choice([-1, 1])
 
         return tuple(new_location)
+
     def age_animals(self):
         for animal in self.herbivore:
             animal.aging()
@@ -199,9 +181,6 @@ class Cell_with_animals(Cell):
     def count_carnivore(self):
         return len(self.carnivore)
 
-
-
-
 class Cell_with_fodder(Cell_with_animals):
     """
     Class for a cell in the island
@@ -235,6 +214,7 @@ class Cell_with_fodder(Cell_with_animals):
         :return: dict
         """
         return {'f_max': cls.f_max}
+
     def __init__(self, location):
         super().__init__(location)
         self.fodder = self.f_max
@@ -250,7 +230,6 @@ class Cell_with_fodder(Cell_with_animals):
         super().feed_animals()
 
         self.reset_fodder()
-
 
     def reset_fodder(self):
         self.fodder = self.f_max
