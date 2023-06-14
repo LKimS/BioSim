@@ -108,7 +108,7 @@ class Graphics:
         plt.pause(1e-6)  # pause required to pass control to GUI
 
 
-        t = threading.Thread(target=self._save_graphics, args=(step))
+        t = threading.Thread(target=self._save_graphics, args=([step]))
         t.start()
 
     def make_movie(self, movie_fmt=None):
