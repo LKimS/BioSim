@@ -91,6 +91,7 @@ while year < 50:
                     carnivore_population= sum_carnivore,
                     herbivore_dict_map = cell_pop_history['Herbivore'])
     print(year)
+    island.move_all_animals(migrating_animals)
 
 
 ini_carns = [{'loc': (2,8),
