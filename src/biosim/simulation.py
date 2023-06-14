@@ -1,7 +1,10 @@
 """
-Template for BioSim class.
+Implements a complete simulation for BioSim class.
 """
-from biosim.island import Island
+from .cell import Lowland, Highland, Water, Desert
+from .animals import Herbivore, Carnivore
+from .island import Island
+
 import matplotlib.pyplot as plt
 
 # The material in this file is licensed under the BSD 3-clause license
@@ -14,7 +17,7 @@ class BioSim:
     Top-level interface to BioSim package.
     """
 
-    def __init__(self, island_map, population, seed,
+    def __init__(self, island_map, ini_pop, seed,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_years=None, img_dir=None, img_base=None, img_fmt='png',
                  log_file=None):
@@ -79,13 +82,13 @@ class BioSim:
         - `img_dir` and `img_base` must either be both None or both strings.
         """
         self.island = Island(island_map, seed)
-        self.island.add_population(population)
+        self.island.add_population(ini_pop)
 
         self.img_dir = img_dir
         self.img_base = img_base
         self.img_years = img_years
 
-    def set_animal_parameters(self, species, params):
+    def set_animal_parameters(self, species, new_parameters):
         pass
         """
         Set parameters for animal species.
@@ -103,9 +106,16 @@ class BioSim:
             If invalid parameter values are passed.
         """
 
-    def set_landscape_parameters(self, landscape, params):
-        pass
+        if species == "Herbivore":
+            Herbivore.set_parameters(new_parameters)
 
+        elif species == "Carnivore":
+            Carnivore.set_parameters(new_parameters)
+        else:
+            raise ValueError("Invalid species. Choose between Herbivore and Carnivore")
+
+
+    def set_landscape_parameters(self, landscape, new_parameters):
         """
         Set parameters for landscape type.
 
@@ -121,6 +131,13 @@ class BioSim:
         ValueError
             If invalid parameter values are passed.
         """
+        if landscape == "L":
+            Lowland.set_parameters(new_parameters)
+        elif landscape == "H":
+            Highland.set_parameters(new_parameters)
+        else:
+            raise ValueError("Invalid landscape. Only L and H has fodder")
+
 
     def plot_population_history(self):
         plt.plot(self.island_pop_history['Herbivore'],'b')
