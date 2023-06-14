@@ -133,6 +133,28 @@ class Cell_with_animals(Cell):
         new_location[dim] += random.choice([-1, 1])
 
         return tuple(new_location)
+
+    def moving_animals_list(self):
+        """
+        Returns a list of animals that will move
+        """
+        moving_animals = []
+        for animal in self.animals:
+            if animal.migrate():
+                new_location = self.get_random_neighboring_cell(self.location)
+                moving_animals.append((animal, self.location, new_location))
+
+        return moving_animals
+
+    def get_random_neighboring_cell(self, location):
+        """
+        Returns a random neighboring cell.
+        """
+        new_location = list(location)
+        dim = random.choice([0, 1])
+        new_location[dim] += random.choice([-1, 1])
+
+        return tuple(new_location)
     def age_animals(self):
         for animal in self.herbivore:
             animal.aging()
@@ -228,81 +250,10 @@ class Lowland(Cell_with_fodder):
     type = "Lowland"
     f_max = 800
     color = (0.00, 0.62, 0.00)
+    default_parameters = {'f_max': f_max}
     
 class Highland(Cell_with_fodder):
     type = "Highland"
     f_max = 300
     color = (0.20, 1.00, 0.42)
-    
-
-
-
-"""
-class Cell:
-    geography = {
-        "W": {
-            "type": "Water",
-            "fodder": 0,
-            "herbivore": 0,
-            "carnivore": 0,
-            "color": (0.13, 0.00, 1.00)
-        },
-        "L": {
-            "type": "Lowland",
-            "fodder": 0,
-            "herbivore": 0,
-            "carnivore": 0,
-            "color": (0.00, 0.62, 0.00)
-        },
-        "H": {
-            "type": "Highland",
-            "fodder": 0,
-            "herbivore": 0,
-            "carnivore": 0,
-            "color": (0.20, 1.00, 0.42)
-        },
-        "D": {
-            "type": "Desert",
-            "fodder": 0,
-            "herbivore": 0,
-            "carnivore": 0,
-            "color": (1.00, 1.00, 0.40)
-        }
-    }
-
-    def __init__(self, letter, location):
-        self.location = location
-        self.type = self.geography[letter]["type"]
-        self.fodder = self.geography[letter]["fodder"]
-        self.herbivore = []
-        self.carnivore = []
-        self.count_herbivore = 0
-        self.count_carnivore = 0
-        self.color = self.geography[letter]["color"]
-
-    def add_animal(self, animal_info):
-        if animal_info["species"] == "Herbivore":
-            self.herbivore.append(Animal(animal_info, self.location))
-        elif animal_info["species"] == "Carnivore":
-            self.carnivore.append(Animal(animal_info, self.location))
-        else:
-            raise ValueError("Invalid animal species")
-
-    def count_animals(self):
-        self.count_herbivore = len(self.herbivore)
-        self.count_carnivore = len(self.carnivore)
-
-    def get_newborns(self, animal_list):
-        newborns = [{
-            'loc': self.location,
-            'pop': []
-        }]
-        for animal in animal_list:
-            newborn = animal.cycle_procreation()
-            newborns[0]['pop'].append(newborn)
-
-        return newborns
-
-    def feed_animals(self):
-        pass
-"""
+    default_parameters = {'f_max': f_max}

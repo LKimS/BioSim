@@ -96,47 +96,22 @@ class Island:
             self.map[(x,y)].update_animal_count()
 
     def migrate_animals(self):
-        moving_animals = []
-        for old_location in self.habital_map:
-            for animal in self.habital_map[old_location].animals:
-                if True:
-                    new_location = self.get_random_neighboring_cell(old_location)
+        all_moving_animals = []
+        for old_location, cell in self.habital_map.items():
+            all_moving_animals.extend(cell.moving_animals_list())
 
-                    if new_location in self.habital_map:
-                        moving_animals.append((animal, old_location, new_location))
+        self.move_all_animals(all_moving_animals)
 
-
-                        for l in [old_location, new_location]:
-                            self.habital_map[l].update_animal_count()
-
-                    else:
-                        print('no migration' + str(old_location))
-
-        self.move_all_animals(moving_animals)
-
-
-
-
-
-
-    def get_random_neighboring_cell(self, location):
-        """
-        Returns a random neighboring cell.
-        """
-        new_location = list(location)
-        dim = random.choice([0, 1])
-        new_location[dim] += random.choice([-1, 1])
-
-        return tuple(new_location)
 
     def move_all_animals(self,list_of_moving_animals):
         """
         Moves animals from old location to new location.
         """
         for animal, old_location, new_location in list_of_moving_animals:
-            self.habital_map[new_location].add_animal_object(animal)
-            self.habital_map[old_location].remove_animal(animal)
-            print('from', old_location, 'to', new_location)
+
+            if new_location in self.habital_map:
+                self.habital_map[new_location].add_animal_object(animal)
+                self.habital_map[old_location].remove_animal(animal)
 
 
 

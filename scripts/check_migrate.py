@@ -16,12 +16,12 @@ geogr = """\
            DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
            DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
            DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDWDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDWDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDWDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDWDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDWDDDDDDDDDDDDDDDDDDDDDDD
+           DDDDDDDDDDDDDDDDDWDDDDDDDDDDDDDDDDDDDDDDD
            DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
            DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
            DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
@@ -41,21 +41,21 @@ geogr = """\
 
 
 
-ini_herbs = [{'loc': (15,15),
+ini_herbs = [{'loc': (30,15),
               'pop': [{'species': 'Herbivore',
                        'age': 5,
                        'weight': 20}
                       for _ in range(800)]}]
-"""
+
 ini_carn = [{'loc': (2, 2),
               'pop': [{'species': 'Carnivore',
                        'age': 5,
                        'weight': 20}
-                      for _ in range(50)]}]
-"""
+                      for _ in range(400)]}]
+
 island = Island(geogr)
 island.add_population(ini_herbs)
-#island.add_population(ini_carn)
+island.add_population(ini_carn)
 
 map_rgb = [[(0,0,0) for _ in range(island.map_width)] for _ in range(island.map_height)]
 
@@ -67,10 +67,12 @@ plt.imshow(map_rgb)
 
 for year in range(1, SIM_YEARS + 1):
     for loc, cell in island.habital_map.items():
+        map_rgb[loc[0] - 1][loc[1] - 1] = (0, 0, 0)
         if len(cell.herbivore) > 0:
-            map_rgb[loc[0]-1][loc[1]-1] = (0, 255, 0)
-        else:
-            map_rgb[loc[0]-1][loc[1]-1] = (0, 0, 0)
+            map_rgb[loc[0]-1][loc[1]-1] = (0,0, 255)
+        if len(cell.carnivore) > 0:
+            map_rgb[loc[0]-1][loc[1]-1] = (255, 0, 0)
+
 
 
     island.migrate_animals()
