@@ -1,9 +1,15 @@
+"""
+Implements the Animal class.
+"""
+
 import math
 import random
 
 
-
 class Animal:
+    """Animals witch can be herbivore or carnivore with attributes and methods for both. """
+
+    # These parameters are defined at the class level
     w_birth = None
     sigma_birth = None
     beta = None
@@ -20,7 +26,71 @@ class Animal:
     F = None
     DeltaPhiMax = None
 
+    default_parameters = {'w_birth': w_birth, 'sigma_birth': sigma_birth,
+                     'beta': beta, 'eta': eta, 'a_half': a_half,
+                     'phi_age': phi_age, 'w_half': w_half,
+                     'phi_weight': phi_weight, 'mu': mu,
+                     'gamma': gamma, 'zeta': zeta, 'xi': xi,
+                     'omega': omega, 'F': F, 'DeltaPhiMax': DeltaPhiMax}
+    @classmethod
+    def set_parameters(cls, new_parameters):
+        """
+        Set class parameters.
+
+        Parameters
+        ----------
+        new_parameters : dict
+            Legal keys: 'w_birth', 'sigma_birth', 'beta', 'eta', 'a_half',
+            'phi_age', 'w_half', 'phi_weight', 'mu', 'gamma', 'zeta', 'xi',
+            'omega', 'F', 'DeltaPhiMax'.
+
+        Raises
+        ------
+        ValueError, KeyError
+        """
+
+        for key in new_parameters:
+            if key not in ('w_birth', 'sigma_birth', 'beta', 'eta', 'a_half',
+                           'phi_age', 'w_half', 'phi_weight', 'mu', 'gamma', 'zeta', 'xi',
+                           'omega', 'F', 'DeltaPhiMax'):
+                raise KeyError('Invalid parameter name: ' + key)
+
+        #All parameters must be positive
+        for key in new_parameters:
+            if not new_parameters[key] >= 0:
+                raise ValueError('All parameters must be positive')
+            else:
+                cls.key = new_parameters[key]
+
+        #DeltaPhiMax must be strictly positive
+        if 'DeltaPhiMax' in new_parameters:
+            if not new_parameters['DeltaPhiMax'] > 0:
+                raise ValueError('DeltaPhiMax must be strictly positive')
+            else:
+                cls.DeltaPhiMax = new_parameters['DeltaPhiMax']
+
+        #Eta must be less than 1
+        if 'eta' in new_parameters:
+            if not new_parameters['eta'] >= 1:
+                raise ValueError('eta must be less than 1')
+            else:
+                cls.eta = new_parameters['eta']
+
+    @classmethod
+    def get_parameters(cls):
+        """Get parameter for the Animal.
+        :return: dict
+        """
+        return {'w_birth': cls.w_birth, 'sigma_birth': cls.sigma_birth,
+                'beta': cls.beta, 'eta': cls.eta, 'a_half': cls.a_half,
+                'phi_age': cls.phi_age, 'w_half': cls.w_half,
+                'phi_weight': cls.phi_weight, 'mu': cls.mu,
+                'gamma': cls.gamma, 'zeta': cls.zeta, 'xi': cls.xi,
+                'omega': cls.omega, 'F': cls.F, 'DeltaPhiMax': cls.DeltaPhiMax}
+
+
     def __init__(self, row, loc):
+        """Create an animal with attributes from row and loc."""
         self.row = row
         self.loc = loc
         self.species = self.row["species"]
@@ -31,6 +101,7 @@ class Animal:
         self.newborn = None
 
     def procreation(self, animal_in_pos):
+        """Returns a new animal if the animal procreates, None otherwise."""
         self.newborn = None
 
         offspring_value = self.zeta * (self.w_birth + self.sigma_birth)
@@ -54,6 +125,7 @@ class Animal:
             return None
 
     def calc_fitness(self):
+        """Calculates the fitness of the animal."""
         if self.weight <= 0:
             return 0
         else:
@@ -63,15 +135,19 @@ class Animal:
             return age_parameter * weight_parameter
 
     def update_fitness(self):
+        """Updates the fitness of the animal."""
         self.fitness = self.calc_fitness()
 
     def aging(self):
+        """Animal ages by one year."""
         self.age += 1
 
     def loss_of_weight(self):
+        """Animal loses weight by one year"""
         self.weight -= self.eta * self.weight
 
     def death(self):
+        """Sets the animal to False if it dies, true otherwise."""
         self.update_fitness()
         probility_of_death = self.omega * (1 - self.fitness)
         if self.weight <= 0:
@@ -82,6 +158,7 @@ class Animal:
             # self.alive = True
             pass
     def migrate(self):
+        """Returns True if the animal migrates, False otherwise."""
         probility_of_migration = self.mu * self.fitness
         if random.random() < probility_of_migration:
             return True
@@ -105,8 +182,15 @@ class Herbivore(Animal):
     omega = 0.4
     F = 10.0
     DeltaPhiMax = None
+    default_parameters = {'w_birth': w_birth, 'sigma_birth': sigma_birth,
+                     'beta': beta, 'eta': eta, 'a_half': a_half,
+                     'phi_age': phi_age, 'w_half': w_half,
+                     'phi_weight': phi_weight, 'mu': mu,
+                     'gamma': gamma, 'zeta': zeta, 'xi': xi,
+                     'omega': omega, 'F': F, 'DeltaPhiMax': DeltaPhiMax}
 
     def feeding(self, fodder=300):
+        """Herbivore eats the amount of fodder given, or the maximum amount of fodder it can eat."""
         if fodder < self.F:
             amount_eaten = fodder
         else:
@@ -131,13 +215,17 @@ class Carnivore(Animal):
     xi = 1.1
     omega = 0.8
     F = 50.0
-    DeltaPhiMax = 15.0
+    DeltaPhiMax = 10.0
+    default_parameters = {'w_birth': w_birth, 'sigma_birth': sigma_birth,
+                     'beta': beta, 'eta': eta, 'a_half': a_half,
+                     'phi_age': phi_age, 'w_half': w_half,
+                     'phi_weight': phi_weight, 'mu': mu,
+                     'gamma': gamma, 'zeta': zeta, 'xi': xi,
+                     'omega': omega, 'F': F, 'DeltaPhiMax': DeltaPhiMax}
 
     def feeding(self, sorted_lowest_fitness_herbivore):
-        """Carnivore tries to kill the weakest herbivore first, then the next weakest and so on."""
-
+        """Carnivore kills the weakest herbivore until it has eaten the amount of fodder it can eat."""
         amount_eaten = 0
-
         for herbivore in sorted_lowest_fitness_herbivore:
             if amount_eaten >= self.F:
                 break

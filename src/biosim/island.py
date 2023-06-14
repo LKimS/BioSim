@@ -3,8 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 
-from biosim.animals import Animal
+
 from .cell import Water, Lowland, Highland, Desert
+
 
 # TODO: error handling and bitmap to plot map
 
