@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
 import os
-import threading
+import multiprocessing
 
 # Update these variables to point to your ffmpeg and convert binaries
 # If you installed ffmpeg using conda or installed both softwares in
@@ -89,6 +89,7 @@ class Graphics:
 
         self.landscape_ax = None
 
+        self.process = None
 
 
     def update(self, step, herbivore_population, carnivore_population, herbivore_dict_map = None, carnivore_dict_map=None):
@@ -108,8 +109,9 @@ class Graphics:
         plt.pause(1e-6)  # pause required to pass control to GUI
 
 
-        t = threading.Thread(target=self._save_graphics, args=([step]))
-        t.start()
+        self.process = multiprocessing.Process(target=self._save_graphics, args=([step]))
+        self.process.start()
+        self._save_graphics(step)
 
     def make_movie(self, movie_fmt=None):
         """

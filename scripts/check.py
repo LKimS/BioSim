@@ -8,7 +8,7 @@ the INF200 project June 2023.
 __author__ = "Hans Ekkehard Plesser, NMBU"
 __email__ = "hans.ekkehard.plesser@nmbu.no"
 
-#Time taken: 82.8325 seconds
+#Time taken: 57.1594 seconds
 
 import textwrap
 import matplotlib.pyplot as plt
@@ -52,7 +52,7 @@ if __name__ == '__main__':
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60, 'delta': 2}},
                  vis_years=1,
-                 img_dir='threaded',
+                 img_dir='process',
                  img_base='test',
                  img_fmt='png',
                  img_years=50)
