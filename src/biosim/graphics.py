@@ -14,7 +14,6 @@
 """
 
 import matplotlib.pyplot as plt
-from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
 import subprocess
 import os
@@ -144,6 +143,7 @@ class Graphics:
         self.landscape_ax = None
 
         self.live_visualization = live_visualization
+        self.year = None
 
 
 
@@ -152,12 +152,12 @@ class Graphics:
                carnivore_population,
                herbivore_dict_map ={},
                carnivore_dict_map={},
-               herbivore_age_list=[0],
-               carnivore_age_list=[0],
-               herbivore_weight_list=[0],
-               carnivore_weight_list=[0],
-               herbivore_fitness_list=[0],
-               carnivore_fitness_list=[0]):
+               herbivore_age_list=[],
+               carnivore_age_list=[],
+               herbivore_weight_list=[],
+               carnivore_weight_list=[],
+               herbivore_fitness_list=[],
+               carnivore_fitness_list=[]):
         """
         Updates graphics with current data and save to file if necessary.
 
@@ -166,7 +166,7 @@ class Graphics:
         :param sys_mean: current mean value of system
         """
 
-
+        self.year = year
         self.update_population_graph(year, herbivore_population, carnivore_population)
         self.update_hervibore_heatmap(herbivore_dict_map)
         self.update_carnivore_heatmap(carnivore_dict_map)
@@ -348,27 +348,27 @@ class Graphics:
 
 
 
-    def update_population_graph(self, step, herbivore_population, carnivore_population):
+    def update_population_graph(self, year, herbivore_population, carnivore_population):
         """Update the graph of the population.
         Parameters
         ----------
-        step
+        year
         population
 
         Returns
         -------
 
         """
-        if step > 300:
-            self.population_ax.set_xlim(step-300, step)
+        if year > 300:
+            self.population_ax.set_xlim(year - 300, year)
 
 
         herbivore_y_data = self.herbivore_population_line.get_ydata()
-        herbivore_y_data[step] = herbivore_population
+        herbivore_y_data[year] = herbivore_population
         self.herbivore_population_line.set_ydata(herbivore_y_data)
 
         carnivore_y_data = self.carnivore_population_line.get_ydata()
-        carnivore_y_data[step] = carnivore_population
+        carnivore_y_data[year] = carnivore_population
         self.carnivore_population_line.set_ydata(carnivore_y_data)
 
         y_val = [num for num in herbivore_y_data + carnivore_y_data if not np.isnan(num)]
@@ -402,7 +402,6 @@ class Graphics:
 
     def update_carnivore_heatmap(self, carnivore_dict_map):
         if self.carnivore_heatmap_img is None:
-
 
             dimx = self.bitmap.shape[0]
             dimy = self.bitmap.shape[1]

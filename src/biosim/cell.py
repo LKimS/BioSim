@@ -44,8 +44,6 @@ class Cell_with_animals(Cell):
         super().__init__(location)
         self.herbivore = []
         self.carnivore = []
-        self.amount_herbivore = 0
-        self.amount_carnivore = 0
         self.cell_pop_history = {'Herbivore': [], 'Carnivore': []}
 
     #General methods

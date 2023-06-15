@@ -173,19 +173,10 @@ class Island:
 
 
         for animal in cell.herbivore+cell.carnivore:
-            self.specs['Herbivore']['weight'].append(animal.weight)
-            self.specs['Herbivore']['age'].append(animal.age)
-            self.specs['Herbivore']['fitness'].append(animal.fitness)
+            self.specs[animal.species]['age'].append(animal.age)
+            self.specs[animal.species]['weight'].append(animal.weight)
+            self.specs[animal.species]['fitness'].append(animal.fitness)
 
-        for animal in cell.carnivore:
-            self.specs['Carnivore']['weight'].append(animal.weight)
-            self.specs['Carnivore']['age'].append(animal.age)
-            self.specs['Carnivore']['fitness'].append(animal.fitness)
-
-        '''
-        for animal in cell.herbivore:
-            self.specs[animal ]['age'].append(animal.age)
-        '''
 
 
     def collect_data(self):

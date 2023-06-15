@@ -173,8 +173,13 @@ class BioSim:
                                      herbivore_population=self.island.pop['Herbivore'],
                                      carnivore_population=self.island.pop['Carnivore'],
                                      herbivore_dict_map=self.island.pop_cell['Herbivore'],
-                                     carnivore_dict_map=self.island.pop_cell['Carnivore'])
-                                     #herbivore_age_list=self.island.specs['Herbivore']['age'])
+                                     carnivore_dict_map=self.island.pop_cell['Carnivore'],
+                                     herbivore_age_list=self.island.specs['Herbivore']['age'],
+                                     carnivore_age_list=self.island.specs['Carnivore']['age'],
+                                     herbivore_weight_list=self.island.specs['Herbivore']['weight'],
+                                     carnivore_weight_list=self.island.specs['Carnivore']['weight'],
+                                     herbivore_fitness_list=self.island.specs['Herbivore']['fitness'],
+                                     carnivore_fitness_list=self.island.specs['Carnivore']['fitness'])
 
             self.current_year += 1
 
