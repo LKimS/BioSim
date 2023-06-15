@@ -279,7 +279,7 @@ class Graphics:
 
         # create new figure window
         if self._fig is None:
-            img_size = (10, 10)
+            img_size = (16,9)
             self._fig = plt.figure(figsize=img_size)
 
         if self._ax is None:
@@ -347,12 +347,14 @@ class Graphics:
             self._population_ax.set_xlim(0, 300)
             self._population_ax.set_ylim(0, self.ymax_animals)
             self._population_ax.set_title('Population')
-            self._population_ax.set_xlabel('Year')
+            self._population_ax.set_xlabel('Year', loc='left')
 
         if self._herbivore_population_line is None:
             herbivore_population_plot = self._population_ax.plot(np.arange(0, final_year + 1),
-                                                                 np.full(final_year + 1, np.nan), color="blue")
+                                                                 np.full(final_year + 1, np.nan),
+                                                                 color="blue", label="Herbivores")
             self._herbivore_population_line = herbivore_population_plot[0]
+            plt.legend()
 
         else:
             x_data, y_data = self._herbivore_population_line.get_data()
@@ -364,7 +366,9 @@ class Graphics:
 
         if self._carnivore_population_line is None:
             carnivore_population_plot = self._population_ax.plot(np.arange(0, final_year + 1),
-                                                                 np.full(final_year + 1, np.nan), color="red")
+                                                                 np.full(final_year + 1, np.nan),
+                                                                 color="red", label="Carnivores")
+            plt.legend()
             self._carnivore_population_line = carnivore_population_plot[0]
         else:
             x_data, y_data = self._carnivore_population_line.get_data()
@@ -388,6 +392,7 @@ class Graphics:
             self.age_carnivore_hist = self._hist_age_ax.stairs(self.age_hist_counts, self.age_bin_edges, color='red',
                                                                lw=2, label='Carnivore')
             self._hist_age_ax.set_ylim(0, self.age_y_max)
+            plt.legend(loc="upper center")
 
         if self._hist_weight_ax is None:
             self._hist_weight_ax = self._fig.add_subplot(self._ax[2, 1])
@@ -403,6 +408,7 @@ class Graphics:
             self.weight_carnivore_hist = self._hist_weight_ax.stairs(self.weight_hist_counts, self.weight_bin_edges, color='red',
                                                                      lw=2, label='Carnivore')
             self._hist_weight_ax.set_ylim(0, self.weight_y_max)
+            plt.legend(loc="upper center")
 
         if self._hist_fitness_ax is None:
             self._hist_fitness_ax = self._fig.add_subplot(self._ax[2, 2])
@@ -418,6 +424,7 @@ class Graphics:
             self.fitness_carnivore_hist = self._hist_fitness_ax.stairs(self.fitness_hist_counts, self.fitness_bin_edges, color='red',
                                                                        lw=2, label='Carnivore')
             self._hist_fitness_ax.set_ylim(0, self.fitness_y_max)
+            plt.legend(loc="upper center")
 
 
 
