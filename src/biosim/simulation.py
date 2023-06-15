@@ -1,5 +1,5 @@
 """
-Implements a complete simulation for BioSim class.
+Implements a complete simulation.
 """
 from .island import Island
 from .cell import Lowland, Highland
@@ -144,12 +144,15 @@ class BioSim:
         """
         Run simulation while visualizing the result.
 
-        :param num_years: number of simulation steps to execute
-        :param vis_years: interval between visualization updates
-        :param img_years: interval between visualizations saved to files
-                          (default: vis_years)
+        Parameters
+        ----------
+        num_years: number of simulation steps to execute
+        vis_years: interval between visualization updates
+        img_years: interval between visualizations saved to files (default: vis_years)
 
-        .. note:: Image files will be numbered consecutively.
+        Notes
+        -----
+        Image files will be numbered consecutively.
         """
         self.final_year = self.current_year + num_years
 
@@ -194,7 +197,27 @@ class BioSim:
                        carnivore_weight_list = [],
                        herbivore_fitness_list = [],
                        carnivore_fitness_list = []):
-        """Update graphics"""
+        """
+        Update graphics with animal info from current year.
+
+        Parameters
+        ----------
+        year
+        herbivore_population
+        carnivore_population
+        herbivore_dict_map
+        carnivore_dict_map
+        herbivore_age_list
+        carnivore_age_list
+        herbivore_weight_list
+        carnivore_weight_list
+        herbivore_fitness_list
+        carnivore_fitness_list
+
+        Returns
+        -------
+
+        """
 
 
         if year % self.vis_years == 0:
@@ -218,6 +241,8 @@ class BioSim:
         ----------
         population : List of dictionaries
             See BioSim Task Description, Sec 3.3.3 for details.
+
+
         """
 
         self.island.add_population(population)

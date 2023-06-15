@@ -1,4 +1,5 @@
 """
+
 :mod:`randvis.graphics` provides graphics support for RandVis.
 
 .. note::
@@ -291,11 +292,14 @@ class Graphics:
 
 
     def update_population_graph(self, year, herbivore_population, carnivore_population):
-        """Update the graph of the population.
+        """
+        Update the graph of the population.
         Parameters
         ----------
+        self
         year
-        population
+        herbivore_population
+        carnivore_population
 
         Returns
         -------
@@ -319,6 +323,16 @@ class Graphics:
         self.population_ax.set_ylim(0, y_max*1.1)
 
     def update_hervibore_heatmap(self, herbivore_dict_map):
+        """
+        Update heatmap of Herbivores
+        Parameters
+        ----------
+        herbivore_dict_map
+
+        Returns
+        -------
+
+        """
         if self.herbivore_heatmap_img is None:
 
             dimx = self.bitmap.shape[0]
@@ -363,6 +377,17 @@ class Graphics:
             self.carnivore_heatmap_img.set_data(self.carnivore_map)
 
     def update_histogram_age(self, herbivore_age_list, carnivore_age_list):
+        """
+        Updates age histogram for Herbivores and Carnivores
+        Parameters
+        ----------
+        herbivore_age_list
+        carnivore_age_list
+
+        Returns
+        -------
+
+        """
 
         if herbivore_age_list is not None:
             hist_counts_age_herbivore, _ = np.histogram(herbivore_age_list, bins=self.age_bin_edges, density=True)
@@ -374,6 +399,17 @@ class Graphics:
 
 
     def update_histogram_weight(self, herbivore_weight_list, carnivore_weight_list):
+        """
+        Updates weight histogram for Herbivores and Carnivores
+        Parameters
+        ----------
+        herbivore_weight_list
+        carnivore_weight_list
+
+        Returns
+        -------
+
+        """
 
         if herbivore_weight_list is not None:
             hist_counts_weight_herbivore, _ = np.histogram(herbivore_weight_list, bins=self.weight_bin_edges, density=True)
@@ -384,7 +420,17 @@ class Graphics:
             self.weight_carnivore_hist.set_data(hist_counts_weight_carnivore)
 
     def update_histogram_fitness(self, herbivore_fitness_list, carnivore_fitness_list):
+        """
+        Updates fitness histogram for Herbivores and Carnivores
+        Parameters
+        ----------
+        herbivore_fitness_list
+        carnivore_fitness_list
 
+        Returns
+        -------
+
+        """
 
         if herbivore_fitness_list is not None:
             hist_counts_fitness_herbivore, _ = np.histogram(herbivore_fitness_list, bins=self.fitness_bin_edges, density=True)
@@ -395,14 +441,16 @@ class Graphics:
             self.fitness_carnivore_hist.set_data(hist_counts_fitness_carnivore)
 
 
-
-
-
-
-
-
     def _save_graphics(self, step):
-        """Saves graphics to file if file name given."""
+        """
+        Saves graphics to file if file name given.
+
+        Parameters
+        ----------
+        self
+        step
+
+        """
 
         if self._img_base is None or step % self.img_years != 0:
             return

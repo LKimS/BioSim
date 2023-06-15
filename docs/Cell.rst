@@ -3,26 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to biosim-u22-kim-mathias's documentation!
+Cell
 ==================================================
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Contents:
-
-   Simulation
-   Graphics
-   Island
-   Cell
-   Animals
+.. automodule:: biosim.cell
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

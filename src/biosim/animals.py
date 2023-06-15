@@ -1,13 +1,14 @@
 """
-Implements the Animal class.
+Implements a class for animals.
 """
 
 import math
 import random
 
 class Animal:
-    """Animals witch can be herbivore or carnivore with attributes and methods for both. """
-
+    """
+    A complete lifecycle to an animal on the island.
+    """
     # These parameters are defined at the class level
     w_birth = None
     sigma_birth = None
@@ -78,8 +79,15 @@ class Animal:
 
     @classmethod
     def get_parameters(cls):
-        """Get parameter for the Animal.
-        :return: dict
+        """
+        Get parameter for the Animal.
+        Parameters
+        ----------
+        cls : class
+
+        Returns
+        -------
+        dict
         """
         return {'w_birth': cls.w_birth, 'sigma_birth': cls.sigma_birth,
                 'beta': cls.beta, 'eta': cls.eta, 'a_half': cls.a_half,
@@ -90,7 +98,16 @@ class Animal:
 
 
     def __init__(self, row, loc):
-        """Create an animal with attributes from row and loc."""
+        """
+        Create an animal with attributes and location.
+        Parameters
+        ----------
+        row : dict
+            Dictionary with animal attributes.
+        loc : tuple
+            Tuple with location of the animal.
+
+        """
         self.row = row
         self.loc = loc
         self.species = self.row["species"]
@@ -102,18 +119,17 @@ class Animal:
 
     def procreation(self, animal_in_pos):
         """
-        Returns a new animal if the animal procreates, None otherwise.
-        Repeat given text a given number of times.
+        Procreation of an animal.
 
         Parameters
         ----------
         animal_in_pos : list
-            Animals in the same position as the parent.
+            Number of animals in the same position as the parent.
 
         Returns
         -------
         dict
-            Dictionary with a new born animal.
+            Dictionary with a newborn animal.
         """
         self.newborn = None
 
@@ -134,11 +150,21 @@ class Animal:
                     newborn_info = {"species": self.species, "age": 0, "weight": newborn_weight}
                     return type(self)(newborn_info, self.loc)
         else:
-            #'animal does not procreate'
+            #animal does not procreate
             return None
 
     def calc_fitness(self):
-        """Calculates the fitness of the animal."""
+        """
+        Calculates the fitness of the animal.
+
+        Parameters
+        ----------
+        self : class
+
+        Returns
+        -------
+        float
+        """
         if self.weight <= 0:
             return 0
         else:
@@ -148,19 +174,46 @@ class Animal:
             return age_parameter * weight_parameter
 
     def update_fitness(self):
-        """Updates the fitness of the animal."""
+        """
+        Updates the fitness of the animal.
+
+        Parameters
+        ----------
+        self : class
+        """
         self.fitness = self.calc_fitness()
 
     def aging(self):
-        """Animal ages by one year."""
+        """
+        Animal ages by one year.
+
+        Parameters
+        ----------
+        self : class
+
+        """
         self.age += 1
 
     def loss_of_weight(self):
-        """Animal loses weight by one year"""
+        """
+        Animal loses weight by one year
+
+        Parameters
+        ----------
+        self : class
+
+        """
         self.weight -= self.eta * self.weight
 
     def death(self):
-        """Sets the animal to False if it dies, true otherwise."""
+        """
+        Animals probability of death increases with low fitness.
+
+        Parameters
+        ----------
+        self : class
+
+        """
         self.update_fitness()
         probility_of_death = self.omega * (1 - self.fitness)
         if self.weight <= 0:
@@ -168,10 +221,12 @@ class Animal:
         elif random.random() < probility_of_death:
             self.alive = False
         else:
-            # self.alive = True
+            #self.alive = True
             pass
     def migrate(self):
-        """Returns True if the animal migrates, False otherwise."""
+        """
+        Animals probability of migration increases with high fitness.
+        """
         probility_of_migration = self.mu * self.fitness
         if random.random() < probility_of_migration:
             return True
@@ -179,6 +234,9 @@ class Animal:
             return False
 
 class Herbivore(Animal):
+    """
+    Herbivores depends on the amount of food available to survive and reproduce.
+    """
     w_birth = 8.0
     sigma_birth = 1.5
     beta = 0.9
@@ -203,7 +261,9 @@ class Herbivore(Animal):
                      'omega': omega, 'F': F, 'DeltaPhiMax': DeltaPhiMax}
 
     def feeding(self, fodder=300):
-        """Herbivore eats the amount of fodder given, or the maximum amount of fodder it can eat."""
+        """
+        Herbivore eats the amount of fodder given, or the maximum amount of fodder it can eat.
+        """
         if fodder < self.F:
             amount_eaten = fodder
         else:
@@ -214,6 +274,9 @@ class Herbivore(Animal):
         return amount_eaten
 
 class Carnivore(Animal):
+    """
+    Carnivores depends on the availability of prey to survive and reproduce.
+    """
     w_birth = 6.0
     sigma_birth = 1.0
     beta = 0.75
@@ -237,7 +300,16 @@ class Carnivore(Animal):
                      'omega': omega, 'F': F, 'DeltaPhiMax': DeltaPhiMax}
 
     def feeding(self, sorted_lowest_fitness_herbivore):
-        """Carnivore kills the weakest herbivore until it has eaten the amount of fodder it can eat."""
+        """
+        Carnivore kills the weakest herbivore until it has eaten the amount of fodder it can eat.
+
+        Parameters
+        ----------
+        self : class
+        sorted_lowest_fitness_herbivore : list
+            List of herbivores sorted by lowest fitness.
+
+        """
         amount_eaten = 0
         for herbivore in sorted_lowest_fitness_herbivore:
             if amount_eaten >= self.F:
