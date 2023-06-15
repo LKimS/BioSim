@@ -7,11 +7,10 @@ Welcome to biosim-u22-kim-mathias's documentation!
 ==================================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
 
    Simulation
-   Graphics
    Island
    Cell
    Animals
