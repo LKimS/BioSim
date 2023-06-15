@@ -33,8 +33,8 @@ geogr = """\
 island = Island(geogr)
 
 
-
-img_size = (10,10)
+scale_factor = .8
+img_size = (16 * scale_factor,9 * scale_factor)
 fig = plt.figure(figsize=img_size)
 
 ax = fig.add_gridspec(3, 3)

@@ -113,7 +113,7 @@ while year < SIM_YEARS:
     # tile/cell work
     for loc, cell in habital_map.items():
         # Teller dyr i cellen
-        cell.update_animal_count()
+        #cell.update_animal_count()
         sum_herbivore += cell.count_herbivore
         sum_carnivore += cell.count_carnivore
         cell_pop_history['Herbivore'][loc].append(cell.count_herbivore)
