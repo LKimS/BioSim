@@ -274,7 +274,7 @@ class Graphics:
             for location, population_history in herbivore_dict_map.items():
                 x = location[0] - 1
                 y = location[1] - 1
-                self.herbivore_map[x][y] = population_history[-1]
+                self.herbivore_map[x][y] = population_history
             self.herbivore_heatmap_img = self.herbivore_heatmap_ax.imshow(self.herbivore_map,
                                                                            interpolation='nearest',
                                                                            vmin=0, vmax=100)
@@ -282,7 +282,7 @@ class Graphics:
             for location, population_history in herbivore_dict_map.items():
                 x = location[0] - 1
                 y = location[1] - 1
-                self.herbivore_map[x][y] = population_history[-1]
+                self.herbivore_map[x][y] = population_history
             self.herbivore_heatmap_img.set_data(self.herbivore_map)
 
     def update_carnivore_heatmap(self, carnivore_dict_map):
@@ -296,7 +296,7 @@ class Graphics:
             for key, value in carnivore_dict_map.items():
                 x = key[0] - 1
                 y = key[1] - 1
-                self.carnivore_map[x][y] = value[-1]
+                self.carnivore_map[x][y] = value
             self.carnivore_heatmap_img = self.carnivore_heatmap_ax.imshow(self.carnivore_map,
                                                                            interpolation='nearest',
                                                                            vmin=0, vmax=100)
@@ -304,7 +304,7 @@ class Graphics:
             for key, value in carnivore_dict_map.items():
                 x = key[0] - 1
                 y = key[1] - 1
-                self.carnivore_map[x][y] = value[-1]
+                self.carnivore_map[x][y] = value
             self.carnivore_heatmap_img.set_data(self.carnivore_map)
 
 
