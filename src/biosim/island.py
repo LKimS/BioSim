@@ -171,7 +171,7 @@ class Island:
         self.pop_cell['Herbivore'][loc] = len(cell.herbivore)
         self.pop_cell['Carnivore'][loc] = len(cell.carnivore)
 
-
+        '''
         for animal in cell.herbivore+cell.carnivore:
             self.specs['Herbivore']['weight'].append(animal.weight)
             self.specs['Herbivore']['age'].append(animal.age)
@@ -181,11 +181,13 @@ class Island:
             self.specs['Carnivore']['weight'].append(animal.weight)
             self.specs['Carnivore']['age'].append(animal.age)
             self.specs['Carnivore']['fitness'].append(animal.fitness)
+        '''
 
-        '''
-        for animal in cell.herbivore:
-            self.specs[animal ]['age'].append(animal.age)
-        '''
+        for animal in cell.herbivore+cell.carnivore:
+            self.specs[animal.species]['age'].append(animal.age)
+            self.specs[animal.species]['weight'].append(animal.weight)
+            self.specs[animal.species]['fitness'].append(animal.fitness)
+
 
 
     def collect_data(self):
