@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
     sim.simulate(num_years=100)
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=100)
+    sim.simulate(num_years=400)
 
     end = time.perf_counter()
     print(f"Time elapsed: {end - start:0.4f} seconds")
