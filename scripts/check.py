@@ -47,6 +47,9 @@ if __name__ == '__main__':
                            'weight': 20}
                           for _ in range(40)]}]
 
+
+
+
     sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
                  seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
@@ -56,7 +59,16 @@ if __name__ == '__main__':
                  img_dir='mov',
                  img_base='test',
                  img_fmt='png',
-                 img_years=50)
+                 img_years=50,
+                 live_visualization=False)
+
+
+
+
+
+
+
+
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
     sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,

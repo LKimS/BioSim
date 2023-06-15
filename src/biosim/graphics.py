@@ -35,7 +35,7 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'   # alternatives: mp4, gif
 class Graphics:
     """Provides graphics support for RandVis."""
 
-    def __init__(self, img_dir=None, img_name=None, img_fmt=None, img_years=None):
+    def __init__(self, img_dir=None, img_name=None, img_fmt=None, img_years=None, live_visualization=True):
         """
         :param img_dir: directory for image files; no images if None
         :type img_dir: str
@@ -87,6 +87,8 @@ class Graphics:
         self.year_text = None
 
         self.landscape_ax = None
+
+        self.live_visualization = live_visualization
 
 
 
@@ -166,6 +168,9 @@ class Graphics:
         if self.fig is None:
             img_size = (10, 10)
             self.fig = plt.figure(figsize=img_size)
+
+        if self.fig is not None and not self.live_visualization:
+            plt.close(self.fig)
 
         if self.ax is None:
             self.ax = self.fig.add_gridspec(3, 3)
