@@ -170,18 +170,9 @@ class Island:
         """Update data for visualization of island map."""
         self.pop_cell['Herbivore'][loc] = len(cell.herbivore)
         self.pop_cell['Carnivore'][loc] = len(cell.carnivore)
-        '''
-        start_loc = self.habital_map.keys()[0]
-        if loc == start_loc:
-            self.specs['Herbivore']['weight'] = []
-            self.specs['Herbivore']['age'] = []
-            self.specs['Herbivore']['fitness'] = []
-            self.specs['Carnivore']['weight'] = []
-            self.specs['Carnivore']['age'] = []
-            self.specs['Carnivore']['fitness'] = []
-        '''
 
-        for animal in cell.herbivore:
+
+        for animal in cell.herbivore+cell.carnivore:
             self.specs['Herbivore']['weight'].append(animal.weight)
             self.specs['Herbivore']['age'].append(animal.age)
             self.specs['Herbivore']['fitness'].append(animal.fitness)
@@ -190,6 +181,11 @@ class Island:
             self.specs['Carnivore']['weight'].append(animal.weight)
             self.specs['Carnivore']['age'].append(animal.age)
             self.specs['Carnivore']['fitness'].append(animal.fitness)
+
+        '''
+        for animal in cell.herbivore:
+            self.specs[animal ]['age'].append(animal.age)
+        '''
 
 
     def collect_data(self):
