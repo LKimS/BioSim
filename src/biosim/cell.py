@@ -112,12 +112,15 @@ class Cell_with_animals(Cell):
                 self.carnivore.extend(newborn_list)
 
     def feed_animals(self):
-        self.sort_herbivore_after_fitness(descending=False)
-        random.shuffle(self.carnivore)
-        for animal in self.carnivore:
-            animal.feeding(self.herbivore)
-            #remove dead animals
-            self.herbivore = [animal for animal in self.herbivore if animal.alive]
+
+        # skip if there is no herbivores in the cell
+        if self.count_herbivore > 0:
+            self.sort_herbivore_after_fitness(descending=False)
+            random.shuffle(self.carnivore)
+            for animal in self.carnivore:
+                animal.feeding(self.herbivore)
+                #remove dead animals
+                self.herbivore = [animal for animal in self.herbivore if animal.alive]
 
     def moving_animals_list(self):
         """
