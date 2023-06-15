@@ -20,7 +20,7 @@ class BioSim:
     """
 
     def __init__(self, island_map, ini_pop=None, seed=123,
-                 vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None, live_visualization=True,
+                 vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_years=None, img_dir=None, img_base=None, img_fmt='png',
                  log_file=None):
 
@@ -89,8 +89,8 @@ class BioSim:
         if ini_pop is not None:
             self.island.add_population(ini_pop)
         self.pop_history = {'Herbivore': [], 'Carnivore': []}
-        self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years,
-                                 ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs, live_visualization=live_visualization)
+        self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years, vis_years=vis_years,
+                                 ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs)
         self.current_year = 1
 
 
@@ -162,7 +162,7 @@ class BioSim:
             raise ValueError('img_years must be multiple of vis_steps')
 
         self.final_year = self.current_year + num_years
-        self.graphics.setup(self.island.bitmap, self.final_year)
+        self.graphics.setup(self.island.map_processed, self.final_year)
 
         while self.current_year < self.final_year + 1:
             self.island.yearly_island_cycle()
@@ -216,6 +216,6 @@ class BioSim:
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
 
-    def make_movie(self):
+    def make_movie(self, movie_fmt='mp4'):
         """Create MPEG4 movie from visualization images saved."""
-        self.graphics.make_movie()
+        self.graphics.make_movie(movie_fmt)
