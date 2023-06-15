@@ -91,6 +91,7 @@ class Graphics:
         self.landscape_ax = None
 
         self.live_visualization = live_visualization
+        self.year = None
 
 
 
@@ -113,7 +114,7 @@ class Graphics:
         :param sys_mean: current mean value of system
         """
 
-
+        self.year = year
         self.update_population_graph(year, herbivore_population, carnivore_population)
         self.update_hervibore_heatmap(herbivore_dict_map)
         self.update_carnivore_heatmap(carnivore_dict_map)
@@ -275,7 +276,7 @@ class Graphics:
 
             self.fitness_bin_max = 1
             self.fitness_bin_width = self.fitness_bin_max / 20
-            self.fitness_y_max = 1
+            self.fitness_y_max = 40
 
             self.fitness_bin_edges = np.arange(0, self.fitness_bin_max + self.fitness_bin_width / 2, self.fitness_bin_width)
             self.fitness_hist_counts = np.zeros_like(self.fitness_bin_edges[:-1], dtype=float)
@@ -289,27 +290,27 @@ class Graphics:
 
 
 
-    def update_population_graph(self, step, herbivore_population, carnivore_population):
+    def update_population_graph(self, year, herbivore_population, carnivore_population):
         """Update the graph of the population.
         Parameters
         ----------
-        step
+        year
         population
 
         Returns
         -------
 
         """
-        if step > 300:
-            self.population_ax.set_xlim(step-300, step)
+        if year > 300:
+            self.population_ax.set_xlim(year - 300, year)
 
 
         herbivore_y_data = self.herbivore_population_line.get_ydata()
-        herbivore_y_data[step] = herbivore_population
+        herbivore_y_data[year] = herbivore_population
         self.herbivore_population_line.set_ydata(herbivore_y_data)
 
         carnivore_y_data = self.carnivore_population_line.get_ydata()
-        carnivore_y_data[step] = carnivore_population
+        carnivore_y_data[year] = carnivore_population
         self.carnivore_population_line.set_ydata(carnivore_y_data)
 
         y_val = [num for num in herbivore_y_data + carnivore_y_data if not np.isnan(num)]
@@ -383,6 +384,7 @@ class Graphics:
             self.weight_carnivore_hist.set_data(hist_counts_weight_carnivore)
 
     def update_histogram_fitness(self, herbivore_fitness_list, carnivore_fitness_list):
+
 
         if herbivore_fitness_list is not None:
             hist_counts_fitness_herbivore, _ = np.histogram(herbivore_fitness_list, bins=self.fitness_bin_edges, density=True)
