@@ -23,14 +23,14 @@ if __name__ == '__main__':
     geogr = """\
                WWWWWWWWWWWWWWWWWWWWW
                DDDDDDDDDDDDDDDDDDDDD
-               DDDDDDDDDDDDDDDDDDDDD"""
+               DLLLDDDDDDDDDDDDDDDDD"""
     geogr = textwrap.dedent(geogr)
 
     ini_herbs = [{'loc': (3, 2),
                   'pop': [{'species': 'Herbivore',
                            'age': 5,
                            'weight': 20}
-                          for _ in range(150)]}]
+                          for _ in range(50)]}]
     ini_carns = [{'loc': (3, 2),
                   'pop': [{'species': 'Carnivore',
                            'age': 5,
