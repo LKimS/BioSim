@@ -20,7 +20,7 @@ class BioSim:
     """
 
     def __init__(self, island_map, ini_pop, seed,
-                 vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
+                 vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None, live_visualization=True,
                  img_years=None, img_dir=None, img_base=None, img_fmt='png',
                  log_file=None):
 
@@ -41,6 +41,8 @@ class BioSim:
             Color-scale limits for animal densities, see below
         hist_specs : dict
             Specifications for histograms, see below
+        live_visualization : bool
+            Boolean specifying if live visualization is to be used (default: True)
         img_years : int
             Years between visualizations saved to files (default: `vis_years`)
         img_dir : str
