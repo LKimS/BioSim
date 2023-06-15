@@ -22,8 +22,18 @@ if __name__ == '__main__':
 
     geogr = """\
                WWWWWWWWWWWWWWWWWWWWW
-               DDDDDDDDDDDDDDDDDDDDD
-               DDDDDDDDDDDDDDDDDDDDD"""
+               WWWWWWWWHWWWWLLLLLLLW
+               WHHHHHLLLLWWLLLLLLLWW
+               WHHHHHHHHHWWLLLLLLWWW
+               WHHHHHLLLLLLLLLLLLWWW
+               WHHHHHLLLDDLLLHLLLWWW
+               WHHLLLLLDDDLLLHHHHWWW
+               WWHHHHLLLDDLLLHWWWWWW
+               WHHHLLLLLDDLLLLLLLWWW
+               WHHHHLLLLDDLLLLWWWWWW
+               WWHHHHLLLLLLLLWWWWWWW
+               WWWHHHHLLLLLLLWWWWWWW
+               WWWWWWWWWWWWWWWWWWWWW"""
     geogr = textwrap.dedent(geogr)
 
     ini_herbs = [{'loc': (3, 2),
@@ -41,7 +51,8 @@ if __name__ == '__main__':
                  seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
-                             'weight': {'max': 60, 'delta': 2}})
+                             'weight': {'max': 60, 'delta': 2}},
+                 vis_years=1)
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
     sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,
@@ -51,7 +62,7 @@ if __name__ == '__main__':
 
     sim.simulate(num_years=100)
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=400)
+    sim.simulate(num_years=100)
 
     end = time.perf_counter()
     print(f"Time elapsed: {end - start:0.4f} seconds")

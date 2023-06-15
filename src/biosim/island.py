@@ -24,7 +24,7 @@ ERROR HANDLING:
 
 class Island:
 
-    #INIT METHOD
+#INIT METHOD
     def __init__(self, input_island_map, random_seed=0):
         random.seed(random_seed)
 
@@ -36,13 +36,11 @@ class Island:
         self.habital_map = self.get_map_with_animals()
         self.bitmap = self.create_bitmap(self.map_processed)
 
-        self.pop_cell_herbivore = {}
-        self.pop_cell_carnivore = {}
-        self.pop_herbivore = 0
-        self.pop_carnivore = 0
+        self.pop_cell = {'Herbivore': {}, 'Carnivore': {}}
+        self.pop = {'Herbivore': 0, 'Carnivore': 0}
 
 
-    #METHODS for input and processing
+#METHODS for input and processing
     def process_input_map(self, input_island_map):
         lines = input_island_map.split("\n")
         processed_lines = [line.strip() for line in lines]
@@ -87,7 +85,7 @@ class Island:
         return cell
 
 
-    #METHODS for adding animals
+#METHODS for adding animals
     def add_population(self, population):
         for item in population:
             x, y = item["loc"]
@@ -114,7 +112,7 @@ class Island:
                 self.habital_map[old_location].remove_animal(animal)
 
 
-    #METHODS for creating bitmap and plotting
+#METHODS for creating bitmap and plotting
     def create_bitmap(self, map_processed):
 
         height = len(map_processed)
@@ -163,12 +161,12 @@ class Island:
 
     def update_data(self, loc, cell):
         """Update data for visualization of island map."""
-        self.pop_cell_herbivore[loc] = len(cell.herbivore)
-        self.pop_cell_carnivore[loc] = len(cell.carnivore)
+        self.pop_cell['Herbivore'][loc] = len(cell.herbivore)
+        self.pop_cell['Carnivore'][loc] = len(cell.carnivore)
 
     def collect_data(self):
         """Collects data from all cells on island."""
-        self.pop_herbivore = sum(self.pop_cell_herbivore.values())
-        self.pop_carnivore = sum(self.pop_cell_carnivore.values())
+        self.pop['Herbivore'] = sum(self.pop_cell['Herbivore'].values())
+        self.pop['Carnivore'] = sum(self.pop_cell['Carnivore'].values())
 
 
