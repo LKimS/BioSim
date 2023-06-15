@@ -152,6 +152,7 @@ class BioSim:
 
         .. note:: Image files will be numbered consecutively.
         """
+        self.vis_years = vis_years
 
         if img_years is None:
             img_years = vis_years
@@ -159,15 +160,16 @@ class BioSim:
         if img_years % vis_years != 0:
             raise ValueError('img_years must be multiple of vis_steps')
 
-        self.final_year = self.current_year + num_years
         self.graphics.setup(self.island.bitmap, self.final_year)
+
+        self.final_year = self.current_year + num_years
+
 
         while self.current_year < self.final_year + 1:
             self.island.yearly_island_cycle()
             self.update_history_data()
 
-            if self.current_year % vis_years == 0:
-                self.graphics.update(self.current_year,
+            self.upate_graphics(self.current_year,
                                      herbivore_population=self.island.pop['Herbivore'],
                                      carnivore_population=self.island.pop['Carnivore'],
                                      herbivore_dict_map=self.island.pop_cell['Herbivore'],
@@ -182,6 +184,34 @@ class BioSim:
             self.current_year += 1
 
 
+
+    def upate_graphics(self ,
+                       year,
+                       herbivore_population = [],
+                       carnivore_population = [],
+                       herbivore_dict_map = {},
+                       carnivore_dict_map = {},
+                       herbivore_age_list = [],
+                       carnivore_age_list = [],
+                       herbivore_weight_list = [],
+                       carnivore_weight_list = [],
+                       herbivore_fitness_list = [],
+                       carnivore_fitness_list = []):
+        """Update graphics"""
+
+
+        if year % self.vis_years == 0:
+            self.graphics.update(self.current_year,
+                                 herbivore_population=herbivore_population,
+                                 carnivore_population=carnivore_population,
+                                 herbivore_dict_map=herbivore_dict_map,
+                                 carnivore_dict_map=carnivore_dict_map,
+                                 herbivore_age_list=herbivore_age_list,
+                                 carnivore_age_list=carnivore_age_list,
+                                 herbivore_weight_list=herbivore_weight_list,
+                                 carnivore_weight_list=carnivore_weight_list,
+                                 herbivore_fitness_list=herbivore_fitness_list,
+                                 carnivore_fitness_list=carnivore_fitness_list)
     def update_history_data(self):
         """Update history data for visualization"""
 
