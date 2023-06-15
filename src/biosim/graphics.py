@@ -184,7 +184,7 @@ class Graphics:
         if self.fig is None:
             img_size = (10, 10)
             self.fig = plt.figure(figsize=img_size)
-
+        # TODO: close fig
         if self.fig is not None and not self.live_visualization:
             plt.close(self.fig)
 

@@ -5,7 +5,7 @@ from .island import Island
 from .cell import Lowland, Highland
 from .animals import Herbivore, Carnivore
 from .graphics import Graphics
-import random
+
 
 import matplotlib.pyplot as plt
 
@@ -87,9 +87,8 @@ class BioSim:
         """
         self.island = Island(island_map, seed)
         self.island.add_population(ini_pop)
-        self.pop_history_herbivore = []
-        self.pop_history_carnivore = []
-        self.graphics = Graphics(img_dir, img_base, img_fmt, live_visualization=live_visualization)
+        self.pop_history = {'Herbivore': [], 'Carnivore': []}
+        self.graphics = Graphics(img_dir, img_base, img_fmt)
         self.current_year = 1
 
 
@@ -169,21 +168,19 @@ class BioSim:
 
             if self.current_year % vis_years == 0:
                 self.graphics.update(self.current_year,
-                                     self.island.pop_herbivore,
-                                     self.island.pop_carnivore)
+                                     herbivore_population=self.island.pop['Herbivore'],
+                                     carnivore_population=self.island.pop['Carnivore'],
+                                     herbivore_dict_map=self.island.pop_cell['Herbivore'],
+                                     carnivore_dict_map=self.island.pop_cell['Carnivore'])
 
             self.current_year += 1
 
 
-
-
     def update_history_data(self):
         """Update history data for visualization"""
-        self.pop_history_herbivore.append(self.island.pop_herbivore)
-        self.pop_history_carnivore.append(self.island.pop_carnivore)
 
-    def collect_history_data(self):
-        """Collect history data for visualization"""
+        self.pop_history['Herbivore'].append(self.island.pop['Herbivore'])
+        self.pop_history['Carnivore'].append(self.island.pop['Carnivore'])
 
 
 
