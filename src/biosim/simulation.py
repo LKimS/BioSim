@@ -92,7 +92,6 @@ class BioSim:
         self.current_year = 1
 
 
-
     def set_animal_parameters(self, species, new_parameters):
         """
         Set parameters for animal species.
@@ -169,8 +168,6 @@ class BioSim:
 
         while self.current_year < self.final_year + 1:
             self.island.yearly_island_cycle()
-            self.update_history_data()
-
             self.upate_graphics(self.current_year,
                                      herbivore_population=self.island.pop['Herbivore'],
                                      carnivore_population=self.island.pop['Carnivore'],
@@ -184,8 +181,6 @@ class BioSim:
                                      carnivore_fitness_list=self.island.specs['Carnivore']['fitness'])
 
             self.current_year += 1
-
-
 
     def upate_graphics(self ,
                        year,
@@ -214,13 +209,6 @@ class BioSim:
                                  carnivore_weight_list=carnivore_weight_list,
                                  herbivore_fitness_list=herbivore_fitness_list,
                                  carnivore_fitness_list=carnivore_fitness_list)
-    def update_history_data(self):
-        """Update history data for visualization"""
-
-        self.pop_history['Herbivore'].append(self.island.pop['Herbivore'])
-        self.pop_history['Carnivore'].append(self.island.pop['Carnivore'])
-
-
 
     def add_population(self, population):
         """
