@@ -183,7 +183,7 @@ class Graphics:
 
         # create new figure window
         if self.fig is None:
-            img_size = (10, 10)
+            img_size = (9, 9)
             self.fig = plt.figure(figsize=img_size)
         # TODO: close fig
         if self.fig is not None and not self.live_visualization:

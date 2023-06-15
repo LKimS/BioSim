@@ -152,6 +152,8 @@ class BioSim:
 
         .. note:: Image files will be numbered consecutively.
         """
+        self.final_year = self.current_year + num_years
+
         self.vis_years = vis_years
 
         if img_years is None:
@@ -162,7 +164,7 @@ class BioSim:
 
         self.graphics.setup(self.island.bitmap, self.final_year)
 
-        self.final_year = self.current_year + num_years
+
 
 
         while self.current_year < self.final_year + 1:
