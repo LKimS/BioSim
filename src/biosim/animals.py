@@ -101,7 +101,20 @@ class Animal:
         self.newborn = None
 
     def procreation(self, animal_in_pos):
-        """Returns a new animal if the animal procreates, None otherwise."""
+        """
+        Returns a new animal if the animal procreates, None otherwise.
+        Repeat given text a given number of times.
+
+        Parameters
+        ----------
+        animal_in_pos : list
+            Animals in the same position as the parent.
+
+        Returns
+        -------
+        dict
+            Dictionary with a new born animal.
+        """
         self.newborn = None
 
         offspring_value = self.zeta * (self.w_birth + self.sigma_birth)
