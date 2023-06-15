@@ -171,13 +171,10 @@ class Island:
         self.pop_cell['Herbivore'][loc] = cell.count_herbivore
         self.pop_cell['Carnivore'][loc] = cell.count_carnivore
 
-
         for animal in cell.herbivore+cell.carnivore:
             self.specs[animal.species]['age'].append(animal.age)
             self.specs[animal.species]['weight'].append(animal.weight)
             self.specs[animal.species]['fitness'].append(animal.fitness)
-
-
 
     def collect_data(self):
         """Collects data from all cells on island."""
