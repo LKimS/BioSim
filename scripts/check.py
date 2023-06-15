@@ -60,9 +60,9 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': 9.})
     sim.set_landscape_parameters('L', {'f_max': 700})
 
-    sim.simulate(num_years=100)
+    sim.simulate(num_years=3)
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=400)
+    sim.simulate(num_years=2)
 
     end = time.perf_counter()
     print(f"Time elapsed: {end - start:0.4f} seconds")

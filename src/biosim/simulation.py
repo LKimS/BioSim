@@ -170,6 +170,7 @@ class BioSim:
                                      carnivore_population=self.island.pop['Carnivore'],
                                      herbivore_dict_map=self.island.pop_cell['Herbivore'],
                                      carnivore_dict_map=self.island.pop_cell['Carnivore'])
+                                     #herbivore_age_list=self.island.specs['Herbivore']['age'])
 
             self.current_year += 1
 

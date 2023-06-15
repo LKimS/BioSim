@@ -39,6 +39,10 @@ class Island:
         self.pop_cell = {'Herbivore': {}, 'Carnivore': {}}
         self.pop = {'Herbivore': 0, 'Carnivore': 0}
 
+        self.specs = {'Herbivore': {'weight': [], 'age': [], 'fitness': []},
+                      'Carnivore': {'weight': [], 'age': [], 'fitness': []}}
+
+
 
 #METHODS for input and processing
     def process_input_map(self, input_island_map):
@@ -146,6 +150,9 @@ class Island:
     def yearly_island_cycle(self):
         migrating_animals = []
 
+        self.specs = {'Herbivore': {'weight': [], 'age': [], 'fitness': []},
+                      'Carnivore': {'weight': [], 'age': [], 'fitness': []}}
+
         for loc , cell in self.habital_map.items():
             self.update_data(loc, cell)
             cell.add_newborns(cell.herbivore)
@@ -163,6 +170,27 @@ class Island:
         """Update data for visualization of island map."""
         self.pop_cell['Herbivore'][loc] = len(cell.herbivore)
         self.pop_cell['Carnivore'][loc] = len(cell.carnivore)
+        '''
+        start_loc = self.habital_map.keys()[0]
+        if loc == start_loc:
+            self.specs['Herbivore']['weight'] = []
+            self.specs['Herbivore']['age'] = []
+            self.specs['Herbivore']['fitness'] = []
+            self.specs['Carnivore']['weight'] = []
+            self.specs['Carnivore']['age'] = []
+            self.specs['Carnivore']['fitness'] = []
+        '''
+
+        for animal in cell.herbivore:
+            self.specs['Herbivore']['weight'].append(animal.weight)
+            self.specs['Herbivore']['age'].append(animal.age)
+            self.specs['Herbivore']['fitness'].append(animal.fitness)
+
+        for animal in cell.carnivore:
+            self.specs['Carnivore']['weight'].append(animal.weight)
+            self.specs['Carnivore']['age'].append(animal.age)
+            self.specs['Carnivore']['fitness'].append(animal.fitness)
+
 
     def collect_data(self):
         """Collects data from all cells on island."""
