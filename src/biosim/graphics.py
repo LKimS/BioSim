@@ -245,7 +245,7 @@ class Graphics:
 
             self.age_bin_max = 60
             self.age_bin_width = self.age_bin_max / 20
-            self.age_y_max = .09
+            self.age_y_max = .2
 
             self.age_bin_edges = np.arange(0, self.age_bin_max + self.age_bin_width / 2, self.age_bin_width)
             self.age_hist_counts = np.zeros_like(self.age_bin_edges[:-1], dtype=float)
@@ -260,7 +260,7 @@ class Graphics:
 
             self.weight_bin_max = 80
             self.weight_bin_width = self.weight_bin_max / 20
-            self.weight_y_max = .09
+            self.weight_y_max = .2
 
             self.weight_bin_edges = np.arange(0, self.weight_bin_max + self.weight_bin_width / 2, self.weight_bin_width)
             self.weight_hist_counts = np.zeros_like(self.weight_bin_edges[:-1], dtype=float)
@@ -275,7 +275,7 @@ class Graphics:
 
             self.fitness_bin_max = 1
             self.fitness_bin_width = self.fitness_bin_max / 20
-            self.fitness_y_max = .6
+            self.fitness_y_max = 1
 
             self.fitness_bin_edges = np.arange(0, self.fitness_bin_max + self.fitness_bin_width / 2, self.fitness_bin_width)
             self.fitness_hist_counts = np.zeros_like(self.fitness_bin_edges[:-1], dtype=float)
