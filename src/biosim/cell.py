@@ -133,6 +133,10 @@ class Cell_with_animals(Cell):
 
         return moving_animals
 
+    def reset_fodder(self):
+        #this cell has no fodder
+        pass
+
     def get_random_neighboring_cell(self, location):
         """
         Returns a random neighboring cell.
