@@ -14,6 +14,7 @@
 """
 
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
 import subprocess
 import os
@@ -33,9 +34,15 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'   # alternatives: mp4, gif
 
 
 class Graphics:
-    """Provides graphics support for RandVis."""
+    """Provides graphics support for BioSim."""
 
-    def __init__(self, img_dir=None, img_name=None, img_fmt=None, img_years=None, live_visualization=True):
+    default_ymax_animals = 1200
+    default_cmax_animals = {'Herbivore': 100, 'Carnivore': 100}
+    default_hist_specs = {'age': {'max': 60, 'delta': 2},
+                          'weight': {'max': 80, 'delta': 2},
+                          'fitness': {'max': 1.0, 'delta': 0.05}}
+    def __init__(self, img_dir=None, img_name=None, img_fmt=None, img_years=None, live_visualization=True,
+                 ymax_animals=1200, cmax_animals=None, hist_specs=None):
         """
         :param img_dir: directory for image files; no images if None
         :type img_dir: str
@@ -46,6 +53,46 @@ class Graphics:
         :img_years: Years between visualizations saved to files (default: `vis_years`)
         :type img_years: int
         """
+
+        if ymax_animals is not None:
+            if ymax_animals < 0:
+                raise ValueError(f'ymax_animals must be a positive number, not {ymax_animals}')
+            self.ymax_animals = ymax_animals
+        else:
+            self.ymax_animals = self.default_ymax_animals
+
+
+
+        if cmax_animals is not None:
+            animals_species = list(self.default_cmax_animals.keys())
+            self.cmax_animals = {}
+            for key in cmax_animals:
+                if key not in animals_species:
+                    raise ValueError(f'Invalid key in cmax_animals: {key}. Valid keys are: {animals_species}')
+
+                self.cmax_animals[key] = cmax_animals[key]
+        else:
+            self.cmax_animals = self.default_cmax_animals
+
+
+
+        if hist_specs is not None:
+            histograms = list(self.default_hist_specs.keys())
+            self.hist_specs = self.default_hist_specs.copy()
+            for key in hist_specs:
+                if key not in histograms:
+                    raise ValueError(f'Invalid key in hist_specs: {key}. Valid keys are: {histograms}')
+                for spec in hist_specs[key]:
+                    specs = list(self.default_hist_specs[key].keys())
+                    if spec not in specs:
+                        raise ValueError(f'Invalid key in hist_specs[{key}]: {spec}. Valid keys are: {specs}')
+                    if hist_specs[key][spec] < 0:
+                        value = hist_specs[key][spec]
+                        raise ValueError(f'hist_specs[{key}][{spec}] must be a positive number, not {value}')
+
+                    self.hist_specs[key][spec] = hist_specs[key][spec]
+        else:
+            self.hist_specs = self.default_hist_specs
 
         if img_name is None:
             img_name = _DEFAULT_GRAPHICS_NAME
@@ -60,8 +107,14 @@ class Graphics:
         else:
             self.img_years = 1
 
-        self._img_fmt = img_fmt if img_fmt is not None else _DEFAULT_IMG_FORMAT
+        if img_fmt is not None:
+            if img_fmt not in ['png', 'jpg']:
+                raise ValueError(f'Invalid image format: {img_fmt}. Valid formats are: png, jpg')
+            self._img_fmt = img_fmt
+        else:
+            self._img_fmt = _DEFAULT_IMG_FORMAT
 
+        # Image counter
         self._img_ctr = 0
 
         # the following will be initialized by _setup_graphics
@@ -99,12 +152,12 @@ class Graphics:
                carnivore_population,
                herbivore_dict_map ={},
                carnivore_dict_map={},
-               herbivore_age_list=[],
-               carnivore_age_list=[],
-               herbivore_weight_list=[],
-               carnivore_weight_list=[],
-               herbivore_fitness_list=[],
-               carnivore_fitness_list=[]):
+               herbivore_age_list=[0],
+               carnivore_age_list=[0],
+               herbivore_weight_list=[0],
+               carnivore_weight_list=[0],
+               herbivore_fitness_list=[0],
+               carnivore_fitness_list=[0]):
         """
         Updates graphics with current data and save to file if necessary.
 
@@ -198,22 +251,28 @@ class Graphics:
             self.map_ax = self.fig.add_subplot(self.ax[0, 1])
             self.map_img = self.map_ax.imshow(map)
             self.bitmap = map
+            self.map_ax.set_title('Map')
+            self.map_ax.axis('off')
 
             # Repeat for heatmap of the animals
         if self.herbivore_heatmap_ax is None:
             self.herbivore_heatmap_ax = self.fig.add_subplot(self.ax[0, 0])
             self.herbivore_heatmap_img = None
+            self.herbivore_heatmap_ax.set_title('Herbivores')
+            self.herbivore_heatmap_ax.axis('off')
 
         if self.carnivore_heatmap_ax is None:
             self.carnivore_heatmap_ax = self.fig.add_subplot(self.ax[0, 2])
-            self.carnivore_heatmap_img = None
+            self.carnivore_heatmap_ax.set_title('Carnivores')
+            self.carnivore_heatmap_ax.axis('off')
 
         if self.population_ax is None:
             self.population_ax = self.fig.add_subplot(self.ax[1, :])
             self.population_ax.set_ylim(-0.05, 0.05)
             self.population_ax.set_xlim(0, 300)
-            self.population_ax.set_ylim(0, 300)
+            self.population_ax.set_ylim(0, self.ymax_animals)
             self.population_ax.set_title('Population')
+            self.population_ax.set_xlabel('Year')
 
         if self.herbivore_population_line is None:
             herbivore_population_plot = self.population_ax.plot(np.arange(0, final_step+1),
@@ -243,9 +302,9 @@ class Graphics:
         if self.hist_age_ax is None:
             self.hist_age_ax = self.fig.add_subplot(self.ax[2, 0:1])
 
-            self.age_bin_max = 60
-            self.age_bin_width = self.age_bin_max / 20
-            self.age_y_max = .09
+            self.age_bin_max = self.hist_specs["age"]["max"]
+            self.age_bin_width = self.hist_specs["age"]["delta"]
+            self.age_y_max = .3
 
             self.age_bin_edges = np.arange(0, self.age_bin_max + self.age_bin_width / 2, self.age_bin_width)
             self.age_hist_counts = np.zeros_like(self.age_bin_edges[:-1], dtype=float)
@@ -258,9 +317,9 @@ class Graphics:
         if self.hist_weight_ax is None:
             self.hist_weight_ax = self.fig.add_subplot(self.ax[2, 1])
 
-            self.weight_bin_max = 80
-            self.weight_bin_width = self.weight_bin_max / 20
-            self.weight_y_max = .09
+            self.weight_bin_max = self.hist_specs["weight"]["max"]
+            self.weight_bin_width = self.hist_specs["weight"]["delta"]
+            self.weight_y_max = .3
 
             self.weight_bin_edges = np.arange(0, self.weight_bin_max + self.weight_bin_width / 2, self.weight_bin_width)
             self.weight_hist_counts = np.zeros_like(self.weight_bin_edges[:-1], dtype=float)
@@ -273,9 +332,9 @@ class Graphics:
         if self.hist_fitness_ax is None:
             self.hist_fitness_ax = self.fig.add_subplot(self.ax[2, 2])
 
-            self.fitness_bin_max = 1
-            self.fitness_bin_width = self.fitness_bin_max / 20
-            self.fitness_y_max = .6
+            self.fitness_bin_max = self.hist_specs["fitness"]["max"]
+            self.fitness_bin_width = self.hist_specs["fitness"]["delta"]
+            self.fitness_y_max =20
 
             self.fitness_bin_edges = np.arange(0, self.fitness_bin_max + self.fitness_bin_width / 2, self.fitness_bin_width)
             self.fitness_hist_counts = np.zeros_like(self.fitness_bin_edges[:-1], dtype=float)
@@ -314,8 +373,8 @@ class Graphics:
 
         y_val = [num for num in herbivore_y_data + carnivore_y_data if not np.isnan(num)]
 
-        y_max = max(y_val)
-        self.population_ax.set_ylim(0, y_max*1.1)
+        #y_max = max(y_val + [self.ymax_animals])
+        #self.population_ax.set_ylim(0, y_max*1.1)
 
     def update_hervibore_heatmap(self, herbivore_dict_map):
         if self.herbivore_heatmap_img is None:
@@ -329,9 +388,11 @@ class Graphics:
                 x = location[0] - 1
                 y = location[1] - 1
                 self.herbivore_map[x][y] = population_history
+            cmax = self.cmax_animals["Herbivore"]
             self.herbivore_heatmap_img = self.herbivore_heatmap_ax.imshow(self.herbivore_map,
                                                                            interpolation='nearest',
-                                                                           vmin=0, vmax=100)
+                                                                           vmin=0, vmax=cmax, cmap="YlGnBu")
+            plt.colorbar(self.herbivore_heatmap_img, ax=self.herbivore_heatmap_ax)
         else:
             for location, population_history in herbivore_dict_map.items():
                 x = location[0] - 1
@@ -342,6 +403,7 @@ class Graphics:
     def update_carnivore_heatmap(self, carnivore_dict_map):
         if self.carnivore_heatmap_img is None:
 
+
             dimx = self.bitmap.shape[0]
             dimy = self.bitmap.shape[1]
 
@@ -351,9 +413,11 @@ class Graphics:
                 x = key[0] - 1
                 y = key[1] - 1
                 self.carnivore_map[x][y] = value
+            cmax = self.cmax_animals["Carnivore"]
             self.carnivore_heatmap_img = self.carnivore_heatmap_ax.imshow(self.carnivore_map,
                                                                            interpolation='nearest',
-                                                                           vmin=0, vmax=100)
+                                                                           vmin=0, vmax=cmax, cmap="YlOrBr")
+            plt.colorbar(self.carnivore_heatmap_img, ax=self.carnivore_heatmap_ax)
         else:
             for key, value in carnivore_dict_map.items():
                 x = key[0] - 1

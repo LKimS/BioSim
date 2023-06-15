@@ -19,7 +19,7 @@ class BioSim:
     Top-level interface to BioSim package.
     """
 
-    def __init__(self, island_map, ini_pop, seed,
+    def __init__(self, island_map, ini_pop=None, seed=123,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None, live_visualization=True,
                  img_years=None, img_dir=None, img_base=None, img_fmt='png',
                  log_file=None):
@@ -86,9 +86,11 @@ class BioSim:
         - `img_dir` and `img_base` must either be both None or both strings.
         """
         self.island = Island(island_map, seed)
-        self.island.add_population(ini_pop)
+        if ini_pop is not None:
+            self.island.add_population(ini_pop)
         self.pop_history = {'Herbivore': [], 'Carnivore': []}
-        self.graphics = Graphics(img_dir, img_base, img_fmt)
+        self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years,
+                                 ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs, live_visualization=live_visualization)
         self.current_year = 1
 
 
