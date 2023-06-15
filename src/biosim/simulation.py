@@ -5,7 +5,7 @@ from .island import Island
 from .cell import Lowland, Highland
 from .animals import Herbivore, Carnivore
 from .graphics import Graphics
-
+import random
 
 import matplotlib.pyplot as plt
 

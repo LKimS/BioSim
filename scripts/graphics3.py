@@ -88,7 +88,7 @@ while year < 50:
     island_pop_history['Herbivore'].append(sum_herbivore)
     island_pop_history['Carnivore'].append(sum_carnivore)
     year += 1
-    graphics.update(step = year,
+    graphics.update(year= year,
                     herbivore_population= sum_herbivore,
                     carnivore_population= sum_carnivore,
                     herbivore_dict_map = cell_pop_history['Herbivore'],
@@ -130,7 +130,7 @@ while year < SIM_YEARS:
     island_pop_history['Herbivore'].append(sum_herbivore)
     island_pop_history['Carnivore'].append(sum_carnivore)
     year += 1
-    graphics.update(step = year,
+    graphics.update(year= year,
                     herbivore_population= sum_herbivore,
                     carnivore_population= sum_carnivore,
                     herbivore_dict_map = cell_pop_history['Herbivore'],

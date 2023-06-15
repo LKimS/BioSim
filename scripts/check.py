@@ -23,14 +23,14 @@ if __name__ == '__main__':
     geogr = """\
                WWWWWWWWWWWWWWWWWWWWW
                WWWWWWWWHWWWWLLLLLLLW
-               WHHHHHLLLLWWLLLLLLLWW
-               WHHHHHHHHHWWLLLLLLWWW
+               WHHHHHLLLLDDLLLLLLLWW
+               WHHHHHHHHHDDLLLLLLWWW
                WHHHHHLLLLLLLLLLLLWWW
-               WHHHHHLLLWWLLLHLLLWWW
+               WHHHHHLLLDDLLLHLLLWWW
                WHHLLLLLLLLLLLHHHHWWW
-               WWHHHHLLLWWLLLHWWWWWW
-               WHHHLLLLLWWLLLLLLLWWW
-               WHHHHLLLLWWLLLLWWWWWW
+               WWHHHHLLLDDLLLHWWWWWW
+               WHHHLLLLLDDLLLLLLLWWW
+               WHHHHLLLLDDLLLLWWWWWW
                WWHHHHLLLLLLLLWWWWWWW
                WWWHHHHLLLLLLLWWWWWWW
                WWWWWWWWWWWWWWWWWWWWW"""
@@ -52,11 +52,15 @@ if __name__ == '__main__':
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60, 'delta': 2}},
-                 vis_years=1,
-                 img_dir='mov',
-                 img_base='test',
-                 img_fmt='png',
-                 img_years=50)
+                 vis_years=1)
+
+
+
+
+
+
+
+
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
     sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,
