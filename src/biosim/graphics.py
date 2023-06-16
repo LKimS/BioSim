@@ -279,11 +279,12 @@ class Graphics:
 
         # create new figure window
         if self._fig is None:
-            img_size = (16,9)
+            scale_factor = .8
+            img_size = (16 * scale_factor,9 * scale_factor)
             self._fig = plt.figure(figsize=img_size)
 
         if self._ax is None:
-            self._ax = self._fig.add_gridspec(3, 3)
+            self._ax = self._fig.add_gridspec(9, 3)
 
         # Add year counter in upper left corner
         if self._year_ax is None:
@@ -322,7 +323,7 @@ class Graphics:
             color_map = [[self.rgb_value[landscape] for landscape in row] for row in geography]
             self._dim_x = len(geography)
             self._dim_y = len(geography[0])
-            self._map_ax = self._fig.add_subplot(self._ax[0, 1])
+            self._map_ax = self._fig.add_subplot(self._ax[0:3, 1])
             self._map_img = self._map_ax.imshow(color_map)
             self.geography = geography
             self._map_ax.set_title('Map')
@@ -330,24 +331,25 @@ class Graphics:
 
         # Repeat for heatmap of the animals
         if self._herbivore_heatmap_ax is None:
-            self._herbivore_heatmap_ax = self._fig.add_subplot(self._ax[0, 0])
+            self._herbivore_heatmap_ax = self._fig.add_subplot(self._ax[0:3, 0])
             self._herbivore_heatmap_img = None
             self._herbivore_heatmap_ax.set_title('Herbivores')
             self._herbivore_heatmap_ax.axis('off')
 
         if self._carnivore_heatmap_ax is None:
-            self._carnivore_heatmap_ax = self._fig.add_subplot(self._ax[0, 2])
+            self._carnivore_heatmap_ax = self._fig.add_subplot(self._ax[0:3, 2])
             self._carnivore_heatmap_ax.set_title('Carnivores')
             self._carnivore_heatmap_ax.axis('off')
 
         # Setting up the population plot
         if self._population_ax is None:
-            self._population_ax = self._fig.add_subplot(self._ax[1, :])
+            self._population_ax = self._fig.add_subplot(self._ax[4:6, :])
             self._population_ax.set_ylim(-0.05, 0.05)
             self._population_ax.set_xlim(0, 300)
             self._population_ax.set_ylim(0, self.ymax_animals)
             self._population_ax.set_title('Population')
-            self._population_ax.set_xlabel('Year', loc='left')
+            self._population_ax.text(0.05, .8, 'Population', transform=self._population_ax.transAxes, fontsize=12)
+            self._population_ax.set_xlabel('Year', loc='right')
 
         if self._herbivore_population_line is None:
             herbivore_population_plot = self._population_ax.plot(np.arange(0, final_year + 1),
@@ -380,7 +382,7 @@ class Graphics:
 
         # Setting up the histogram
         if self._hist_age_ax is None:
-            self._hist_age_ax = self._fig.add_subplot(self._ax[2, 0:1])
+            self._hist_age_ax = self._fig.add_subplot(self._ax[7:9, 0])
 
             self.age_bin_max = self.hist_specs["age"]["max"]
             self.age_bin_width = self.hist_specs["age"]["delta"]
@@ -392,10 +394,10 @@ class Graphics:
             self.age_carnivore_hist = self._hist_age_ax.stairs(self.age_hist_counts, self.age_bin_edges, color='red',
                                                                lw=2, label='Carnivore')
             self._hist_age_ax.set_ylim(0, self.age_y_max)
-            plt.legend(loc="upper center")
+            plt.legend(loc="upper center", fontsize="8")
 
         if self._hist_weight_ax is None:
-            self._hist_weight_ax = self._fig.add_subplot(self._ax[2, 1])
+            self._hist_weight_ax = self._fig.add_subplot(self._ax[7:9, 1])
 
             self.weight_bin_max = self.hist_specs["weight"]["max"]
             self.weight_bin_width = self.hist_specs["weight"]["delta"]
@@ -408,10 +410,10 @@ class Graphics:
             self.weight_carnivore_hist = self._hist_weight_ax.stairs(self.weight_hist_counts, self.weight_bin_edges, color='red',
                                                                      lw=2, label='Carnivore')
             self._hist_weight_ax.set_ylim(0, self.weight_y_max)
-            plt.legend(loc="upper center")
+            plt.legend(loc="upper center", fontsize="8")
 
         if self._hist_fitness_ax is None:
-            self._hist_fitness_ax = self._fig.add_subplot(self._ax[2, 2])
+            self._hist_fitness_ax = self._fig.add_subplot(self._ax[7:9, 2])
 
             self.fitness_bin_max = self.hist_specs["fitness"]["max"]
             self.fitness_bin_width = self.hist_specs["fitness"]["delta"]
@@ -424,7 +426,7 @@ class Graphics:
             self.fitness_carnivore_hist = self._hist_fitness_ax.stairs(self.fitness_hist_counts, self.fitness_bin_edges, color='red',
                                                                        lw=2, label='Carnivore')
             self._hist_fitness_ax.set_ylim(0, self.fitness_y_max)
-            plt.legend(loc="upper center")
+            plt.legend(loc="upper center", fontsize="8")
 
 
 
@@ -436,7 +438,7 @@ class Graphics:
         year_txt = f"Year: {year}"
         if self.year_counter is None:
             self.year_counter = self._year_ax.text(0.5, 0.5, year_txt, horizontalalignment='center',
-                                                   verticalalignment='center')
+                                                   verticalalignment='center', fontsize=20)
         else:
             self.year_counter.set_text(f"Year: {year}")
 
