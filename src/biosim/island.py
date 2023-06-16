@@ -168,8 +168,8 @@ class Island:
 
     def update_data(self, loc, cell):
         """Update data for visualization of island map."""
-        self.pop_cell['Herbivore'][loc] = len(cell.herbivore)
-        self.pop_cell['Carnivore'][loc] = len(cell.carnivore)
+        self.pop_cell['Herbivore'][loc] = cell.count_herbivore
+        self.pop_cell['Carnivore'][loc] = cell.count_carnivore
 
 
         for animal in cell.herbivore+cell.carnivore:
