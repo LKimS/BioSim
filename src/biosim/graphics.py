@@ -285,7 +285,6 @@ class Graphics:
 
         """
 
-        if
 
         self.final_year = final_year
 
