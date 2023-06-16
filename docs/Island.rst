@@ -6,27 +6,10 @@
 Island
 ==================================================
 
-Cell class
-----------
-
-.. automodule:: biosim.cell
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-Island class
-------------
-
 .. automodule:: biosim.island
     :members:
     :undoc-members:
     :show-inheritance:
 
-Graphics class
---------------
 
-.. automodule:: biosim.graphics
-    :members:
-    :undoc-members:
-    :show-inheritance:
 

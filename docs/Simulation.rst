@@ -11,3 +11,7 @@ Simulation
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: biosim.graphics
+    :members:
+    :undoc-members:
+    :show-inheritance:
