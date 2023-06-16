@@ -52,7 +52,7 @@ if __name__ == '__main__':
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60, 'delta': 2}},
-                 vis_years=2, ymax_animals=20000, img_dir='mov', img_base='test')
+                 vis_years=2, ymax_animals=20000, img_dir='norm', img_base='test')
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
     sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,
@@ -60,14 +60,14 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': 9.})
     sim.set_landscape_parameters('L', {'f_max': 700})
 
-    sim.simulate(num_years=1)
+    sim.simulate(num_years=20)
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=11)
-    #sim.simulate(num_years=10)
+    sim.simulate(num_years=280)
+
 
     end = time.perf_counter()
     print(f"Time elapsed: {end - start:0.4f} seconds")
 
     plt.show()
 
-    #sim.make_movie()
+    sim.make_movie()

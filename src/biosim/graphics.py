@@ -538,6 +538,7 @@ class Graphics:
 
         if herbivore_age_list is not None and herbivore_age_list != []:
             hist_counts_age_herbivore, _ = np.histogram(herbivore_age_list, bins=self.age_bin_edges, density=True)
+            hist_counts_age_herbivore_norm = hist_counts_age_herbivore / np.sum(hist_counts_age_herbivore)
 
             # Update y-axis
             if self._frame_ctr % self.hist_update_y_ax == 0:
@@ -548,6 +549,7 @@ class Graphics:
 
         if carnivore_age_list is not None and carnivore_age_list != []:
             hist_counts_age_carnivore, _ = np.histogram(carnivore_age_list, bins=self.age_bin_edges, density=True)
+            hist_counts_age_carnivore_norm = hist_counts_age_carnivore / np.sum(hist_counts_age_carnivore)
 
             # Update y-axis
             if self._frame_ctr % self.hist_update_y_ax == 0:
@@ -568,22 +570,24 @@ class Graphics:
 
         if herbivore_weight_list is not None and herbivore_weight_list != []:
             hist_counts_weight_herbivore, _ = np.histogram(herbivore_weight_list, bins=self.weight_bin_edges, density=True)
+            hist_counts_weight_herbivore_norm = hist_counts_weight_herbivore / np.sum(hist_counts_weight_herbivore)
 
             # Update y-axis
             if self._frame_ctr % self.hist_update_y_ax == 0:
-                y_max = max(self.weight_y_max, max(hist_counts_weight_herbivore)*1.1)
+                y_max = max(self.weight_y_max, max(hist_counts_weight_herbivore_norm)*1.1)
                 self._hist_weight_ax.set_ylim([0, y_max])
 
-            self.weight_herbivore_hist.set_data(hist_counts_weight_herbivore)
+            self.weight_herbivore_hist.set_data(hist_counts_weight_herbivore_norm)
 
         if carnivore_weight_list is not None and carnivore_weight_list != []:
             hist_counts_weight_carnivore, _ = np.histogram(carnivore_weight_list, bins=self.weight_bin_edges, density=True)
+            hist_counts_weight_carnivore_norm = hist_counts_weight_carnivore / np.sum(hist_counts_weight_carnivore)
 
             # Update y-axis
             if self._frame_ctr % self.hist_update_y_ax == 0:
-                y_max = max(self.weight_y_max, max(hist_counts_weight_carnivore)*1.1)
+                y_max = max(self.weight_y_max, max(hist_counts_weight_carnivore_norm)*1.1)
                 self._hist_weight_ax.set_ylim([0, y_max])
-            self.weight_carnivore_hist.set_data(hist_counts_weight_carnivore)
+            self.weight_carnivore_hist.set_data(hist_counts_weight_carnivore_norm)
 
     def _update_histogram_fitness(self, herbivore_fitness_list, carnivore_fitness_list):
         """
