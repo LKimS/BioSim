@@ -144,7 +144,7 @@ class BioSim:
         else:
             raise ValueError("Invalid landscape. Only L and H has fodder")
 
-    def simulate(self, num_years, img_years=None):
+    def simulate(self, num_years, vis_years=1, img_years=None):
         """
         Run simulation while visualizing the result.
 
@@ -154,6 +154,7 @@ class BioSim:
 
         .. note:: Image files will be numbered consecutively.
         """
+        # TODO: impliment: vis_years and img_years
 
         if img_years is None:
             img_years = self.vis_years
@@ -164,7 +165,7 @@ class BioSim:
         self.final_year = self.current_year + num_years
         self.graphics.setup(self.island.map_processed, self.final_year)
 
-        while self.current_year < self.final_year + 1:
+        while self.current_year <= self.final_year:
             self.island.yearly_island_cycle()
             self.update_history_data()
 
@@ -182,6 +183,9 @@ class BioSim:
                                      carnivore_fitness_list=self.island.specs['Carnivore']['fitness'])
 
             self.current_year += 1
+
+        # Subract one year to get the last year of the simulation
+        self.current_year -= 1
 
 
     def update_history_data(self):

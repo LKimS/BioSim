@@ -271,7 +271,7 @@ class Graphics:
         else:
             raise ValueError('Unknown movie format: ' + movie_fmt)
 
-    def setup(self, geography, final_year):
+    def setup(self, geography, final_year, vis_years=1):
         """
         Prepare graphics.
 
@@ -284,6 +284,8 @@ class Graphics:
         :type final_year: int
 
         """
+
+        if
 
         self.final_year = final_year
 
@@ -305,7 +307,6 @@ class Graphics:
         # Add landscape patches
 
         if self._landscape_ax is None:
-            #                   R    G    B
 
             self._landscape_ax = self._fig.add_axes([.43, .9, .22, .8]) # llx, lly, w, h
             self._landscape_ax.axis('off')
@@ -355,15 +356,16 @@ class Graphics:
         if self._population_ax is None:
             self._population_ax = self._fig.add_subplot(self._ax[4:6, :])
             self._population_ax.set_ylim(-0.05, 0.05)
-            self._population_ax.set_xlim(0, 300)
             self._population_ax.set_ylim(0, self.ymax_animals)
             self._population_ax.set_title('Population')
             self._population_ax.text(0.05, .8, 'Population', transform=self._population_ax.transAxes, fontsize=12)
             self._population_ax.set_xlabel('Year', loc='right')
 
+        self._population_ax.set_xlim(0, final_year)
+
         if self.herbivore_population_line is None:
             herbivore_population_plot = self._population_ax.plot(np.arange(0, final_year + 1),
-                                                                 np.full(final_year + 1, np.nan),
+                                                                 np.full(final_year + 1, np.nan),"o-",
                                                                  color="blue", label="Herbivores")
             self.herbivore_population_line = herbivore_population_plot[0]
             plt.legend()

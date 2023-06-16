@@ -43,9 +43,12 @@ ini_carns = [{'loc': (3, 2),
 
 hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05}}
 
-sim = BioSim(island_map=geogr, ymax_animals=160)
+sim = BioSim(island_map=geogr, vis_years=1)
 sim.add_population(population=ini_herbs)
-sim.simulate(1)
+sim.simulate(20)
+sim.add_population(population=ini_carns)
+input("Press Enter to continue...")
+sim.simulate(10)
 
 
 end = perf_counter()
