@@ -216,7 +216,6 @@ class Graphics:
         :type carnivore_fitness_list: list
         """
 
-        print(f"\rVisualization of year: {year} out of {self.final_year}", flush=True, end='')
 
         self.year = year
         self._update_year_counter(year)
@@ -361,31 +360,33 @@ class Graphics:
             self._population_ax.set_xlabel('Year', loc='right')
 
         self._population_ax.set_xlim(0, final_year)
+        xdata = np.arange(0, final_year + 1, self.vis_years)
 
         if self.herbivore_population_line is None:
-            herbivore_population_plot = self._population_ax.plot(np.arange(0, final_year + 1),
-                                                                 np.full(final_year + 1, np.nan),"o-",
+
+            herbivore_population_plot = self._population_ax.plot(xdata,
+                                                                 np.full(len(xdata), np.nan),
                                                                  color="blue", label="Herbivores")
             self.herbivore_population_line = herbivore_population_plot[0]
             plt.legend()
 
         else:
             x_data, y_data = self.herbivore_population_line.get_data()
-            x_new = np.arange(x_data[-1] + 1, final_year + 1)
+            x_new = np.arange(x_data[-1] + self.vis_years, final_year + 1, self.vis_years)
             if len(x_new) > 0:
                 y_new = np.full(x_new.shape, np.nan)
                 self.herbivore_population_line.set_data(np.hstack((x_data, x_new)),
                                                         np.hstack((y_data, y_new)))
 
         if self._carnivore_population_line is None:
-            carnivore_population_plot = self._population_ax.plot(np.arange(0, final_year + 1),
-                                                                 np.full(final_year + 1, np.nan),
+            carnivore_population_plot = self._population_ax.plot(xdata,
+                                                                 np.full(len(xdata), np.nan),
                                                                  color="red", label="Carnivores")
             plt.legend()
             self._carnivore_population_line = carnivore_population_plot[0]
         else:
             x_data, y_data = self._carnivore_population_line.get_data()
-            x_new = np.arange(x_data[-1] + 1, final_year + 1)
+            x_new = np.arange(x_data[-1] + self.vis_years, final_year + 1, self.vis_years)
             if len(x_new) > 0:
                 y_new = np.full(x_new.shape, np.nan)
                 self._carnivore_population_line.set_data(np.hstack((x_data, x_new)),
@@ -464,17 +465,13 @@ class Graphics:
         :type carnivore_population: int
         """
 
-        # Creates a moving graph of the population
-        if year > 300:
-            self._population_ax.set_xlim(year - 300, year)
-
-
+        idx = year // self.vis_years
         herbivore_y_data = self.herbivore_population_line.get_ydata()
-        herbivore_y_data[year] = herbivore_population
+        herbivore_y_data[idx] = herbivore_population
         self.herbivore_population_line.set_ydata(herbivore_y_data)
 
         carnivore_y_data = self._carnivore_population_line.get_ydata()
-        carnivore_y_data[year] = carnivore_population
+        carnivore_y_data[idx] = carnivore_population
         self._carnivore_population_line.set_ydata(carnivore_y_data)
 
 

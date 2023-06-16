@@ -85,14 +85,29 @@ class BioSim:
 
         - `img_dir` and `img_base` must either be both None or both strings.
         """
+        self.current_year = 0
         self.island = Island(island_map, seed)
         if ini_pop is not None:
             self.island.add_population(ini_pop)
         self.pop_history = {'Herbivore': [], 'Carnivore': []}
-        self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years, vis_years=vis_years,
-                                 ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs)
-        self.current_year = 0
+
+        if vis_years <= 0 and type(vis_years) != int:
+            raise ValueError('vis_years must be a positive integer')
         self.vis_years = vis_years
+
+        if self.vis_years != 0:
+            self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years, vis_years=vis_years,
+                                     ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs)
+            if img_years is None:
+                self.img_years = vis_years
+
+            if self.img_years % vis_years != 0:
+                raise ValueError('img_years must be multiple of vis_steps')
+        else:
+            print('Visualization is disabled')
+
+
+
 
 
 
@@ -144,32 +159,36 @@ class BioSim:
         else:
             raise ValueError("Invalid landscape. Only L and H has fodder")
 
-    def simulate(self, num_years, vis_years=1, img_years=None):
+    def simulate(self, num_years):
         """
         Run simulation while visualizing the result.
 
         :param num_years: number of simulation steps to execute
-        :param img_years: interval between visualizations saved to files
-                          (default: vis_years)
 
         .. note:: Image files will be numbered consecutively.
         """
         # TODO: impliment: vis_years and img_years
 
-        if img_years is None:
-            img_years = self.vis_years
 
-        if img_years % self.vis_years != 0:
-            raise ValueError('img_years must be multiple of vis_steps')
 
         self.final_year = self.current_year + num_years
-        self.graphics.setup(self.island.map_processed, self.final_year)
+
+        if self.current_year != 0:
+            self.current_year += 1
+
+
+        if self.vis_years != 0:
+            self.graphics.setup(self.island.map_processed, self.final_year)
 
         while self.current_year <= self.final_year:
+            #print(f"\rSimulating... year: {self.current_year} out of {self.final_year}", flush=True, end='')
+            print(self.vis_years)
             self.island.yearly_island_cycle()
             self.update_history_data()
 
-            if self.current_year % self.vis_years == 0 and self.vis_years != 0:
+
+
+            if self.vis_years != 0 and self.current_year % self.vis_years == 0:
                 self.graphics.update(self.current_year,
                                      herbivore_population=self.island.pop['Herbivore'],
                                      carnivore_population=self.island.pop['Carnivore'],
@@ -186,6 +205,7 @@ class BioSim:
 
         # Subract one year to get the last year of the simulation
         self.current_year -= 1
+        print()
 
 
     def update_history_data(self):
