@@ -40,7 +40,7 @@ class Graphics:
     """
 
     # Default values for visualization parameters
-    default_ymax_animals = 20000
+    default_ymax_animals = 30000
     default_cmax_animals = {'Herbivore': 140, 'Carnivore': 100}
     default_hist_specs = {'age': {'max': 60, 'delta': 5},
                           'weight': {'max': 80, 'delta': 5},

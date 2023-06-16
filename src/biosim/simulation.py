@@ -181,8 +181,7 @@ class BioSim:
             self.graphics.setup(self.island.map_processed, self.final_year)
 
         while self.current_year <= self.final_year:
-            #print(f"\rSimulating... year: {self.current_year} out of {self.final_year}", flush=True, end='')
-            print(self.vis_years)
+            print(f"\rSimulating... year: {self.current_year} out of {self.final_year}", flush=True, end='')
             self.island.yearly_island_cycle()
             self.update_history_data()
 
