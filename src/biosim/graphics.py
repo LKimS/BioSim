@@ -355,7 +355,7 @@ class Graphics:
         if self._population_ax is None:
             self._population_ax = self._fig.add_subplot(self._ax[4:6, :])
             self._population_ax.set_ylim(-0.05, 0.05)
-            self._population_ax.set_xlim(0, 3)
+            self._population_ax.set_xlim(0, 300)
             self._population_ax.set_ylim(0, self.ymax_animals)
             self._population_ax.set_title('Population')
             self._population_ax.text(0.05, .8, 'Population', transform=self._population_ax.transAxes, fontsize=12)
