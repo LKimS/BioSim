@@ -92,6 +92,7 @@ class BioSim:
         self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years, vis_years=vis_years,
                                  ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs)
         self.current_year = 1
+        self.vis_years = vis_years
 
 
 
@@ -143,12 +144,11 @@ class BioSim:
         else:
             raise ValueError("Invalid landscape. Only L and H has fodder")
 
-    def simulate(self, num_years, vis_years=1, img_years=None):
+    def simulate(self, num_years, img_years=None):
         """
         Run simulation while visualizing the result.
 
         :param num_years: number of simulation steps to execute
-        :param vis_years: interval between visualization updates
         :param img_years: interval between visualizations saved to files
                           (default: vis_years)
 
@@ -156,9 +156,9 @@ class BioSim:
         """
 
         if img_years is None:
-            img_years = vis_years
+            img_years = self.vis_years
 
-        if img_years % vis_years != 0:
+        if img_years % self.vis_years != 0:
             raise ValueError('img_years must be multiple of vis_steps')
 
         self.final_year = self.current_year + num_years
@@ -168,7 +168,7 @@ class BioSim:
             self.island.yearly_island_cycle()
             self.update_history_data()
 
-            if self.current_year % vis_years == 0:
+            if self.current_year % self.vis_years == 0:
                 self.graphics.update(self.current_year,
                                      herbivore_population=self.island.pop['Herbivore'],
                                      carnivore_population=self.island.pop['Carnivore'],
