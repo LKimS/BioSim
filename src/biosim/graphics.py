@@ -77,6 +77,16 @@ class Graphics:
         else:
             self.ymax_animals = self.default_ymax_animals
 
+        if vis_years is not None:
+            if vis_years < 0 or type(vis_years) != type(int()):
+                print(type(vis_years))
+                raise ValueError(f'vis_years must be a positive integer, not {vis_years}')
+
+            self.vis_years = vis_years
+
+        if vis_years == 0:
+            return
+
 
         # check if cmax_animals is a dictionary with valid keys
         if cmax_animals is not None:
@@ -147,7 +157,7 @@ class Graphics:
         self._carnivore_heatmap_ax = None
         self._carnivore_heatmap_img = None
         self._population_ax = None
-        self._herbivore_population_line = None
+        self.herbivore_population_line = None
         self._carnivore_population_line = None
 
         self._hist_age_ax = None
@@ -345,26 +355,26 @@ class Graphics:
         if self._population_ax is None:
             self._population_ax = self._fig.add_subplot(self._ax[4:6, :])
             self._population_ax.set_ylim(-0.05, 0.05)
-            self._population_ax.set_xlim(0, 300)
+            self._population_ax.set_xlim(0, 3)
             self._population_ax.set_ylim(0, self.ymax_animals)
             self._population_ax.set_title('Population')
             self._population_ax.text(0.05, .8, 'Population', transform=self._population_ax.transAxes, fontsize=12)
             self._population_ax.set_xlabel('Year', loc='right')
 
-        if self._herbivore_population_line is None:
+        if self.herbivore_population_line is None:
             herbivore_population_plot = self._population_ax.plot(np.arange(0, final_year + 1),
                                                                  np.full(final_year + 1, np.nan),
                                                                  color="blue", label="Herbivores")
-            self._herbivore_population_line = herbivore_population_plot[0]
+            self.herbivore_population_line = herbivore_population_plot[0]
             plt.legend()
 
         else:
-            x_data, y_data = self._herbivore_population_line.get_data()
+            x_data, y_data = self.herbivore_population_line.get_data()
             x_new = np.arange(x_data[-1] + 1, final_year + 1)
             if len(x_new) > 0:
                 y_new = np.full(x_new.shape, np.nan)
-                self._herbivore_population_line.set_data(np.hstack((x_data, x_new)),
-                                                         np.hstack((y_data, y_new)))
+                self.herbivore_population_line.set_data(np.hstack((x_data, x_new)),
+                                                        np.hstack((y_data, y_new)))
 
         if self._carnivore_population_line is None:
             carnivore_population_plot = self._population_ax.plot(np.arange(0, final_year + 1),
@@ -458,9 +468,9 @@ class Graphics:
             self._population_ax.set_xlim(year - 300, year)
 
 
-        herbivore_y_data = self._herbivore_population_line.get_ydata()
+        herbivore_y_data = self.herbivore_population_line.get_ydata()
         herbivore_y_data[year] = herbivore_population
-        self._herbivore_population_line.set_ydata(herbivore_y_data)
+        self.herbivore_population_line.set_ydata(herbivore_y_data)
 
         carnivore_y_data = self._carnivore_population_line.get_ydata()
         carnivore_y_data[year] = carnivore_population

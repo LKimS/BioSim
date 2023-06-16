@@ -91,7 +91,7 @@ class BioSim:
         self.pop_history = {'Herbivore': [], 'Carnivore': []}
         self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years, vis_years=vis_years,
                                  ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs)
-        self.current_year = 1
+        self.current_year = 0
         self.vis_years = vis_years
 
 
@@ -168,7 +168,7 @@ class BioSim:
             self.island.yearly_island_cycle()
             self.update_history_data()
 
-            if self.current_year % self.vis_years == 0:
+            if self.current_year % self.vis_years == 0 and self.vis_years != 0:
                 self.graphics.update(self.current_year,
                                      herbivore_population=self.island.pop['Herbivore'],
                                      carnivore_population=self.island.pop['Carnivore'],
