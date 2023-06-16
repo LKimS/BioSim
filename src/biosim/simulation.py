@@ -1,5 +1,5 @@
 """
-Implements a complete simulation.
+Implements a complete simulation for BioSim class.
 """
 from .island import Island
 from .cell import Lowland, Highland
@@ -19,8 +19,8 @@ class BioSim:
     Top-level interface to BioSim package.
     """
 
-    def __init__(self, island_map, ini_pop, seed,
-                 vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None, live_visualization=True,
+    def __init__(self, island_map, ini_pop=None, seed=123,
+                 vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_years=None, img_dir=None, img_base=None, img_fmt='png',
                  log_file=None):
 
@@ -86,10 +86,13 @@ class BioSim:
         - `img_dir` and `img_base` must either be both None or both strings.
         """
         self.island = Island(island_map, seed)
-        self.island.add_population(ini_pop)
+        if ini_pop is not None:
+            self.island.add_population(ini_pop)
         self.pop_history = {'Herbivore': [], 'Carnivore': []}
-        self.graphics = Graphics(img_dir, img_base, img_fmt)
+        self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years, vis_years=vis_years,
+                                 ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs)
         self.current_year = 1
+        self.vis_years = vis_years
 
 
     def set_animal_parameters(self, species, new_parameters):
@@ -140,26 +143,22 @@ class BioSim:
         else:
             raise ValueError("Invalid landscape. Only L and H has fodder")
 
-    def simulate(self, num_years, vis_years=1, img_years=None):
+    def simulate(self, num_years, img_years=None):
         """
         Run simulation while visualizing the result.
 
-        Parameters
-        ----------
-        num_years: number of simulation steps to execute
-        vis_years: interval between visualization updates
-        img_years: interval between visualizations saved to files (default: vis_years)
+        :param num_years: number of simulation steps to execute
+        :param img_years: interval between visualizations saved to files
+                          (default: vis_years)
 
-        Notes
-        -----
-        Image files will be numbered consecutively.
+        .. note:: Image files will be numbered consecutively.
         """
         self.final_year = self.current_year + num_years
 
         self.vis_years = vis_years
 
         if img_years is None:
-            img_years = vis_years
+            img_years = self.vis_years
 
         if img_years % vis_years != 0:
             raise ValueError('img_years must be multiple of vis_steps')
@@ -259,6 +258,6 @@ class BioSim:
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
 
-    def make_movie(self):
+    def make_movie(self, movie_fmt='mp4'):
         """Create MPEG4 movie from visualization images saved."""
-        self.graphics.make_movie()
+        self.graphics.make_movie(movie_fmt)

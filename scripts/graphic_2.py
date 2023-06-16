@@ -33,8 +33,8 @@ geogr = """\
 island = Island(geogr)
 
 
-
-img_size = (10,10)
+scale_factor = .8
+img_size = (16 * scale_factor,9 * scale_factor)
 fig = plt.figure(figsize=img_size)
 
 ax = fig.add_gridspec(3, 3)
@@ -93,7 +93,7 @@ rgb_value = {'W': (0.13, 0.00, 1.00),  # blue
 
 
 
-landscape_ax = fig.add_axes([.4, .9, .22, .8]) # llx, lly, w, h
+landscape_ax = fig.add_axes([.43, .9, .22, .8]) # llx, lly, w, h
 landscape_ax.axis('off')
 
 landscape_ax.add_patch(plt.Rectangle((0, .06), 0.11, 0.04, edgecolor='none',
