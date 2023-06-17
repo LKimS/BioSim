@@ -8,6 +8,7 @@ from .graphics import Graphics
 
 
 import csv
+import pickle
 
 # The material in this file is licensed under the BSD 3-clause license
 # https://opensource.org/licenses/BSD-3-Clause
@@ -125,8 +126,8 @@ class BioSim:
         else:
             print('Visualization is disabled')
 
-        if log_file is not None:
-            self.log_file = log_file
+
+        self.log_file = log_file
 
 
 
@@ -270,6 +271,36 @@ class BioSim:
             writer.writerow(self.pop_history.keys())
 
             writer.writerows(zip(*self.pop_history.values()))
+
+    def save_simulation(self, file_name):
+        """
+        Save the simulation to a file.
+
+        :param file_name: name of file to save to
+
+        Write this as a note: This featrue is not implimented yet.
+        """
+        if file_name[-4:] != ".pkl":
+            file_name += ".pkl"
+
+        with open(file_name, "wb") as file:
+            pickle.dump(self, file)
+
+    @staticmethod
+    def load_simulation(file_name):
+        """
+        Load a simulation from a file.
+
+        :param file_name: name of file to load from
+        :return: simulation object
+
+        Write this as a note: This featrue is not implimented yet.
+        """
+        with open(file_name, "rb") as file:
+            sim = pickle.load(file)
+
+        return sim
+
 
 
 
