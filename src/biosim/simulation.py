@@ -19,7 +19,22 @@ class BioSim:
     Top-level interface to BioSim package.
     """
 
-    def __init__(self, island_map, ini_pop=None, seed=123,
+    _default_map = """\
+               WWWWWWWWWWWWWWWWWWWWW
+               WWWWWWWWHWWWWLLLLLLLW
+               WHHHHHLLLLWWLLLLLLLWW
+               WHHHHHHHHHWWLLLLLLWWW
+               WHHHHHLLLLLLLLLLLLWWW
+               WHHHHHLLLDDLLLHLLLWWW
+               WHHLLLLLDDDLLLHHHHWWW
+               WWHHHHLLLDDLLLHWWWWWW
+               WHHHLLLLLDDLLLLLLLWWW
+               WHHHHLLLLDDLLLLWWWWWW
+               WWHHHHLLLLLLLLWWWWWWW
+               WWWHHHHLLLLLLLWWWWWWW
+               WWWWWWWWWWWWWWWWWWWWW"""
+
+    def __init__(self, island_map=None, ini_pop=None, seed=123,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_years=None, img_dir=None, img_base=None, img_fmt='png',
                  log_file=None):
@@ -41,8 +56,6 @@ class BioSim:
             Color-scale limits for animal densities, see below
         hist_specs : dict
             Specifications for histograms, see below
-        live_visualization : bool
-            Boolean specifying if live visualization is to be used (default: True)
         img_years : int
             Years between visualizations saved to files (default: `vis_years`)
         img_dir : str
@@ -86,7 +99,13 @@ class BioSim:
         - `img_dir` and `img_base` must either be both None or both strings.
         """
         self.current_year = 0
+
+        if island_map is None:
+            island_map = self._default_map
+
         self.island = Island(island_map, seed)
+
+
         if ini_pop is not None:
             self.island.add_population(ini_pop)
         self.pop_history = {'Herbivore': [], 'Carnivore': []}
