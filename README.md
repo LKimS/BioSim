@@ -55,7 +55,9 @@ First you import the BioSim class from the simulation module.
 Then you create a string that represents the map of the island. 
 The map is a grid of cells, where each cell is either water (W), desert (D), lowland (L) or highland (H). 
 The map is surrounded by water. The map is given as a string, where each line represents a row of cells. 
-The upper left corner of the map has coordinates (0, 0). The map string is given as a parameter to the BioSim class. 
+The upper left corner of the map has coordinates (0, 0). 
+Coordiantes (1,0) is the cell below (0, 0) and (0, 1) is the cell to the right of (0, 0).
+The map string is given as a parameter to the BioSim class. 
 To add animals to the simulation, you create a list of dictionaries as shown above. 
 Create an instance of the BioSim class and use the add_population method to add the animals to the simulation.
 The simulation is run by calling the simulate method, which will create a live visualization of the simulation.
