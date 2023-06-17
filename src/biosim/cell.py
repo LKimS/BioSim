@@ -1,7 +1,6 @@
 """Implements the Cell class."""
 
 from .animals import Herbivore, Carnivore
-import random
 
 import random
 

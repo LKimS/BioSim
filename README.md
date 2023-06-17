@@ -1,4 +1,4 @@
-# Starting point for BioSim projects June 2023
+# BioSim: Modelling the ecosystem of Rossumøya
 
 ## Note
 
