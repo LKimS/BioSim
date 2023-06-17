@@ -47,7 +47,7 @@ if __name__ == '__main__':
                            'weight': 20}
                           for _ in range(40)]}]
 
-    sim = BioSim()
+    sim = BioSim(img_dir='mov', img_base='base', ini_pop=ini_herbs, island_map=geogr)
 
 
 
@@ -69,4 +69,4 @@ if __name__ == '__main__':
 
     plt.show()
 
-    #sim.make_movie()
+    sim.make_movie()
