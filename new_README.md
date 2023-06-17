@@ -2,7 +2,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <a name="readme-top"></a>
-<div align="center">
+<div align="left">
   <a href="https://github.com/github_username/repo_name">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
@@ -85,6 +85,7 @@ If you want to run the included tests, then you also need the python package: `p
 
 An example code of how to use this package is shown below.
 
+
 ```python
 from biosim.simulation import BioSim
 geogr = """\
@@ -121,6 +122,7 @@ sim.simulate(num_years=100)
 
 sim.make_movie()
 ```
+
 First you import the BioSim class from the simulation module. 
 Then you create a string that represents the map of the island. 
 The map is a grid of cells, where each cell is either water (W), desert (D), lowland (L) or highland (H). 
