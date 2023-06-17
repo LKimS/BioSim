@@ -52,7 +52,7 @@ if __name__ == '__main__':
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60, 'delta': 2}},
-                 vis_years=0, ymax_animals=20000, log_file='test.csv')
+                 vis_years=0, ymax_animals=20000, log_file='log.cs')
 
 
 
