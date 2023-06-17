@@ -36,7 +36,6 @@ class Island:
         self.map_processed = self.process_input_map(input_island_map)
         self.map_height = self.get_map_height(self.map_processed)
         self.map_width = self.get_map_width(self.map_processed)
-        bool = self.check_line_length(self.map_processed)
         self.map = self.map_processed_to_dict(self.map_processed)
         self.habital_map = self.get_map_with_animals()
         self.bitmap = self.create_bitmap(self.map_processed)
@@ -124,7 +123,7 @@ class Island:
         for item in population:
             x, y = item["loc"]
             for animal_info in item['pop']:
-                self.map[(x,y)].add_animal_from_dict(animal_info)
+                self.map[(x, y)].add_animal_from_dict(animal_info)
 
 # TODO: check if this method is needed
     def migrate_animals(self):
@@ -165,13 +164,6 @@ class Island:
         #plt.legend()
         plt.show()
 
-    # ERROR HANDLING
-    def check_line_length(self, island_map_processed):
-        line1 = island_map_processed[0]
-        for line in island_map_processed[1:]:
-            if len(line) != len(line1):
-
-                return False
 
 
 #METHODS for yearly cycle
@@ -184,8 +176,7 @@ class Island:
 
         for loc , cell in self.habital_map.items():
             self.update_data(loc, cell)
-            cell.add_newborns(cell.herbivore)
-            cell.add_newborns(cell.carnivore)
+            cell.add_newborns()
             cell.feed_animals()
             migrating_animals.extend(cell.moving_animals_list())
             cell.age_animals()
@@ -201,7 +192,7 @@ class Island:
         self.pop_cell['Carnivore'][loc] = cell.count_carnivore
 
 
-        for animal in cell.herbivore+cell.carnivore:
+        for animal in cell.animals:
             self.specs[animal.species]['age'].append(animal.age)
             self.specs[animal.species]['weight'].append(animal.weight)
             self.specs[animal.species]['fitness'].append(animal.fitness)

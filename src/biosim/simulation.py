@@ -118,14 +118,13 @@ class BioSim:
         if self.vis_years != 0:
             self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years, vis_years=vis_years,
                                      ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs)
-            if img_years is None:
-                self.img_years = vis_years
+
+            self.img_years = vis_years
 
             if self.img_years % vis_years != 0:
                 raise ValueError('img_years must be multiple of vis_steps')
         else:
             print('Visualization is disabled')
-
 
         self.log_file = log_file
 
@@ -309,13 +308,24 @@ class BioSim:
         """Last year simulated."""
         return self.current_year
 
+    # TODO: impliment
     @property
     def num_animals(self):
         """Total number of animals on island."""
+        num_animal = 0
+        for species, pop_history in self.pop_history.items():
+            if pop_history == []:
+                continue
+            num_animal += pop_history[-1]
+
+        return num_animal
+
 
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
+        current_pop = {species: (pop_history[-1] if pop_history != [] else 0) for species, pop_history in self.pop_history.items()}
+        return current_pop
 
     def make_movie(self, movie_fmt='mp4'):
         """Create MPEG4 movie from visualization images saved."""

@@ -71,7 +71,7 @@ class Animal:
 
         #Eta must be less than 1
         if 'eta' in new_parameters:
-            if not new_parameters['eta'] >= 1:
+            if new_parameters['eta'] >= 1:
                 raise ValueError('eta must be less than 1')
             else:
                 cls.eta = new_parameters['eta']

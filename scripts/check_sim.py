@@ -47,7 +47,7 @@ if __name__ == '__main__':
                            'weight': 20}
                           for _ in range(40)]}]
 
-    sim = BioSim(img_dir='mov', img_base='base', ini_pop=ini_herbs, island_map=geogr)
+    sim = BioSim(ini_pop=ini_herbs, island_map=geogr, img_dir='mov', vis_years=2, img_years=4)
 
 
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': 9.})
     sim.set_landscape_parameters('L', {'f_max': 700})
 
-    sim.simulate(num_years=100)
+    sim.simulate(num_years=0)
     sim.add_population(population=ini_carns)
     sim.simulate(num_years=100)
 
@@ -69,4 +69,4 @@ if __name__ == '__main__':
 
     plt.show()
 
-    sim.make_movie()
+    #sim.make_movie()
