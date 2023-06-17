@@ -7,7 +7,7 @@ from .animals import Herbivore, Carnivore
 from .graphics import Graphics
 
 
-import matplotlib.pyplot as plt
+import csv
 
 # The material in this file is licensed under the BSD 3-clause license
 # https://opensource.org/licenses/BSD-3-Clause
@@ -105,6 +105,9 @@ class BioSim:
                 raise ValueError('img_years must be multiple of vis_steps')
         else:
             print('Visualization is disabled')
+
+        if log_file is not None:
+            self.log_file = log_file
 
 
 
@@ -206,6 +209,10 @@ class BioSim:
         self.current_year -= 1
         print()
 
+        if self.log_file is not None:
+            print(f"Saving log file to {self.log_file}")
+            self.save_log_file()
+
 
     def update_history_data(self):
         """Update history data for visualization"""
@@ -227,9 +234,30 @@ class BioSim:
 
         self.island.add_population(population)
 
+
+    def save_log_file(self):
+        """
+        Save the log file.
+        """
+        if self.log_file is None:
+            return
+
+        if self.log_file[-4:] != ".csv":
+            self.log_file += ".csv"
+
+        with open(self.log_file, "w") as file:
+            writer = csv.writer(file)
+
+            writer.writerow(self.pop_history.keys())
+
+            writer.writerows(zip(*self.pop_history.values()))
+
+
+
     @property
     def year(self):
         """Last year simulated."""
+        return self.current_year
 
     @property
     def num_animals(self):

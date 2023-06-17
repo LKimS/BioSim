@@ -96,6 +96,7 @@ class Island:
 
         return map
 
+    # TODO: move into method above
     def get_map_with_animals(self):
         map_with_animals = {}
         for x in range(1, self.map_height+1):
@@ -125,8 +126,7 @@ class Island:
             for animal_info in item['pop']:
                 self.map[(x,y)].add_animal_from_dict(animal_info)
 
-            #self.map[(x,y)].update_animal_count()
-
+# TODO: check if this method is needed
     def migrate_animals(self):
         all_moving_animals = []
         for old_location, cell in self.habital_map.items():
