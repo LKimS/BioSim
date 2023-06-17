@@ -23,6 +23,11 @@ ERROR HANDLING:
 """
 
 class Island:
+    """
+    Island class for BioSim.
+    """
+    allowed_cells = ['W', 'L', 'H', 'D']
+
 
 #INIT METHOD
     def __init__(self, input_island_map, random_seed=0):
@@ -49,7 +54,31 @@ class Island:
         lines = input_island_map.split("\n")
         processed_lines = [line.strip() for line in lines]
         processed_lines = [line for line in processed_lines if line != '']
+
+        self._island_compatibility_check(processed_lines)
+
         return processed_lines
+
+    def _island_compatibility_check(self, processed_lines):
+        """
+        Checks if input_island_map is compatible with the Island class.
+        """
+
+        line_width = len(processed_lines[0])
+
+        for row, line in enumerate(processed_lines):
+            if len(line) != line_width:
+                raise ValueError("All lines must contain the same number of letters.")
+            for collumn, letter in enumerate(line):
+                if letter not in self.allowed_cells:
+                    raise ValueError(f"Only letters W, L, H, D are allowed. Not {letter}.")
+                if row == 0 or row == len(processed_lines)-1:
+                    if letter != 'W':
+                        raise ValueError("Geography must be surrounded by water.")
+                if collumn == 0 or collumn == len(line)-1:
+                    if letter != 'W':
+                        raise ValueError("Geography must be surrounded by water.")
+
 
     def get_map_height(self, map_processed):
         return len(map_processed)

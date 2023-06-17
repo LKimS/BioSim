@@ -48,7 +48,7 @@ class Graphics:
     age_y_max = .2
     weight_y_max = .15
     fitness_y_max = .3
-    hist_update_y_ax = 30
+    hist_update_y_ax = 48
 
     rgb_value = {'W': (0.13, 0.00, 1.00),  # blue
                  'L': (0.00, 0.62, 0.00),  # dark green
@@ -290,15 +290,15 @@ class Graphics:
         # create new figure window
         if self._fig is None:
             scale_factor = .8
-            img_size = (16 * scale_factor,9 * scale_factor)
+            img_size = (16 * scale_factor,10 * scale_factor)
             self._fig = plt.figure(figsize=img_size)
 
         if self._ax is None:
-            self._ax = self._fig.add_gridspec(9, 3)
+            self._ax = self._fig.add_gridspec(12, 3)
 
         # Add year counter in upper left corner
         if self._year_ax is None:
-            self._year_ax = self._fig.add_axes([.05, .93, .2, .06]) # llx, lly, w, h
+            self._year_ax = self._fig.add_axes([.2, .9, .2, .06]) # llx, lly, w, h
             self.year_counter = None
             self._year_ax.axis('off')
 
@@ -306,24 +306,24 @@ class Graphics:
 
         if self._landscape_ax is None:
 
-            self._landscape_ax = self._fig.add_axes([.43, .9, .22, .8]) # llx, lly, w, h
+            self._landscape_ax = self._fig.add_axes([.4, .01, .22, .09]) # llx, lly, w, h
             self._landscape_ax.axis('off')
 
-            self._landscape_ax.add_patch(plt.Rectangle((0, .06), 0.11, 0.04, edgecolor='none',
-                                                       facecolor=self.rgb_value['W']))
-            self._landscape_ax.text(.12, 0.07, 'Water', transform=self._landscape_ax.transAxes)
+            self._landscape_ax.add_patch(plt.Rectangle((0, .6), 0.2, 0.4, edgecolor='none',
+                                  facecolor=self.rgb_value['W']))
+            self._landscape_ax.text(.22, 0.7, 'Water', transform=self._landscape_ax.transAxes)
 
-            self._landscape_ax.add_patch(plt.Rectangle((0, .01), 0.11, 0.04, edgecolor='none',
-                                                       facecolor=self.rgb_value['D']))
-            self._landscape_ax.text(.12, 0.02, 'Desert', transform=self._landscape_ax.transAxes)
+            self._landscape_ax.add_patch(plt.Rectangle((0, .0), 0.2, 0.4, edgecolor='none',
+                                  facecolor=self.rgb_value['D']))
+            self._landscape_ax.text(.22, 0.16, 'Desert', transform=self._landscape_ax.transAxes)
 
-            self._landscape_ax.add_patch(plt.Rectangle((0.6, .06), 0.11, 0.04, edgecolor='none',
-                                                       facecolor=self.rgb_value['L']))
-            self._landscape_ax.text(.72, 0.07, 'Lowland', transform=self._landscape_ax.transAxes)
+            self._landscape_ax.add_patch(plt.Rectangle((.5, .6), 0.2, 0.4, edgecolor='none',
+                                  facecolor=self.rgb_value['L']))
+            self._landscape_ax.text(.73, .7, 'Lowland', transform=self._landscape_ax.transAxes)
 
-            self._landscape_ax.add_patch(plt.Rectangle((0.6, .01), 0.11, 0.04, edgecolor='none',
-                                                       facecolor=self.rgb_value['H']))
-            self._landscape_ax.text(.72, 0.02, 'Highland', transform=self._landscape_ax.transAxes)
+            self._landscape_ax.add_patch(plt.Rectangle((0.5, .0), 0.2, 0.4, edgecolor='none',
+                                  facecolor=self.rgb_value['H']))
+            self._landscape_ax.text(.73, 0.16, 'Highland', transform=self._landscape_ax.transAxes)
 
         # Add left subplot for images created with imshow().
         # We cannot create the actual ImageAxis object before we know
@@ -332,32 +332,39 @@ class Graphics:
             color_map = [[self.rgb_value[landscape] for landscape in row] for row in geography]
             self._dim_x = len(geography)
             self._dim_y = len(geography[0])
-            self._map_ax = self._fig.add_subplot(self._ax[0:3, 1])
+            self._map_ax = self._fig.add_subplot(self._ax[8:,1])
             self._map_img = self._map_ax.imshow(color_map)
             self.geography = geography
             self._map_ax.set_title('Map')
             self._map_ax.axis('off')
 
+            self._map_title_ax = self._fig.add_axes([0, 0.12, .1, .25]) # llx, lly, w, h
+            self._map_title_ax.text(0.5, 0.5, 'Population\ndensity', horizontalalignment='center', verticalalignment='center', fontsize=15, rotation=45)
+            self._map_title_ax.axis('off')
+
         # Repeat for heatmap of the animals
         if self._herbivore_heatmap_ax is None:
-            self._herbivore_heatmap_ax = self._fig.add_subplot(self._ax[0:3, 0])
+            self._herbivore_heatmap_ax = self._fig.add_subplot(self._ax[8:,0])
             self._herbivore_heatmap_img = None
             self._herbivore_heatmap_ax.set_title('Herbivores')
             self._herbivore_heatmap_ax.axis('off')
 
         if self._carnivore_heatmap_ax is None:
-            self._carnivore_heatmap_ax = self._fig.add_subplot(self._ax[0:3, 2])
+            self._carnivore_heatmap_ax = self._fig.add_subplot(self._ax[8:,2])
             self._carnivore_heatmap_ax.set_title('Carnivores')
             self._carnivore_heatmap_ax.axis('off')
 
         # Setting up the population plot
         if self._population_ax is None:
-            self._population_ax = self._fig.add_subplot(self._ax[4:6, :])
+            self._population_ax = self._fig.add_subplot(self._ax[0:3,:])
             self._population_ax.set_ylim(-0.05, 0.05)
             self._population_ax.set_ylim(0, self.ymax_animals)
-            self._population_ax.set_title('Population')
-            self._population_ax.text(0.05, .8, 'Population', transform=self._population_ax.transAxes, fontsize=12)
+            #self._population_ax.set_title('Population')
             self._population_ax.set_xlabel('Year', loc='right')
+
+            self._population_title_ax = self._fig.add_axes([0, .7, .1, .18]) # llx, lly, w, h
+            self._population_title_ax.text(0.5, 0.5, 'Population\nHistory', horizontalalignment='center', verticalalignment='center', fontsize=15, rotation=45)
+            self._population_title_ax.axis('off')
 
         self._population_ax.set_xlim(0, final_year)
         xdata = np.arange(0, final_year + 1, self.vis_years)
@@ -368,7 +375,6 @@ class Graphics:
                                                                  np.full(len(xdata), np.nan),
                                                                  color="blue", label="Herbivores")
             self.herbivore_population_line = herbivore_population_plot[0]
-            plt.legend()
 
         else:
             x_data, y_data = self.herbivore_population_line.get_data()
@@ -382,7 +388,6 @@ class Graphics:
             carnivore_population_plot = self._population_ax.plot(xdata,
                                                                  np.full(len(xdata), np.nan),
                                                                  color="red", label="Carnivores")
-            plt.legend()
             self._carnivore_population_line = carnivore_population_plot[0]
         else:
             x_data, y_data = self._carnivore_population_line.get_data()
@@ -394,7 +399,8 @@ class Graphics:
 
         # Setting up the histogram
         if self._hist_age_ax is None:
-            self._hist_age_ax = self._fig.add_subplot(self._ax[7:9, 0])
+            self._hist_age_ax = self._fig.add_subplot(self._ax[4:7, 0])
+            self._hist_age_ax.set_title('Age distribution')
 
             self.age_bin_max = self.hist_specs["age"]["max"]
             self.age_bin_width = self.hist_specs["age"]["delta"]
@@ -406,10 +412,12 @@ class Graphics:
             self.age_carnivore_hist = self._hist_age_ax.stairs(self.age_hist_counts, self.age_bin_edges, color='red',
                                                                lw=2, label='Carnivore')
             self._hist_age_ax.set_ylim(0, self.age_y_max)
-            plt.legend(loc="upper center", fontsize="8")
+
+
 
         if self._hist_weight_ax is None:
-            self._hist_weight_ax = self._fig.add_subplot(self._ax[7:9, 1])
+            self._hist_weight_ax = self._fig.add_subplot(self._ax[4:7,1])
+            self._hist_weight_ax.set_title('Weight distribution')
 
             self.weight_bin_max = self.hist_specs["weight"]["max"]
             self.weight_bin_width = self.hist_specs["weight"]["delta"]
@@ -422,10 +430,17 @@ class Graphics:
             self.weight_carnivore_hist = self._hist_weight_ax.stairs(self.weight_hist_counts, self.weight_bin_edges, color='red',
                                                                      lw=2, label='Carnivore')
             self._hist_weight_ax.set_ylim(0, self.weight_y_max)
-            plt.legend(loc="upper center", fontsize="8")
+
+            plt.legend(bbox_to_anchor=(.36, .895), loc="lower left",
+                       bbox_transform=self._fig.transFigure, ncol=2, fontsize=15)
+
+            self._hist_title_ax = self._fig.add_axes([0, .44, .1, .18]) # llx, lly, w, h
+            self._hist_title_ax.text(0.5, 0.5, 'Normalized\nhistograms', horizontalalignment='center', verticalalignment='center', fontsize=15, rotation=45)
+            self._hist_title_ax.axis('off')
 
         if self._hist_fitness_ax is None:
-            self._hist_fitness_ax = self._fig.add_subplot(self._ax[7:9, 2])
+            self._hist_fitness_ax = self._fig.add_subplot(self._ax[4:7,2])
+            self._hist_fitness_ax.set_title('Fitness distribution')
 
             self.fitness_bin_max = self.hist_specs["fitness"]["max"]
             self.fitness_bin_width = self.hist_specs["fitness"]["delta"]
@@ -438,7 +453,7 @@ class Graphics:
             self.fitness_carnivore_hist = self._hist_fitness_ax.stairs(self.fitness_hist_counts, self.fitness_bin_edges, color='red',
                                                                        lw=2, label='Carnivore')
             self._hist_fitness_ax.set_ylim(0, self.fitness_y_max)
-            plt.legend(loc="upper center", fontsize="8")
+
 
 
 
@@ -542,8 +557,11 @@ class Graphics:
 
             # Update y-axis
             if self._frame_ctr % self.hist_update_y_ax == 0:
-                y_max = max(self.age_y_max, max(hist_counts_age_herbivore)*1.1)
+                y_max = max(self.age_y_max, max(hist_counts_age_herbivore_norm)*1.1)
                 self._hist_age_ax.set_ylim([0, y_max])
+
+                if self._frame_ctr % self.hist_update_y_ax:
+                    y_max = max(self.age_y_max, max(hist_counts_age_herbivore_norm)*1.1)
 
             self.age_herbivore_hist.set_data(hist_counts_age_herbivore)
 
@@ -551,12 +569,15 @@ class Graphics:
             hist_counts_age_carnivore, _ = np.histogram(carnivore_age_list, bins=self.age_bin_edges, density=True)
             hist_counts_age_carnivore_norm = hist_counts_age_carnivore / np.sum(hist_counts_age_carnivore)
 
-            # Update y-axis
             if self._frame_ctr % self.hist_update_y_ax == 0:
-                y_max = max(self.age_y_max, max(hist_counts_age_carnivore)*1.1)
+                y_max = max(self.age_y_max, max(hist_counts_age_herbivore_norm) * 1.1,
+                            max(hist_counts_age_carnivore_norm) * 1.1)
                 self._hist_age_ax.set_ylim([0, y_max])
 
+
             self.age_carnivore_hist.set_data(hist_counts_age_carnivore)
+
+
 
 
     def _update_histogram_weight(self, herbivore_weight_list, carnivore_weight_list):
@@ -572,7 +593,6 @@ class Graphics:
             hist_counts_weight_herbivore, _ = np.histogram(herbivore_weight_list, bins=self.weight_bin_edges, density=True)
             hist_counts_weight_herbivore_norm = hist_counts_weight_herbivore / np.sum(hist_counts_weight_herbivore)
 
-            # Update y-axis
             if self._frame_ctr % self.hist_update_y_ax == 0:
                 y_max = max(self.weight_y_max, max(hist_counts_weight_herbivore_norm)*1.1)
                 self._hist_weight_ax.set_ylim([0, y_max])
@@ -583,11 +603,15 @@ class Graphics:
             hist_counts_weight_carnivore, _ = np.histogram(carnivore_weight_list, bins=self.weight_bin_edges, density=True)
             hist_counts_weight_carnivore_norm = hist_counts_weight_carnivore / np.sum(hist_counts_weight_carnivore)
 
-            # Update y-axis
             if self._frame_ctr % self.hist_update_y_ax == 0:
-                y_max = max(self.weight_y_max, max(hist_counts_weight_carnivore_norm)*1.1)
+                y_max = max(self.weight_y_max, max(hist_counts_weight_herbivore_norm) * 1.1,
+                            max(hist_counts_weight_carnivore_norm) * 1.1)
+
                 self._hist_weight_ax.set_ylim([0, y_max])
+
             self.weight_carnivore_hist.set_data(hist_counts_weight_carnivore_norm)
+
+
 
     def _update_histogram_fitness(self, herbivore_fitness_list, carnivore_fitness_list):
         """
@@ -607,22 +631,21 @@ class Graphics:
             hist_counts_fitness_herbivore, _ = np.histogram(herbivore_fitness_list, bins=self.fitness_bin_edges, density=True)
             hist_counts_fitness_herbivore_norm = hist_counts_fitness_herbivore / np.sum(hist_counts_fitness_herbivore)
 
-            # update y-axis
             if self._frame_ctr % self.hist_update_y_ax == 0:
                 y_max = max(self.fitness_y_max, max(hist_counts_fitness_herbivore_norm)*1.1)
                 self._hist_fitness_ax.set_ylim([0, y_max])
+
             self.fitness_herbivore_hist.set_data(hist_counts_fitness_herbivore_norm)
 
         if carnivore_fitness_list is not None and carnivore_fitness_list != []:
             hist_counts_fitness_carnivore, _ = np.histogram(carnivore_fitness_list, bins=self.fitness_bin_edges, density=True)
             hist_counts_fitness_carnivore_norm = hist_counts_fitness_carnivore / np.sum(hist_counts_fitness_carnivore)
 
-            # update y-axis
             if self._frame_ctr % self.hist_update_y_ax == 0:
-                y_max = max(self.fitness_y_max, max(hist_counts_fitness_carnivore_norm)*1.1)
+                y_max = max(self.fitness_y_max, max(hist_counts_fitness_herbivore_norm)*1.1, max(hist_counts_fitness_carnivore_norm)*1.1)
                 self._hist_fitness_ax.set_ylim([0, y_max])
-            self.fitness_carnivore_hist.set_data(hist_counts_fitness_carnivore_norm)
 
+            self.fitness_carnivore_hist.set_data(hist_counts_fitness_carnivore_norm)
 
 
 

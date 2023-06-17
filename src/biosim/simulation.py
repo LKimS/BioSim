@@ -241,4 +241,7 @@ class BioSim:
 
     def make_movie(self, movie_fmt='mp4'):
         """Create MPEG4 movie from visualization images saved."""
+        if self.vis_years == 0:
+            return ValueError('To turn on movie making, set vis_years > 0')
+
         self.graphics.make_movie(movie_fmt)

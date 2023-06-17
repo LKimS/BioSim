@@ -26,7 +26,7 @@ class Cell:
         self.location = location
 
     def add_animal_from_dict(self, animal_info):
-        raise ValueError(f"Cannot add animal to {type(self)} cell")
+        raise ValueError(f"Cannot add animal to {type(self)} cell at loc: {self.location}")
 
     @classmethod
     def set_parameters(cls, params):
@@ -48,12 +48,25 @@ class Cell_with_animals(Cell):
 
     #General methods
     def add_animal_from_dict(self, animal_info):
+
+        valid_keys = ["species", "age", "weight"]
+
+        for key, value in animal_info.items():
+            if key not in valid_keys:
+                raise ValueError(f"Invalid key: {key}. Valid keys are: {valid_keys}")
+            if key == "species" and value not in ["Herbivore", "Carnivore"]:
+                raise ValueError(f"Invalid species: {value}")
+            if key == "age" and (value < 0 or type(value) != int):
+                raise ValueError(f"Invalid age: {value}. Age must be a non negative integer")
+            if key == "weight" and value <= 0:
+                raise ValueError(f"Invalid weight: {value}. Weight must be a positive number")
+
+
+
         if animal_info["species"] == "Herbivore":
             self.herbivore.append(Herbivore(animal_info, self.location))
         elif animal_info["species"] == "Carnivore":
             self.carnivore.append(Carnivore(animal_info, self.location))
-        else:
-            raise ValueError("Invalid animal species")
 
     def add_animal_object(self, animal):
         """
