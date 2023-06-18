@@ -121,9 +121,12 @@ class Island:
 #METHODS for adding animals
     def add_population(self, population):
         for item in population:
-            x, y = item["loc"]
+            loc = item["loc"]
+            if loc not in self.map:
+                raise ValueError("Location does not exist on island.")
+
             for animal_info in item['pop']:
-                self.map[(x, y)].add_animal_from_dict(animal_info)
+                self.map[loc].add_animal_from_dict(animal_info)
 
 # TODO: check if this method is needed
     def migrate_animals(self):
