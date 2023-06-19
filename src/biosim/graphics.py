@@ -20,8 +20,6 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: gif
 
 class Graphics:
     """
-    Provides graphics support for BioSim.
-
     :mod:`biosim.graphics` provides graphics support for BioSim.
 
     This module was inspired by RandVis package by Hans Ekkehard Plesser
@@ -58,7 +56,10 @@ class Graphics:
     def __init__(self, img_dir=None, img_name=None, img_fmt=None, img_years=None, vis_years=0,
                  ymax_animals=1200, cmax_animals=None, hist_specs=None):
         """
+        __init__ method for class Graphics
+
         Setting up a new visualization object.
+
         :param img_dir: directory for image files; no images if None
         :type img_dir: str
         :param img_name: beginning of name for image files
@@ -67,6 +68,7 @@ class Graphics:
         :type img_fmt: str
         :img_years: Years between visualizations saved to files (default: `vis_years`)
         :type img_years: int
+
         """
 
         # check if ymax_animals is a positive number
@@ -188,27 +190,27 @@ class Graphics:
         """
         Updates graphics with current data and save to file if necessary.
 
-        :param year: current year
+        :param year: current year.
         :type year: int
-        :param herbivore_population: current herbivore population
+        :param herbivore_population: current herbivore population.
         :type herbivore_population: int
-        :param carnivore_population: current carnivore population
+        :param carnivore_population: current carnivore population.
         :type carnivore_population: int
-        :param herbivore_dict_map: current herbivore population distribution (dictionary)
+        :param herbivore_dict_map: current herbivore population distribution.
         :type herbivore_dict_map: dict
-        :param carnivore_dict_map: current carnivore population distribution (dictionary)
+        :param carnivore_dict_map: current carnivore population distribution.
         :type carnivore_dict_map: dict
-        :param herbivore_age_list: current herbivore age distribution (list)
+        :param herbivore_age_list: current herbivore age distribution.
         :type herbivore_age_list: list
-        :param carnivore_age_list: current carnivore age distribution (list)
+        :param carnivore_age_list: current carnivore age distribution.
         :type carnivore_age_list: list
-        :param herbivore_weight_list: current herbivore weight distribution (list)
+        :param herbivore_weight_list: current herbivore weight distribution.
         :type herbivore_weight_list: list
-        :param carnivore_weight_list: current carnivore weight distribution (list)
+        :param carnivore_weight_list: current carnivore weight distribution.
         :type carnivore_weight_list: list
-        :param herbivore_fitness_list: current herbivore fitness distribution (list)
+        :param herbivore_fitness_list: current herbivore fitness distribution.
         :type herbivore_fitness_list: list
-        :param carnivore_fitness_list: current carnivore fitness distribution (list)
+        :param carnivore_fitness_list: current carnivore fitness distribution.
         :type carnivore_fitness_list: list
         """
 
@@ -230,8 +232,10 @@ class Graphics:
     def make_movie(self, movie_fmt=None):
         """
         Creates MPEG4 movie from visualization images saved.
-        :param movie_fmt: Video format, either 'mp4' or 'gif'. Default 'mp4'.
+
+        :param movie_fmt: Video format, either mp4 (default) or gif.
         :type movie_fmt: str
+
         """
 
         if self._img_base is None:
