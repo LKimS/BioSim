@@ -97,7 +97,6 @@ class Island:
         return len(map_processed)
 
     def _get_map_width(self, map_processed):
-    def get_map_width(map_processed):
         """
         Get the width of the map
 
@@ -112,8 +111,8 @@ class Island:
         """
         return len(map_processed[0])
 
+
     def _map_processed_to_dict(self, map_processed):
-    def map_processed_to_dict(self, map_processed):
         """
         Creates a map(dict) with coordinates as keys and cell objects as values
 
