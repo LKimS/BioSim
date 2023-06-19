@@ -141,10 +141,11 @@ class Animal:
     def loss_of_weight(self):
         """Animal loses weight by one year"""
         self.weight -= self.params["eta"] * self.weight
+        self._update_fitness()
 
     def death(self):
         """Sets the animal to False if it dies, true otherwise."""
-        self._update_fitness()
+
         probability_of_death = self.params["omega"] * (1 - self.fitness)
         if self.weight <= 0:
             self.alive = False
@@ -174,7 +175,7 @@ class Herbivore(Animal):
     params = default_parameters.copy()
 
 
-    def feeding(self, fodder=300):
+    def feeding(self, fodder):
         """Herbivore eats the amount of fodder given, or the maximum amount of fodder it can eat."""
         if fodder < self.params["F"]:
             amount_eaten = fodder
