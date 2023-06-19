@@ -4,14 +4,6 @@ from .animals import Herbivore, Carnivore
 
 import random
 
-"""
-core methods:
-- remove animal when dead
-- sort animals by fitness
-- update fodder
-- feed animals
-- add baby animals
-"""
 
 class Cell:
     """
@@ -35,8 +27,8 @@ class Cell:
     def is_habitable(self):
         return self._habitable
 
-class Cell_with_animals(Cell):
 
+class Cell_with_animals(Cell):
     _habitable = True
 
     def __init__(self, location):
@@ -54,7 +46,7 @@ class Cell_with_animals(Cell):
             animals.extend(animal_list)
         return animals
 
-    #General methods
+    # General methods
     def add_animal_from_dict(self, animal_info):
 
         valid_keys = ["species", "age", "weight"]
@@ -71,7 +63,6 @@ class Cell_with_animals(Cell):
 
         new_animal = self.species[animal_info["species"]](animal_info, self.location)
         self.fauna[animal_info["species"]].append(new_animal)
-
 
     def add_animal_object(self, animal):
         """
@@ -98,8 +89,7 @@ class Cell_with_animals(Cell):
     def _sort_herbivore_after_fitness(self, descending=True):
         self.fauna["Herbivore"].sort(key=lambda animal: animal.fitness, reverse=descending)
 
-
-    #Annual cycle methods
+    # Annual cycle methods
 
     def add_newborns(self):
         """
@@ -111,7 +101,6 @@ class Cell_with_animals(Cell):
                 if newborn is not None:
                     self.fauna[species].append(newborn)
 
-
     def feed_animals(self):
 
         # skip if there is no herbivores in the cell
@@ -121,7 +110,7 @@ class Cell_with_animals(Cell):
             for animal in self.fauna["Carnivore"]:
                 animal.feeding(self.fauna["Herbivore"])
 
-                #remove dead animals
+                # remove dead animals
                 self.fauna["Herbivore"] = [animal for animal in self.fauna["Herbivore"] if animal.alive]
 
     def moving_animals_list(self):
@@ -137,7 +126,7 @@ class Cell_with_animals(Cell):
         return moving_animals
 
     def reset_fodder(self):
-        #this cell has no fodder
+        # this cell has no fodder
         pass
 
     def _get_random_neighboring_cell(self, location):
@@ -147,7 +136,7 @@ class Cell_with_animals(Cell):
         new_location = []
 
         # Change in direction       South, North, West, East
-        direction = random.choice([(-1,0), (1,0), (0,-1), (0,1)])
+        direction = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
 
         # Calculate new coordinates
         for current, change in zip(location, direction):
@@ -168,6 +157,7 @@ class Cell_with_animals(Cell):
         """
         for animal in self.animals:
             animal.loss_of_weight()
+
     def animal_death(self):
         """
         Removes dead animals from the cell
@@ -178,10 +168,6 @@ class Cell_with_animals(Cell):
 
             self.fauna[species] = [animal for animal in animal_list if animal.alive]
 
-
-
-
-
     @property
     def count_herbivore(self):
         return len(self.fauna["Herbivore"])
@@ -190,11 +176,12 @@ class Cell_with_animals(Cell):
     def count_carnivore(self):
         return len(self.fauna["Carnivore"])
 
+
 class Cell_with_fodder(Cell_with_animals):
     """
     Class for a cell in the island
     """
-    f_max =None
+    f_max = None
 
     default_parameters = {'f_max': f_max}
 
@@ -243,20 +230,24 @@ class Cell_with_fodder(Cell_with_animals):
     def reset_fodder(self):
         self.fodder = self.f_max
 
+
 class Water(Cell):
     type = "Water"
     color = (0.13, 0.00, 1.00)
 
+
 class Desert(Cell_with_animals):
     type = "Desert"
     color = (1.00, 1.00, 0.40)
-    
+
+
 class Lowland(Cell_with_fodder):
     type = "Lowland"
     f_max = 800
     color = (0.00, 0.62, 0.00)
     default_parameters = {'f_max': f_max}
-    
+
+
 class Highland(Cell_with_fodder):
     type = "Highland"
     f_max = 300
