@@ -19,6 +19,9 @@ class Island:
     """
     Island class. Superclass for all landscape types.
     """
+
+    allowed_cells = ['W', 'L', 'H', 'D']
+
 #INIT METHOD
     def __init__(self, input_island_map, random_seed=0):
         """
