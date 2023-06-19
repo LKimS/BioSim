@@ -7,6 +7,9 @@ from .animals import Herbivore, Carnivore
 from .graphics import Graphics
 
 
+import csv
+import pickle
+
 # The material in this file is licensed under the BSD 3-clause license
 # https://opensource.org/licenses/BSD-3-Clause
 # (C) Copyright 2023 Hans Ekkehard Plesser / NMBU
@@ -17,7 +20,22 @@ class BioSim:
     Top-level interface to BioSim package.
     """
 
-    def __init__(self, island_map, ini_pop=None, seed=123,
+    _default_map = """\
+               WWWWWWWWWWWWWWWWWWWWW
+               WWWWWWWWHWWWWLLLLLLLW
+               WHHHHHLLLLWWLLLLLLLWW
+               WHHHHHHHHHWWLLLLLLWWW
+               WHHHHHLLLLLLLLLLLLWWW
+               WHHHHHLLLDDLLLHLLLWWW
+               WHHLLLLLDDDLLLHHHHWWW
+               WWHHHHLLLDDLLLHWWWWWW
+               WHHHLLLLLDDLLLLLLLWWW
+               WHHHHLLLLDDLLLLWWWWWW
+               WWHHHHLLLLLLLLWWWWWWW
+               WWWHHHHLLLLLLLWWWWWWW
+               WWWWWWWWWWWWWWWWWWWWW"""
+
+    def __init__(self, island_map=None, ini_pop=None, seed=123,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_years=None, img_dir=None, img_base=None, img_fmt='png',
                  log_file=None):
@@ -39,8 +57,6 @@ class BioSim:
             Color-scale limits for animal densities, see below
         hist_specs : dict
             Specifications for histograms, see below
-        live_visualization : bool
-            Boolean specifying if live visualization is to be used (default: True)
         img_years : int
             Years between visualizations saved to files (default: `vis_years`)
         img_dir : str
@@ -83,15 +99,37 @@ class BioSim:
 
         - `img_dir` and `img_base` must either be both None or both strings.
         """
+        self.current_year = 0
+
+        if island_map is None:
+            island_map = self._default_map
+
         self.island = Island(island_map, seed)
+
+
         if ini_pop is not None:
             self.island.add_population(ini_pop)
         self.pop_history = {'Herbivore': [], 'Carnivore': []}
-        self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years,
-                                 vis_years=vis_years, ymax_animals=ymax_animals, cmax_animals=cmax_animals,
-                                 hist_specs=hist_specs)
-        self.current_year = 0
+
+        if vis_years <= 0 and type(vis_years) != int:
+            raise ValueError('vis_years must be a positive integer')
         self.vis_years = vis_years
+
+        if self.vis_years != 0:
+            self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years, vis_years=vis_years,
+                                     ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs)
+
+            self.img_years = vis_years
+
+            if self.img_years % vis_years != 0:
+                raise ValueError('img_years must be multiple of vis_steps')
+        else:
+            print('Visualization is disabled')
+
+        self.log_file = log_file
+
+
+
 
     def set_animal_parameters(self, species, new_parameters):
         """
@@ -141,31 +179,35 @@ class BioSim:
         else:
             raise ValueError("Invalid landscape. Only L and H has fodder")
 
-    def simulate(self, num_years, img_years=None):
+    def simulate(self, num_years):
         """
         Run simulation while visualizing the result.
 
         :param num_years: number of simulation steps to execute
-        :param img_years: interval between visualizations saved to files
-                          (default: vis_years)
 
         .. note:: Image files will be numbered consecutively.
         """
+        # TODO: impliment: vis_years and img_years
 
-        if img_years is None:
-            img_years = self.vis_years
 
-        if img_years % self.vis_years != 0:
-            raise ValueError('img_years must be multiple of vis_steps')
 
         self.final_year = self.current_year + num_years
-        self.graphics.setup(self.island.map_processed, self.final_year)
 
-        while self.current_year < self.final_year + 1:
+        if self.current_year != 0:
+            self.current_year += 1
+
+
+        if self.vis_years != 0:
+            self.graphics.setup(self.island.map_processed, self.final_year)
+
+        while self.current_year <= self.final_year:
+            print(f"\rSimulating... year: {self.current_year} out of {self.final_year}", flush=True, end='')
             self.island.yearly_island_cycle()
             self.update_history_data()
 
-            if self.current_year % self.vis_years == 0 and self.vis_years != 0:
+
+
+            if self.vis_years != 0 and self.current_year % self.vis_years == 0:
                 self.graphics.update(self.current_year,
                                      herbivore_population=self.island.pop['Herbivore'],
                                      carnivore_population=self.island.pop['Carnivore'],
@@ -179,6 +221,14 @@ class BioSim:
                                      carnivore_fitness_list=self.island.specs['Carnivore']['fitness'])
 
             self.current_year += 1
+
+        # Subract one year to get the last year of the simulation
+        self.current_year -= 1
+        print()
+
+        if self.log_file is not None:
+            print(f"Saving log file to {self.log_file}")
+            self.save_log_file()
 
 
     def update_history_data(self):
@@ -201,18 +251,83 @@ class BioSim:
 
         self.island.add_population(population)
 
+
+    def save_log_file(self):
+        """
+        Save the log file.
+        """
+        if self.log_file is None:
+            return
+
+        if self.log_file[-4:] != ".csv":
+            self.log_file += ".csv"
+
+        with open(self.log_file, "w") as file:
+            writer = csv.writer(file)
+
+            writer.writerow(self.pop_history.keys())
+
+            writer.writerows(zip(*self.pop_history.values()))
+
+    def save_simulation(self, file_name):
+        """
+        Save the simulation to a file.
+
+        :param file_name: name of file to save to
+
+        Write this as a note: This featrue is not implimented yet.
+        """
+        if file_name[-4:] != ".pkl":
+            file_name += ".pkl"
+
+        with open(file_name, "wb") as file:
+            pickle.dump(self, file)
+
+    @staticmethod
+    def load_simulation(file_name):
+        """
+        Load a simulation from a file.
+
+        :param file_name: name of file to load from
+        :return: simulation object
+
+        Write this as a note: This featrue is not implimented yet.
+        """
+        with open(file_name, "rb") as file:
+            sim = pickle.load(file)
+
+        return sim
+
+
+
+
     @property
     def year(self):
         """Last year simulated."""
+        return self.current_year
 
+    # TODO: impliment
     @property
     def num_animals(self):
         """Total number of animals on island."""
+        num_animal = 0
+        for species, pop_history in self.pop_history.items():
+            if pop_history == []:
+                continue
+            num_animal += pop_history[-1]
+
+        return num_animal
+
 
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
+        current_pop = {species: (pop_history[-1] if pop_history != [] else 0) for species, pop_history in self.pop_history.items()}
+        return current_pop
 
     def make_movie(self, movie_fmt='mp4'):
         """Create MPEG4 movie from visualization images saved."""
+        if self.vis_years == 0:
+            return ValueError('To turn on movie making, set vis_years > 0')
+
         self.graphics.make_movie(movie_fmt)

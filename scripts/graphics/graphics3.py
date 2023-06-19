@@ -94,7 +94,7 @@ while year < 50:
                     herbivore_dict_map = cell_pop_history['Herbivore'],
                     carnivore_dict_map = cell_pop_history['Carnivore'])
     print(f"year: {year}, time: {time()-start}")
-    island.move_all_animals(migrating_animals)
+    island._move_all_animals(migrating_animals)
 
 
 ini_carns = [{'loc': (2,8),
@@ -136,6 +136,6 @@ while year < SIM_YEARS:
                     herbivore_dict_map = cell_pop_history['Herbivore'],
                     carnivore_dict_map = cell_pop_history['Carnivore'])
     print(f"year: {year}, time: {time()-start}")
-    island.move_all_animals(migrating_animals)
+    island._move_all_animals(migrating_animals)
 
 plt.show()

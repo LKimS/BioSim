@@ -1,1 +1,2 @@
-Population graph: Should it move to the right?
+Test for newborn weight distribution
+dynamic y axis

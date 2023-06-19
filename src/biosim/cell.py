@@ -1,18 +1,9 @@
 """Implements the Cell class."""
 
 from .animals import Herbivore, Carnivore
-import random
 
 import random
 
-"""
-core methods:
-- remove animal when dead
-- sort animals by fitness
-- update fodder
-- feed animals
-- add baby animals
-"""
 
 class Cell:
     """
@@ -26,7 +17,7 @@ class Cell:
         self.location = location
 
     def add_animal_from_dict(self, animal_info):
-        raise ValueError(f"Cannot add animal to {type(self)} cell")
+        raise ValueError(f"Cannot add animal to {type(self)} cell at loc: {self.location}")
 
     @classmethod
     def set_parameters(cls, params):
@@ -36,24 +27,42 @@ class Cell:
     def is_habitable(self):
         return self._habitable
 
-class Cell_with_animals(Cell):
 
+class Cell_with_animals(Cell):
     _habitable = True
 
     def __init__(self, location):
         super().__init__(location)
-        self.herbivore = []
-        self.carnivore = []
+        self.fauna = {'Herbivore': [], 'Carnivore': []}
         self.cell_pop_history = {'Herbivore': [], 'Carnivore': []}
 
-    #General methods
+        self.species = {'Herbivore': Herbivore, 'Carnivore': Carnivore}
+
+    @property
+    def animals(self):
+        animals = []
+
+        for animal_list in self.fauna.values():
+            animals.extend(animal_list)
+        return animals
+
+    # General methods
     def add_animal_from_dict(self, animal_info):
-        if animal_info["species"] == "Herbivore":
-            self.herbivore.append(Herbivore(animal_info, self.location))
-        elif animal_info["species"] == "Carnivore":
-            self.carnivore.append(Carnivore(animal_info, self.location))
-        else:
-            raise ValueError("Invalid animal species")
+
+        valid_keys = ["species", "age", "weight"]
+
+        for key, value in animal_info.items():
+            if key not in valid_keys:
+                raise ValueError(f"Invalid key: {key}. Valid keys are: {valid_keys}")
+            if key == "species" and value not in ["Herbivore", "Carnivore"]:
+                raise ValueError(f"Invalid species: {value}")
+            if key == "age" and (value < 0 or type(value) != int):
+                raise ValueError(f"Invalid age: {value}. Age must be a non negative integer")
+            if key == "weight" and value <= 0:
+                raise ValueError(f"Invalid weight: {value}. Weight must be a positive number")
+
+        new_animal = self.species[animal_info["species"]](animal_info, self.location)
+        self.fauna[animal_info["species"]].append(new_animal)
 
     def add_animal_object(self, animal):
         """
@@ -61,66 +70,48 @@ class Cell_with_animals(Cell):
         Parameters
         ----------
         animal
-
-        Returns
-        -------
-
         """
-        if animal.species == "Herbivore":
-            self.herbivore.append(animal)
-        elif animal.species == "Carnivore":
-            self.carnivore.append(animal)
-        else:
-            raise ValueError("Invalid animal species")
+
+        new_animal_species = animal.species
+
+        if new_animal_species not in self.fauna.keys():
+            raise ValueError(f"Invalid animal species: {new_animal_species}")
+
+        self.fauna[new_animal_species].append(animal)
 
     def remove_animal(self, animal):
-        if animal.species == "Herbivore":
-            self.herbivore.remove(animal)
-        elif animal.species == "Carnivore":
-            self.carnivore.remove(animal)
-        else:
-            raise ValueError("Invalid animal species")
+        """
+        Removes an animal object from the cell
+        """
+        animal_species = animal.species
+        self.fauna[animal_species].remove(animal)
 
-    def sort_herbivore_after_fitness(self, descending=True):
-        self.herbivore.sort(key=lambda animal: animal.fitness, reverse=descending)
+    def _sort_herbivore_after_fitness(self, descending=True):
+        self.fauna["Herbivore"].sort(key=lambda animal: animal.fitness, reverse=descending)
 
-    def update_fitness(self):
-        for animal in self.herbivore:
-            animal.fitness = animal.calc_fitness()
+    # Annual cycle methods
 
-        for animal in self.carnivore:
-            animal.fitness = animal.calc_fitness()
-
-    #Annual cycle methods
-
-    def add_newborns(self, animal_list):
-
-        newborn_list = []
-
-        for animal in animal_list:
-            newborn = animal.procreation(len(animal_list))
-            if newborn is not None:
-                newborn_list.append(newborn)
-
-        if newborn_list != []:
-            species = newborn_list[0].species
-
-
-            if species == "Herbivore":
-                self.herbivore.extend(newborn_list)
-            elif species == "Carnivore":
-                self.carnivore.extend(newborn_list)
+    def add_newborns(self):
+        """
+        Adds newborns to the cell
+        """
+        for species, animal_list in self.fauna.items():
+            for animal in animal_list:
+                newborn = animal.procreation(len(animal_list))
+                if newborn is not None:
+                    self.fauna[species].append(newborn)
 
     def feed_animals(self):
 
         # skip if there is no herbivores in the cell
         if self.count_herbivore > 0:
-            self.sort_herbivore_after_fitness(descending=False)
-            random.shuffle(self.carnivore)
-            for animal in self.carnivore:
-                animal.feeding(self.herbivore)
-                #remove dead animals
-                self.herbivore = [animal for animal in self.herbivore if animal.alive]
+            self._sort_herbivore_after_fitness(descending=False)
+            random.shuffle(self.fauna["Carnivore"])
+            for animal in self.fauna["Carnivore"]:
+                animal.feeding(self.fauna["Herbivore"])
+
+                # remove dead animals
+                self.fauna["Herbivore"] = [animal for animal in self.fauna["Herbivore"] if animal.alive]
 
     def moving_animals_list(self):
         """
@@ -128,69 +119,69 @@ class Cell_with_animals(Cell):
         """
         moving_animals = []
         for animal in self.animals:
-            if True:
-                new_location = self.get_random_neighboring_cell(self.location)
+            if animal.migrate():
+                new_location = self._get_random_neighboring_cell(self.location)
                 moving_animals.append((animal, self.location, new_location))
 
         return moving_animals
 
     def reset_fodder(self):
-        #this cell has no fodder
+        # this cell has no fodder
         pass
 
-    def get_random_neighboring_cell(self, location):
+    def _get_random_neighboring_cell(self, location):
         """
         Returns a random neighboring cell.
         """
-        new_location = list(location)
+        new_location = []
 
-        # get a random dimension. 0: moves vertically, 1: moves horizontally
-        dim = random.choice([0, 1])
-        # get a random direction. -1: moves down/left, 1: moves up/right
-        new_location[dim] += random.choice([-1, 1])
+        # Change in direction       South, North, West, East
+        direction = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
+
+        # Calculate new coordinates
+        for current, change in zip(location, direction):
+            new_location.append(current + change)
 
         return tuple(new_location)
 
     def age_animals(self):
-        for animal in self.herbivore:
-            animal.aging()
-
-        for animal in self.carnivore:
+        """
+        Ages all animals in the cell with one year
+        """
+        for animal in self.animals:
             animal.aging()
 
     def loss_of_weight(self):
-        for animal in self.herbivore:
-            animal.loss_of_weight()
-
-        for animal in self.carnivore:
+        """
+        Updates the weight of all animals in the cell
+        """
+        for animal in self.animals:
             animal.loss_of_weight()
 
     def animal_death(self):
-        for animal in self.herbivore:
-            animal.death()
-        self.herbivore = [animal for animal in self.herbivore if animal.alive]
+        """
+        Removes dead animals from the cell
+        """
+        for species, animal_list in self.fauna.items():
+            for animal in animal_list:
+                animal.death()
 
-        for animal in self.carnivore:
-            animal.death()
-        self.carnivore = [animal for animal in self.carnivore if animal.alive]
-
-    @property
-    def animals(self):
-        return self.herbivore + self.carnivore
+            self.fauna[species] = [animal for animal in animal_list if animal.alive]
 
     @property
     def count_herbivore(self):
-        return len(self.herbivore)
+        return len(self.fauna["Herbivore"])
 
     @property
     def count_carnivore(self):
-        return len(self.carnivore)
+        return len(self.fauna["Carnivore"])
+
 
 class Cell_with_fodder(Cell_with_animals):
     """
     Class for a cell in the island
     """
-    f_max =None
+    f_max = None
 
     default_parameters = {'f_max': f_max}
 
@@ -225,8 +216,8 @@ class Cell_with_fodder(Cell_with_animals):
         self.fodder = self.f_max
 
     def feed_animals(self):
-        self.sort_herbivore_after_fitness()
-        for animal in self.herbivore:
+        self._sort_herbivore_after_fitness()
+        for animal in self.fauna["Herbivore"]:
             if self.fodder > 0:
                 self.fodder -= animal.feeding(self.fodder)
             else:
@@ -239,20 +230,24 @@ class Cell_with_fodder(Cell_with_animals):
     def reset_fodder(self):
         self.fodder = self.f_max
 
+
 class Water(Cell):
     type = "Water"
     color = (0.13, 0.00, 1.00)
 
+
 class Desert(Cell_with_animals):
     type = "Desert"
     color = (1.00, 1.00, 0.40)
-    
+
+
 class Lowland(Cell_with_fodder):
     type = "Lowland"
     f_max = 800
     color = (0.00, 0.62, 0.00)
     default_parameters = {'f_max': f_max}
-    
+
+
 class Highland(Cell_with_fodder):
     type = "Highland"
     f_max = 300
