@@ -1,7 +1,3 @@
-.. biosim-u22-kim-mathias documentation master file, created by
-   sphinx-quickstart on Thu Jun 15 12:47:52 2023.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 Biosim - A model of the ecosystem Rossumøya
 ==================================================
@@ -47,23 +43,5 @@ Another smart idea was to only let the animals eat if they have something
 to eat in that cell. This makes the code a lot faster!
 
 
-For more information about the documentation, see the following sections bellow.
-
-
-
-.. toctree::
-   :maxdepth: 4
-   :caption: Contents:
-
-
-   home
-
-   codedoc
-
-   examples
-
-   further
-
-
-
+For more information about the documentation, see the following sections.
 

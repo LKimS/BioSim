@@ -7,8 +7,6 @@ from .animals import Herbivore, Carnivore
 from .graphics import Graphics
 
 
-import matplotlib.pyplot as plt
-
 # The material in this file is licensed under the BSD 3-clause license
 # https://opensource.org/licenses/BSD-3-Clause
 # (C) Copyright 2023 Hans Ekkehard Plesser / NMBU
@@ -89,12 +87,11 @@ class BioSim:
         if ini_pop is not None:
             self.island.add_population(ini_pop)
         self.pop_history = {'Herbivore': [], 'Carnivore': []}
-        self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years, vis_years=vis_years,
-                                 ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs)
+        self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years,
+                                 vis_years=vis_years, ymax_animals=ymax_animals, cmax_animals=cmax_animals,
+                                 hist_specs=hist_specs)
         self.current_year = 0
         self.vis_years = vis_years
-
-
 
     def set_animal_parameters(self, species, new_parameters):
         """
@@ -104,7 +101,7 @@ class BioSim:
         ----------
         species : str
             Name of species for which parameters shall be set.
-        params : dict
+        new_parameters : dict
             New parameter values
 
         Raises
@@ -129,7 +126,7 @@ class BioSim:
         ----------
         landscape : str
             Code letter for landscape
-        params : dict
+        new_parameters : dict
             New parameter values
 
         Raises
