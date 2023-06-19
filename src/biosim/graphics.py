@@ -461,8 +461,8 @@ class Graphics:
 
     def _update_year_counter(self, year):
         """Update the year counter.
-        :param year: int
 
+        :param year: int
         """
         year_txt = f"Year: {year}"
         if self.year_counter is None:
@@ -474,6 +474,7 @@ class Graphics:
     def _update_population_graph(self, year, herbivore_population, carnivore_population):
         """
         Update the population graph.
+
         :param year: Current year
         :type year: int
         :param herbivore_population: Current herbivore population
@@ -494,6 +495,7 @@ class Graphics:
     def _update_herbivore_heatmap(self, herbivore_dict_map):
         """
         Update the herbivore heatmap.
+
         :param herbivore_dict_map: Dictionary with herbivore population history
         :type herbivore_dict_map: dict
         """
@@ -520,6 +522,7 @@ class Graphics:
     def _update_carnivore_heatmap(self, carnivore_dict_map):
         """
         Update the carnivore heatmap.
+
         :param carnivore_dict_map: Dictionary with carnivore population history
         :type carnivore_dict_map: dict
         """
@@ -546,6 +549,7 @@ class Graphics:
     def _update_histogram_age(self, herbivore_age_list, carnivore_age_list):
         """
         Update the age histogram.
+
         :param herbivore_age_list: List of herbivore ages
         :type herbivore_age_list: list
         :param carnivore_age_list: List of carnivore ages
@@ -577,6 +581,7 @@ class Graphics:
     def _update_histogram_weight(self, herbivore_weight_list, carnivore_weight_list):
         """
         Update the weight histogram.
+
         :param herbivore_weight_list: List of herbivore weights
         :type herbivore_weight_list: list
         :param carnivore_weight_list: List of carnivore weights
@@ -609,9 +614,10 @@ class Graphics:
 
     def _update_histogram_fitness(self, herbivore_fitness_list, carnivore_fitness_list):
         """
-        Update the histogram of fitness for herbivores and carnivores
+        Update the histogram of fitness for herbivores and carnivores.
 
         .. note::
+
             Normalized the histogram with the help from:
             https://stackoverflow.com/questions/21532667/numpy-histogram-cumulative-density-does-not-sum-to-1
 
@@ -647,6 +653,7 @@ class Graphics:
 
     def _save_graphics(self, year):
         """Saves graphics to file if file name given.
+
         :param year: Year of simulation
         :type year: int
         """
