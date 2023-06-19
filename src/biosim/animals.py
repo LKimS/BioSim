@@ -44,9 +44,9 @@ class Animal:
         # All parameters must be positive
         for key in new_parameters:
             if not (type(new_parameters[key]) == int or type(new_parameters[key]) == float):
-                raise ValueError('All parameters must be postive numbers')
+                raise ValueError('All parameters must be positive numbers')
             elif not new_parameters[key] >= 0:
-                raise ValueError('All parameters must be postive numbers')
+                raise ValueError('All parameters must be positive numbers')
             else:
                 cls.params[key] = new_parameters[key]
 
@@ -89,27 +89,32 @@ class Animal:
 
         Parameters
         ----------
-        animal_in_pos : list
+        animal_in_pos : int
             Animals in the same position as the parent.
 
         Returns
         -------
         dict
-            Dictionary with a new born animal.
+            Dictionary with a newborn animal.
         """
         self.newborn = None
+        zeta = self.params["zeta"]
+        w_birth = self.params["w_birth"]
+        sigma_birth = self.params["sigma_birth"]
+        gamma = self.params["gamma"]
+        xi = self.params["xi"]
 
-        offspring_value = self.params["zeta"] * (self.params["w_birth"] + self.params["sigma_birth"])
+        offspring_value = zeta * (w_birth + sigma_birth)
         if self.weight >= offspring_value:
-            probability_of_procreation = min(1, self.params["gamma"] * self.fitness * animal_in_pos)
+            probability_of_procreation = min(1, gamma * self.fitness * animal_in_pos)
             if random.random() < probability_of_procreation:
                 # 'newborn log calc'
-                mu = math.log(self.params["w_birth"] ** 2 / (
-                    math.sqrt(self.params["w_birth"] ** 2 + self.params["sigma_birth"] ** 2)))
-                sigma = math.sqrt(math.log(1 + (self.params["sigma_birth"] ** 2 / self.params["w_birth"] ** 2)))
+                mu = math.log(w_birth ** 2 / (
+                    math.sqrt(w_birth ** 2 + sigma_birth ** 2)))
+                sigma = math.sqrt(math.log(1 + (sigma_birth ** 2 / w_birth ** 2)))
                 newborn_weight = random.lognormvariate(mu, sigma)
 
-                parent_loss = self.params["xi"] * newborn_weight
+                parent_loss = xi * newborn_weight
                 if self.weight > parent_loss:
                     self.weight -= parent_loss
                     self.newborn = True
@@ -125,9 +130,14 @@ class Animal:
         if self.weight <= 0:
             return 0
         else:
+            phi_weight = self.params["phi_weight"]
+            phi_age = self.params["phi_age"]
+            a_half = self.params["a_half"]
+            w_half = self.params["w_half"]
+
             age_parameter = 1 / (1 + math.exp(
-                self.params["phi_age"] * (self.age - self.params["a_half"])))
-            weight_parameter = 1 / (1 + math.exp(-self.params["phi_weight"] * (self.weight - self.params["w_half"])))
+                phi_age * (self.age - a_half)))
+            weight_parameter = 1 / (1 + math.exp(-phi_weight * (self.weight - w_half)))
             return age_parameter * weight_parameter
 
     def _update_fitness(self):
@@ -157,8 +167,8 @@ class Animal:
 
     def migrate(self):
         """Returns True if the animal migrates, False otherwise."""
-        probility_of_migration = self.params["mu"] * self.fitness
-        if random.random() < probility_of_migration:
+        probability_of_migration = self.params["mu"] * self.fitness
+        if random.random() < probability_of_migration:
             return True
         else:
             return False
@@ -173,7 +183,6 @@ class Herbivore(Animal):
                           'omega': 0.4, 'F': 10.0}
 
     params = default_parameters.copy()
-
 
     def feeding(self, fodder):
         """Herbivore eats the amount of fodder given, or the maximum amount of fodder it can eat."""
@@ -198,8 +207,12 @@ class Carnivore(Animal):
     params = default_parameters.copy()
 
     def feeding(self, sorted_lowest_fitness_herbivore):
-        """Carnivore kills the weakest herbivore until it has eaten the amount of fodder it can eat."""
+        """
+        Carnivore kills the weakest herbivore until it has eaten the amount of fodder it can eat.
+        """
+        delta_phi_max = self.params["DeltaPhiMax"]
         amount_eaten = 0
+
         for herbivore in sorted_lowest_fitness_herbivore:
             if amount_eaten >= self.params["F"]:
                 break
@@ -207,8 +220,8 @@ class Carnivore(Animal):
             diff_fitness = self.fitness - herbivore.fitness
             if diff_fitness < 0:
                 probability_of_killing = 0
-            elif 0 < diff_fitness and diff_fitness < self.params["DeltaPhiMax"]:
-                probability_of_killing = (self.fitness - herbivore.fitness) / self.params["DeltaPhiMax"]
+            elif 0 < diff_fitness < delta_phi_max:
+                probability_of_killing = (self.fitness - herbivore.fitness) / delta_phi_max
             else:
                 probability_of_killing = 1
 

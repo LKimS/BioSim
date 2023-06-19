@@ -111,7 +111,8 @@ class Cell_with_animals(Cell):
                 animal.feeding(self.fauna["Herbivore"])
 
                 # remove dead animals
-                self.fauna["Herbivore"] = [animal for animal in self.fauna["Herbivore"] if animal.alive]
+                herbivores = self.fauna["Herbivore"]
+                self.fauna["Herbivore"] = [animal for animal in herbivores if animal.alive]
 
     def moving_animals_list(self):
         """

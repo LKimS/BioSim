@@ -47,12 +47,12 @@ if __name__ == '__main__':
                            'weight': 20}
                           for _ in range(50)]}]
 
-    sim = BioSim(geogr, ini_herbs + ini_carns, seed=2,
+    sim = BioSim(geogr, ini_herbs + ini_carns, seed=3,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60, 'delta': 2}},
                  cmax_animals={'Herbivore': 200, 'Carnivore': 50},
-                 img_dir='results2',
+                 img_dir='results3',
                  img_base='sample',
                  ymax_animals=12000)
     sim.simulate(1000)
