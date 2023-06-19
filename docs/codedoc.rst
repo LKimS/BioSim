@@ -3,6 +3,10 @@ Code documentation
 
 Simulation
 -------------
+The simulation is run by the BioSim class. The class will simulate
+an ecosystem on an island. You need to input amount of starting animals
+and the map geography. If you run simulate once, you simulate one year.
+
 
 .. autoclass:: biosim.simulation.BioSim
     :inherited-members:

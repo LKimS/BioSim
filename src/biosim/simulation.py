@@ -18,6 +18,9 @@ import pickle
 class BioSim:
     """
     Top-level interface to BioSim package.
+
+    BioSim class implements a complete simulation of the ecosystem. Choose
+    a multi
     """
 
     _default_map = """\
