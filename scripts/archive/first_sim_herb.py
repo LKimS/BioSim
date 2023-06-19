@@ -43,7 +43,7 @@ for seed in range(10):
                 cell.add_newborns(cell.herbivore)
                 cell.add_newborns(cell.carnivore)
                 cell.feed_animals()
-                cell.update_fitness()
+                cell._update_fitness()
                 #ceel.migration()
                 cell.age_animals()
                 cell.loss_of_weight()

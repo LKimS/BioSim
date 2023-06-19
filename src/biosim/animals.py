@@ -78,7 +78,7 @@ class Animal:
         self.species = self.row["species"]
         self.age = self.row["age"]
         self.weight = self.row["weight"]
-        self.fitness = self.calc_fitness()
+        self.fitness = self._calc_fitness()
         self.alive = True
         self.newborn = None
 
@@ -113,14 +113,14 @@ class Animal:
                 if self.weight > parent_loss:
                     self.weight -= parent_loss
                     self.newborn = True
-                    self.update_fitness()
+                    self._update_fitness()
                     newborn_info = {"species": self.species, "age": 0, "weight": newborn_weight}
                     return type(self)(newborn_info, self.loc)
-        else:
-            # 'animal does not procreate'
-            return None
 
-    def calc_fitness(self):
+            # 'animal does not procreate'
+        return None
+
+    def _calc_fitness(self):
         """Calculates the fitness of the animal."""
         if self.weight <= 0:
             return 0
@@ -130,9 +130,9 @@ class Animal:
             weight_parameter = 1 / (1 + math.exp(-self.params["phi_weight"] * (self.weight - self.params["w_half"])))
             return age_parameter * weight_parameter
 
-    def update_fitness(self):
+    def _update_fitness(self):
         """Updates the fitness of the animal."""
-        self.fitness = self.calc_fitness()
+        self.fitness = self._calc_fitness()
 
     def aging(self):
         """Animal ages by one year."""
@@ -144,7 +144,7 @@ class Animal:
 
     def death(self):
         """Sets the animal to False if it dies, true otherwise."""
-        self.update_fitness()
+        self._update_fitness()
         probability_of_death = self.params["omega"] * (1 - self.fitness)
         if self.weight <= 0:
             self.alive = False
@@ -182,7 +182,7 @@ class Herbivore(Animal):
             amount_eaten = self.params["F"]
 
         self.weight += (amount_eaten * self.params["beta"])
-        self.update_fitness()
+        self._update_fitness()
         return amount_eaten
 
 
@@ -220,5 +220,5 @@ class Carnivore(Animal):
 
                 self.weight += eating * self.params["beta"]
                 herbivore.alive = False
-                self.update_fitness()
+                self._update_fitness()
                 amount_eaten += eating

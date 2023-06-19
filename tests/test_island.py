@@ -18,34 +18,104 @@ Requirements violated
 '''
 
 from biosim.island import Island
+import pytest
 
-def test_init():
-    """Test that the init method works as expected"""
-    pass
-
-
-
-def test_process_input_map():
+def test_create_island():
+    """Test that island is created with correct attributes"""
     map_string = """\
-                    WHLD
-                    WLDH
-                    WWWW
-                    HHHH
+                    W
+                    """
+    island = Island(map_string)
+
+
+
+@pytest.mark.parametrize("letter", ["W", "L", "H", "D"])
+def test_process_input_map(letter):
+    """Test that the input map is processed correctly"""
+    map_string = f"""\
+                    WWW
+                    W{letter}W
+                    WWW
                     """
 
     island = Island(map_string)
 
-    expected = ["WHLD", "WLDH", "WWWW", "HHHH"]
-    assert island.process_input_map(map_string) == expected
+    expected = ["WWW", f"W{letter}W", "WWW"]
+    assert island._process_input_map(map_string) == expected
+
+@pytest.mark.parametrize("letter", [ "L", "H", "D"])
+def test_wrong_boundry(letter):
+    """Invalid boundry in map string raises ValueError"""
+
+    map_string = f"""\
+                    {letter}WW
+                    WLW
+                    WWW
+                    """
+
+    with pytest.raises(ValueError):
+        island = Island(map_string)
+
+@pytest.mark.parametrize("letter", [ "L", "H", "D"])
+def test_wrong_boundry2(letter):
+    """Invalid boundry in map string raises ValueError"""
+
+    map_string = f"""\
+                    WWW
+                    WLW
+                    WW{letter}
+                    """
+
+    with pytest.raises(ValueError):
+        island = Island(map_string)
+
+def test_wrong_character():
+    """Invalid character in map string raises ValueError"""
+
+    map_string = """\
+                    WWW
+                    WRW
+                    WWW
+                    """
+
+    with pytest.raises(ValueError):
+        island = Island(map_string)
+def test_wrong_length():
+    """Invalid length of map string raises ValueError"""
+
+    map_string = """\
+                    WWW
+                    W
+                    WWW
+                    """
+
+    with pytest.raises(ValueError):
+        island = Island(map_string)
+
+def test_correct_map():
+    map_string = """\
+                        WWWW
+                        WHLW
+                        WWWW"""
+
+    island = Island(map_string)
+    processed_map = island._process_input_map(map_string)
+
+    map = island._map_processed_to_dict(processed_map)
+
+    for loc, cell in map.items():
+        assert cell.type[0] == processed_map[loc[0] - 1][loc[1] - 1]
+    
+                    
 
 def test_add_population():
     """Test that the add_population puts animals in right cell with information"""
 
     map_string = """\
-                    WHLD
-                    WLDH
                     WWWW
-                    HHHH
+                    WLDW
+                    WWWW
+                    WWWW
                     """
     number = 5
     island = Island(map_string)
@@ -53,7 +123,7 @@ def test_add_population():
 
     island.add_population(ini_herbs)
 
-    assert len(island.map[(2,2)].herbivore) == number
+    assert len(island.map[(2,2)].fauna["Herbivore"]) == number
 
 
 

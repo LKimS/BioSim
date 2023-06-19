@@ -560,10 +560,8 @@ class Graphics:
                 y_max = max(self.age_y_max, max(hist_counts_age_herbivore_norm)*1.1)
                 self._hist_age_ax.set_ylim([0, y_max])
 
-                if self._frame_ctr % self.hist_update_y_ax:
-                    y_max = max(self.age_y_max, max(hist_counts_age_herbivore_norm)*1.1)
 
-            self.age_herbivore_hist.set_data(hist_counts_age_herbivore)
+            self.age_herbivore_hist.set_data(hist_counts_age_herbivore_norm)
 
         if carnivore_age_list is not None and carnivore_age_list != []:
             hist_counts_age_carnivore, _ = np.histogram(carnivore_age_list, bins=self.age_bin_edges, density=True)
@@ -575,7 +573,7 @@ class Graphics:
                 self._hist_age_ax.set_ylim([0, y_max])
 
 
-            self.age_carnivore_hist.set_data(hist_counts_age_carnivore)
+            self.age_carnivore_hist.set_data(hist_counts_age_carnivore_norm)
 
 
 

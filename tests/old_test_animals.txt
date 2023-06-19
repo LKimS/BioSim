@@ -86,7 +86,7 @@ def test_calc_fitness(species, age, weight):
         #animal = Carnivore(stat, loc)
         pass
 
-    animal.calc_fitness()
+    animal._calc_fitness()
 
     result = animal.fitness
 

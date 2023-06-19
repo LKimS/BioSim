@@ -95,15 +95,10 @@ class Cell_with_animals(Cell):
         animal_species = animal.species
         self.fauna[animal_species].remove(animal)
 
-    def sort_herbivore_after_fitness(self, descending=True):
+    def _sort_herbivore_after_fitness(self, descending=True):
         self.fauna["Herbivore"].sort(key=lambda animal: animal.fitness, reverse=descending)
 
 
-    # TODO: is this used
-    def update_fitness(self):
-
-        for animal in self.animals:
-            animal.fitness = animal.calc_fitness()
     #Annual cycle methods
 
     def add_newborns(self):
@@ -121,7 +116,7 @@ class Cell_with_animals(Cell):
 
         # skip if there is no herbivores in the cell
         if self.count_herbivore > 0:
-            self.sort_herbivore_after_fitness(descending=False)
+            self._sort_herbivore_after_fitness(descending=False)
             random.shuffle(self.fauna["Carnivore"])
             for animal in self.fauna["Carnivore"]:
                 animal.feeding(self.fauna["Herbivore"])
@@ -135,8 +130,8 @@ class Cell_with_animals(Cell):
         """
         moving_animals = []
         for animal in self.animals:
-            if True:
-                new_location = self.get_random_neighboring_cell(self.location)
+            if animal.migrate():
+                new_location = self._get_random_neighboring_cell(self.location)
                 moving_animals.append((animal, self.location, new_location))
 
         return moving_animals
@@ -145,7 +140,7 @@ class Cell_with_animals(Cell):
         #this cell has no fodder
         pass
 
-    def get_random_neighboring_cell(self, location):
+    def _get_random_neighboring_cell(self, location):
         """
         Returns a random neighboring cell.
         """
@@ -234,7 +229,7 @@ class Cell_with_fodder(Cell_with_animals):
         self.fodder = self.f_max
 
     def feed_animals(self):
-        self.sort_herbivore_after_fitness()
+        self._sort_herbivore_after_fitness()
         for animal in self.fauna["Herbivore"]:
             if self.fodder > 0:
                 self.fodder -= animal.feeding(self.fodder)

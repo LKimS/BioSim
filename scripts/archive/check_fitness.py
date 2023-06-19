@@ -19,11 +19,11 @@ print(h1.fitness)
 
 h1.weight = 30
 h1.age = 50
-h1.update_fitness()
+h1._update_fitness()
 print(h1.fitness)
 
 print(c1.fitness)
 c1.weight = 30
 c1.age = 20
-c1.update_fitness()
+c1._update_fitness()
 print(c1.fitness)
