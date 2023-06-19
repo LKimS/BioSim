@@ -244,7 +244,7 @@ def test_calc_fitness(species, age_change, weight):
     fitness_weight_param = 1 / (1 + math.exp(-animal.params["phi_weight"] * (weight - animal.params["w_half"])))
 
     fitness = fitness_age_param * fitness_weight_param
-    assert animal._calc_fitness() == approx(fitness)
+    assert animal.calc_fitness() == approx(fitness)
 
 
 def test_update_fitness():
@@ -257,7 +257,7 @@ def test_update_fitness():
     animal.age = 10
     animal.weight = 10
     animal._update_fitness()
-    assert animal.fitness == approx(animal._calc_fitness())
+    assert animal.fitness == approx(animal.calc_fitness())
 
 
 @pytest.mark.parametrize("species, age", [("Herbivore", 5),

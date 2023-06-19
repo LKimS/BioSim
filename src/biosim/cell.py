@@ -8,6 +8,7 @@ import random
 class Cell:
     """
     Class for a cell in the island
+
     """
     type = None
     color = None

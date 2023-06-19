@@ -79,7 +79,7 @@ class Animal:
         self.species = self.row["species"]
         self.age = self.row["age"]
         self.weight = self.row["weight"]
-        self.fitness = self._calc_fitness()
+        self.fitness = self.calc_fitness()
         self.alive = True
         self.newborn = None
 
@@ -120,7 +120,7 @@ class Animal:
             #animal does not procreate
         return None
 
-    def _calc_fitness(self):
+    def calc_fitness(self):
         """Calculates the fitness of the animal."""
         if self.weight <= 0:
             return 0
@@ -134,7 +134,7 @@ class Animal:
         """
         Updates the fitness of the animal.
         """
-        self.fitness = self._calc_fitness()
+        self.fitness = self.calc_fitness()
 
     def aging(self):
         """Animal ages by one year."""

@@ -18,6 +18,7 @@ Island
 
 Cell
 ----------
+Hei hei
 
 .. autoclass:: biosim.cell.Water
     :inherited-members:
