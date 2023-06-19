@@ -16,10 +16,6 @@ import pickle
 
 
 class BioSim:
-    """
-    BioSim class is the top-level interface to BioSim package. It implements a complete simulation of the ecosystem.
-    Choose between multiple different parameters to adjust your simulation and wanted output.
-    """
 
     _default_map = """\
                WWWWWWWWWWWWWWWWWWWWW
@@ -42,6 +38,9 @@ class BioSim:
                  log_file=None):
 
         """
+        BioSim class is the top-level interface to BioSim package. It implements a complete simulation
+        of the ecosystem. Choose between multiple different parameters to adjust your simulation and preferred output.
+
         Parameters
         ----------
         island_map : str
@@ -230,12 +229,23 @@ class BioSim:
 
     def add_population(self, population):
         """
-        Add a population to the island
+        Adds population with a location on the Island.
+        Follow examples bellow for list-format.
 
         Parameters
         ----------
         population : List of dictionaries
-            See BioSim Task Description, Sec 3.3.3 for details.
+            List with dictionary. Keys 'loc' and 'pop'.
+
+
+        .. code:: python
+
+            ini_herbs = [{'loc': (3, 2),
+            'pop': [{'species': 'Herbivore',
+            'age': 5, 'weight': 20} for _ in range(150)]}]
+
+        Permitted keys within 'pop' are age, weight and species.
+
         """
 
         self.island.add_population(population)
