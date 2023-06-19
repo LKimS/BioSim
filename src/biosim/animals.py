@@ -87,15 +87,18 @@ class Animal:
         """
         Procreation of an animal.
 
-        Parameters
-        ----------
-        animal_in_pos : int
-            Number of animals in the same position as the parent.
+        :param animal_in_pos: number of animals in the same position
+        :type animal_in_pos: int
 
-        Returns
-        -------
-        dict
-            Dictionary with a newborn animal.
+        .. note::
+            .. figure:: ../img/lognormdist.png
+                :width: 400
+                :align: center
+                :alt: lognormdist.png
+
+                Source: https://en.wikipedia.org/wiki/Log-normal_distribution<
+
+
         """
         self.newborn = None
         zeta = self.params["zeta"]
