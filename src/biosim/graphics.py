@@ -271,10 +271,12 @@ class Graphics:
 
     def setup(self, geography, final_year, vis_years=1):
         """
-        Prepare graphics.
+        Prepare graphics with population history, histograms and heatmaps for the island.
 
-        Call this before calling :meth:`update()` for the first time after
-        the final time step has changed.
+        .. note::
+
+            Call this before calling :meth:`update()` for the first time after
+            the final time step has changed.
 
         :param geography: A list of lists containing the landscape. From Island.processed_map
         :type geography: list
