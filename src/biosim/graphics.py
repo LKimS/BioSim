@@ -1,19 +1,4 @@
-"""
-:mod:`biosim.graphics` provides graphics support for BioSim.
 
-This module was inspired by RandVis package by Hans Ekkehard Plesser
-
-.. note::
-   * This module requires the program ``ffmpeg`` or ``convert``
-     available from `<https://ffmpeg.org>` and `<https://imagemagick.org>`.
-   * You can also install ``ffmpeg`` using ``conda install ffmpeg``
-   * You need to set the  :const:`_FFMPEG_BINARY` and :const:`_CONVERT_BINARY`
-     constants below to the command required to invoke the programs
-   * You need to set the :const:`_DEFAULT_FILEBASE` constant below to the
-     directory and file-name start you want to use for the graphics output
-     files.
-
-"""
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -36,7 +21,23 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: gif
 class Graphics:
     """
     Provides graphics support for BioSim.
+
+    :mod:`biosim.graphics` provides graphics support for BioSim.
+
+    This module was inspired by RandVis package by Hans Ekkehard Plesser
+
+    .. note::
+       * This module requires the program ``ffmpeg`` or ``convert``
+         available from `<https://ffmpeg.org>` and `<https://imagemagick.org>`.
+       * You can also install ``ffmpeg`` using ``conda install ffmpeg``
+       * You need to set the  :const:`_FFMPEG_BINARY` and :const:`_CONVERT_BINARY`
+         constants below to the command required to invoke the programs
+       * You need to set the :const:`_DEFAULT_FILEBASE` constant below to the
+         directory and file-name start you want to use for the graphics output
+         files.
+
     """
+
 
     # Default values for visualization parameters
     default_ymax_animals = 30000
