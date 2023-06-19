@@ -20,20 +20,7 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: gif
 
 class Graphics:
     """
-    :mod:`biosim.graphics` provides graphics support for BioSim.
-
-    This module was inspired by RandVis package by Hans Ekkehard Plesser
-
-    .. note::
-       * This module requires the program ``ffmpeg`` or ``convert``
-         available from `<https://ffmpeg.org>` and `<https://imagemagick.org>`.
-       * You can also install ``ffmpeg`` using ``conda install ffmpeg``
-       * You need to set the  :const:`_FFMPEG_BINARY` and :const:`_CONVERT_BINARY`
-         constants below to the command required to invoke the programs
-       * You need to set the :const:`_DEFAULT_FILEBASE` constant below to the
-         directory and file-name start you want to use for the graphics output
-         files.
-
+    Visualization of island
     """
 
 
@@ -56,9 +43,7 @@ class Graphics:
     def __init__(self, img_dir=None, img_name=None, img_fmt=None, img_years=None, vis_years=0,
                  ymax_animals=1200, cmax_animals=None, hist_specs=None):
         """
-        __init__ method for class Graphics
-
-        Setting up a new visualization object.
+        Initialization up a new visualization object.
 
         :param img_dir: directory for image files; no images if None
         :type img_dir: str
@@ -68,6 +53,16 @@ class Graphics:
         :type img_fmt: str
         :img_years: Years between visualizations saved to files (default: `vis_years`)
         :type img_years: int
+
+        .. note::
+           * This module requires the program ``ffmpeg`` or ``convert``
+             available from `<https://ffmpeg.org>` and `<https://imagemagick.org>`.
+           * You can also install ``ffmpeg`` using ``conda install ffmpeg``
+           * You need to set the  :const:`_FFMPEG_BINARY` and :const:`_CONVERT_BINARY`
+             constants below to the command required to invoke the programs
+           * You need to set the :const:`_DEFAULT_FILEBASE` constant below to the
+             directory and file-name start you want to use for the graphics output
+             files.
 
         """
 
@@ -273,15 +268,16 @@ class Graphics:
         """
         Prepare graphics with population history, histograms and heatmaps for the island.
 
-        .. note::
-
-            Call this before calling :meth:`update()` for the first time after
-            the final time step has changed.
-
         :param geography: A list of lists containing the landscape. From Island.processed_map
         :type geography: list
         :param final_year: last time step to be visualised (upper limit of x-axis)
         :type final_year: int
+
+
+        .. note::
+            Call this before calling :meth:`update()` for the first time after
+            the final time step has changed.
+
 
         """
 
