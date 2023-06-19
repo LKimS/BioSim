@@ -83,13 +83,13 @@ class Island:
         for row, line in enumerate(processed_lines):
             if len(line) != line_width:
                 raise ValueError("All lines must contain the same number of letters.")
-            for collumn, letter in enumerate(line):
+            for column, letter in enumerate(line):
                 if letter not in self.allowed_cells:
                     raise ValueError(f"Only letters W, L, H, D are allowed. Not {letter}.")
                 if row == 0 or row == len(processed_lines) - 1:
                     if letter != 'W':
                         raise ValueError("Geography must be surrounded by water.")
-                if collumn == 0 or collumn == len(line) - 1:
+                if column == 0 or column == len(line) - 1:
                     if letter != 'W':
                         raise ValueError("Geography must be surrounded by water.")
 
@@ -110,7 +110,6 @@ class Island:
 
         """
         return len(map_processed[0])
-
 
     def _map_processed_to_dict(self, map_processed):
         """

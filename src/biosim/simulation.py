@@ -6,9 +6,9 @@ from .cell import Lowland, Highland
 from .animals import Herbivore, Carnivore
 from .graphics import Graphics
 
-
 import csv
 import pickle
+
 
 # The material in this file is licensed under the BSD 3-clause license
 # https://opensource.org/licenses/BSD-3-Clause
@@ -106,7 +106,6 @@ class BioSim:
 
         self.island = Island(island_map, seed)
 
-
         if ini_pop is not None:
             self.island.add_population(ini_pop)
         self.pop_history = {'Herbivore': [], 'Carnivore': []}
@@ -116,7 +115,8 @@ class BioSim:
         self.vis_years = vis_years
 
         if self.vis_years != 0:
-            self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years, vis_years=vis_years,
+            self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years,
+                                     vis_years=vis_years,
                                      ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs)
 
             self.img_years = vis_years
@@ -127,9 +127,6 @@ class BioSim:
             print('Visualization is disabled')
 
         self.log_file = log_file
-
-
-
 
     def set_animal_parameters(self, species, new_parameters):
         """
@@ -187,15 +184,11 @@ class BioSim:
 
         .. note:: Image files will be numbered consecutively.
         """
-        # TODO: impliment: vis_years and img_years
-
-
 
         self.final_year = self.current_year + num_years
 
         if self.current_year != 0:
             self.current_year += 1
-
 
         if self.vis_years != 0:
             self.graphics.setup(self.island.map_processed, self.final_year)
@@ -204,8 +197,6 @@ class BioSim:
             print(f"\rSimulating... year: {self.current_year} out of {self.final_year}", flush=True, end='')
             self.island.yearly_island_cycle()
             self.update_history_data()
-
-
 
             if self.vis_years != 0 and self.current_year % self.vis_years == 0:
                 self.graphics.update(self.current_year,
@@ -222,7 +213,7 @@ class BioSim:
 
             self.current_year += 1
 
-        # Subract one year to get the last year of the simulation
+        # Subtract one year to get the last year of the simulation
         self.current_year -= 1
         print()
 
@@ -230,14 +221,11 @@ class BioSim:
             print(f"Saving log file to {self.log_file}")
             self.save_log_file()
 
-
     def update_history_data(self):
         """Update history data for visualization"""
 
         self.pop_history['Herbivore'].append(self.island.pop['Herbivore'])
         self.pop_history['Carnivore'].append(self.island.pop['Carnivore'])
-
-
 
     def add_population(self, population):
         """
@@ -250,7 +238,6 @@ class BioSim:
         """
 
         self.island.add_population(population)
-
 
     def save_log_file(self):
         """
@@ -275,7 +262,7 @@ class BioSim:
 
         :param file_name: name of file to save to
 
-        Write this as a note: This featrue is not implimented yet.
+        Write this as a note: This feature is not implemented yet.
         """
         if file_name[-4:] != ".pkl":
             file_name += ".pkl"
@@ -291,22 +278,18 @@ class BioSim:
         :param file_name: name of file to load from
         :return: simulation object
 
-        Write this as a note: This featrue is not implimented yet.
+        Write this as a note: This feature is not implemented yet.
         """
         with open(file_name, "rb") as file:
             sim = pickle.load(file)
 
         return sim
 
-
-
-
     @property
     def year(self):
         """Last year simulated."""
         return self.current_year
 
-    # TODO: impliment
     @property
     def num_animals(self):
         """Total number of animals on island."""
@@ -318,11 +301,11 @@ class BioSim:
 
         return num_animal
 
-
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
-        current_pop = {species: (pop_history[-1] if pop_history != [] else 0) for species, pop_history in self.pop_history.items()}
+        current_pop = {species: (pop_history[-1] if pop_history != [] else 0) for species, pop_history in
+                       self.pop_history.items()}
         return current_pop
 
     def make_movie(self, movie_fmt='mp4'):

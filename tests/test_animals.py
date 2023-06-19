@@ -8,13 +8,13 @@ from biosim.animals import Herbivore, Carnivore
 
 
 def std_herb():
-    Herb = Herbivore({"species": "Herbivore", "age": 40, "weight": 60}, (1, 2))
-    return Herb
+    herb = Herbivore({"species": "Herbivore", "age": 40, "weight": 60}, (1, 2))
+    return herb
 
 
 def std_carn():
-    Carn = Carnivore({"species": "Carnivore", "age": 40, "weight": 60}, (1, 2))
-    return Carn
+    carn = Carnivore({"species": "Carnivore", "age": 40, "weight": 60}, (1, 2))
+    return carn
 
 
 @pytest.fixture
@@ -191,9 +191,6 @@ def test_procreation_age(animal):
     assert baby.age == 0 and type(baby) == type(animal)
 
 
-
-
-
 @pytest.mark.parametrize("animal", [std_herb(), std_carn()])
 def test_procreation_prob(animal):
     num_trials = 10000
@@ -215,7 +212,7 @@ def test_procreation_prob(animal):
 def test_procreation_weight(animal):
     # TODO
     """This test executes procreation N times and checks that the weight of the baby is within the expected range.
-        The distribution of the weight will follow the log normla distribution, and at high N will be approximated by
+        The distribution of the weight will follow the log normal distribution, and at high N will be approximated by
         the normal distribution. The test checks that the mean of the distribution is within the expected range.
     """
     pass
@@ -316,6 +313,7 @@ def test_death(animal):
 
     assert stats.binom_test(deaths, num_trial, prob_of_death) > .01
 
+
 def test_death_weight():
     """Test that animals dies if their weight is 0"""
     animal = std_herb()
@@ -386,7 +384,8 @@ def test_herb_death_eaten(reset_default_params):
 
     assert not herb.alive
 
-@pytest.mark.parametrize("herb_weight", [1,10,15,25,40,50,60])
+
+@pytest.mark.parametrize("herb_weight", [1, 10, 15, 25, 40, 50, 60])
 def test_herb_death_eaten(reset_default_params, herb_weight):
     """Test that carnivore gains the right amount of weight when eating"""
 
@@ -408,6 +407,7 @@ def test_herb_death_eaten(reset_default_params, herb_weight):
 
     assert carn.weight == approx(min(herb.weight, carn.params["F"]) * carn.params["beta"] + old_weight)
 
+
 def test_carn_eat_full(reset_default_params):
     """Test that carnivore stops after eaten enough"""
 
@@ -416,7 +416,6 @@ def test_carn_eat_full(reset_default_params):
     herb_stat = {'species': "Herbivore",
                  'age': 1000,
                  'weight': herb_weight}
-
 
     herb_list = [Herbivore(herb_stat, (1, 2)) for _ in range(60)]
     carn = std_carn()
@@ -434,8 +433,9 @@ def test_carn_eat_full(reset_default_params):
 
     assert len(herb_alive) == num_alive
 
+
 def test_carn_eat_prob():
-    """Test that the probability of eating is correctq"""
+    """Test that the probability of eating is correct"""
     num_trial = 10000
 
     carn = std_carn()
@@ -459,8 +459,9 @@ def test_carn_eat_prob():
 
     assert stats.binom_test(num_kills, num_trial, probability_of_killing) > .01
 
+
 def test_carn_eat_prob_fitness():
-    """Test that carnivore cannot eat if their fitness is lower then the herbivores"""
+    """Test that carnivore cannot eat if their fitness is lower than the herbivores"""
     herb = std_herb()
     carn = std_carn()
 
@@ -471,5 +472,3 @@ def test_carn_eat_prob_fitness():
         carn.feeding([herb])
 
     assert herb.alive == True
-
-
