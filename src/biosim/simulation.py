@@ -16,7 +16,10 @@ import pickle
 
 
 class BioSim:
-
+    """
+    BioSim class is the top-level interface to BioSim package. It implements a complete simulation
+    of the ecosystem. Choose between multiple different parameters to adjust your simulation and preferred output.
+    """
     _default_map = """\
                WWWWWWWWWWWWWWWWWWWWW
                WWWWWWWWHWWWWLLLLLLLW
@@ -36,10 +39,8 @@ class BioSim:
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_years=None, img_dir=None, img_base=None, img_fmt='png',
                  log_file=None):
-
         """
-        BioSim class is the top-level interface to BioSim package. It implements a complete simulation
-        of the ecosystem. Choose between multiple different parameters to adjust your simulation and preferred output.
+        __init__ method initializes the BioSim class with the following parameters:
 
         Parameters
         ----------
@@ -143,6 +144,19 @@ class BioSim:
         ------
         ValueError
             If invalid parameter values are passed.
+
+
+        Example
+        --------
+        .. code:: python
+
+            sim.set_animal_parameters('Carnivore', {'a_half': 70,
+                                                    'phi_age': 0.5,
+                                                    'omega': 0.3,
+                                                    'DeltaPhiMax': 9.})
+
+        Parameters can be used to simulate sickness and changes in the animal.
+
         """
 
         if species == "Herbivore":
@@ -168,6 +182,17 @@ class BioSim:
         ------
         ValueError
             If invalid parameter values are passed.
+
+
+        Example
+        --------
+
+        .. code:: python
+
+            sim.set_landscape_parameters('L', {'f_max': 700})
+
+        Parameter 'L' is for Lowland, and by decreasing the f_max, the amount of fodder is decreased.
+
         """
         if landscape == "L":
             Lowland.set_parameters(new_parameters)
@@ -178,7 +203,8 @@ class BioSim:
 
     def simulate(self, num_years):
         """
-        Run simulation while visualizing the result.
+        Run simulation while visualizing the result. Look at __init__
+        for information about the parameters and features.
 
         :param num_years: number of simulation steps to execute
 
@@ -222,7 +248,9 @@ class BioSim:
             self.save_log_file()
 
     def update_history_data(self):
-        """Update history data for visualization"""
+        """
+        Updates history data for visualization.
+        """
 
         self.pop_history['Herbivore'].append(self.island.pop['Herbivore'])
         self.pop_history['Carnivore'].append(self.island.pop['Carnivore'])
@@ -238,6 +266,8 @@ class BioSim:
             List with dictionary. Keys 'loc' and 'pop'.
 
 
+        Example
+        ---------
         .. code:: python
 
             ini_herbs = [{'loc': (3, 2),
@@ -254,6 +284,14 @@ class BioSim:
         """
         Save population history as a csv file.
 
+        Example
+        -------
+        .. code:: python
+
+            herbivore,carnivore
+            150,50
+            200,40
+            300,30
 
         """
         if self.log_file is None:
@@ -275,7 +313,7 @@ class BioSim:
 
         :param file_name: name of file to save to
 
-        Write this as a note: This feature is not implemented yet.
+        This feature is not fully implemented yet.
         """
         if file_name[-4:] != ".pkl":
             file_name += ".pkl"
