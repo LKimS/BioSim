@@ -3,9 +3,9 @@ Code documentation
 
 Simulation
 -------------
-The simulation is run by the BioSim class and Graphics Class. The class will simulate
-an ecosystem on an island. You need to input amount of starting animals
-and the map geography. If you run simulate once, you simulate one year.
+The simulation is run by the BioSim- and Graphics-class.
+BioSim simulates the ecosystem on the Island, Graphics visualizes the data from the simulation.
+If you run the simulation once, you simulate one year.
 
 
 .. autoclass:: biosim.simulation.BioSim
