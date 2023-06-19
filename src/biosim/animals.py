@@ -91,6 +91,15 @@ class Animal:
         :type animal_in_pos: int
 
         .. note::
+            The probaility of procreation is given by the following formula:
+
+            .. math::
+                p_{procreation} =
+                min(1, gamma \cdot fitness_{self} \cdot N_{same})
+
+            Where :math:`N_{same}` is the number of animals in the same position as the animal.
+            And the other parameters given :ref:`here <herb_params-label>`.
+
             The weight of the newborn is calculated by a lognormal distribution from the python random.lognormvariate(:math:`\mu, \sigma`). The parameters are given by the
             following formula:
 
@@ -208,6 +217,8 @@ class Animal:
 class Herbivore(Animal):
     """
     Herbivores depends on the amount of food available to survive and reproduce.
+
+    .. _herb_params-label:
     """
     default_parameters = {'w_birth': 8.0, 'sigma_birth': 1.5,
                           'beta': 0.9, 'eta': 0.05, 'a_half': 40.0,
