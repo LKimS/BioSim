@@ -229,7 +229,7 @@ class BioSim:
 
     def add_population(self, population):
         """
-        Adds population with a location on the Island.
+        Adds population on a location on the Island.
         Follow examples bellow for list-format.
 
         Parameters
@@ -252,7 +252,9 @@ class BioSim:
 
     def save_log_file(self):
         """
-        Save the log file.
+        Save population history as a csv file.
+
+
         """
         if self.log_file is None:
             return
@@ -289,7 +291,7 @@ class BioSim:
         :param file_name: name of file to load from
         :return: simulation object
 
-        Write this as a note: This feature is not implemented yet.
+        This feature is not fully implemented yet.
         """
         with open(file_name, "rb") as file:
             sim = pickle.load(file)
@@ -303,7 +305,15 @@ class BioSim:
 
     @property
     def num_animals(self):
-        """Total number of animals on island."""
+        """
+        Total number of animals on island.
+
+        Return
+        -------
+        num_animal : int
+            Number of animals on island
+
+        """
         num_animal = 0
         for species, pop_history in self.pop_history.items():
             if pop_history == []:
@@ -314,13 +324,29 @@ class BioSim:
 
     @property
     def num_animals_per_species(self):
-        """Number of animals per species in island, as dictionary."""
+        """
+        Number of animals per species in island, as dictionary.
+
+        Return
+        -------
+        num_animals_per_species : dict
+            Number of animals per species in island, as dictionary.
+        """
+        #If population is None, return zero. If not None, return last population history
         current_pop = {species: (pop_history[-1] if pop_history != [] else 0) for species, pop_history in
                        self.pop_history.items()}
         return current_pop
 
     def make_movie(self, movie_fmt='mp4'):
-        """Create MPEG4 movie from visualization images saved."""
+        """
+        Create MPEG4 movie from visualization images saved.
+
+        Parameters
+        ----------
+        movie_fmt : mp4
+            Format of movie, defaults to 'mp4'.
+
+        """
         if self.vis_years == 0:
             return ValueError('To turn on movie making, set vis_years > 0')
 
