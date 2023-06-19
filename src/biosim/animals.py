@@ -1,5 +1,5 @@
 """
-Implements the Animal class.
+Implements a class for animals.
 """
 
 import math
@@ -7,8 +7,9 @@ import random
 
 
 class Animal:
-    """Animals witch can be herbivore or carnivore with attributes and methods for both. """
-
+    """
+    A complete lifecycle to an animal on the island.
+    """
     # These parameters are defined at the class level
 
     default_parameters = {'w_birth': None, 'sigma_birth': None,
@@ -84,18 +85,17 @@ class Animal:
 
     def procreation(self, animal_in_pos):
         """
-        Returns a new animal if the animal procreates, None otherwise.
-        Repeat given text a given number of times.
+        Procreation of an animal.
 
         Parameters
         ----------
         animal_in_pos : list
-            Animals in the same position as the parent.
+            Number of animals in the same position as the parent.
 
         Returns
         -------
         dict
-            Dictionary with a new born animal.
+            Dictionary with a newborn animal.
         """
         self.newborn = None
 
@@ -117,7 +117,7 @@ class Animal:
                     newborn_info = {"species": self.species, "age": 0, "weight": newborn_weight}
                     return type(self)(newborn_info, self.loc)
 
-            # 'animal does not procreate'
+            #animal does not procreate
         return None
 
     def _calc_fitness(self):
@@ -131,7 +131,9 @@ class Animal:
             return age_parameter * weight_parameter
 
     def _update_fitness(self):
-        """Updates the fitness of the animal."""
+        """
+        Updates the fitness of the animal.
+        """
         self.fitness = self._calc_fitness()
 
     def aging(self):
@@ -144,19 +146,27 @@ class Animal:
         self._update_fitness()
 
     def death(self):
-        """Sets the animal to False if it dies, true otherwise."""
+        """
+        Animals probability of death increases with low fitness.
 
+        Parameters
+        ----------
+        self : class
+
+        """
         probability_of_death = self.params["omega"] * (1 - self.fitness)
         if self.weight <= 0:
             self.alive = False
         elif random.random() < probability_of_death:
             self.alive = False
         else:
-            # self.alive = True
+            #self.alive = True
             pass
 
     def migrate(self):
-        """Returns True if the animal migrates, False otherwise."""
+        """
+        Animals probability of migration increases with high fitness.
+        """
         probility_of_migration = self.params["mu"] * self.fitness
         if random.random() < probility_of_migration:
             return True
@@ -165,6 +175,9 @@ class Animal:
 
 
 class Herbivore(Animal):
+    """
+    Herbivores depends on the amount of food available to survive and reproduce.
+    """
     default_parameters = {'w_birth': 8.0, 'sigma_birth': 1.5,
                           'beta': 0.9, 'eta': 0.05, 'a_half': 40.0,
                           'phi_age': 0.6, 'w_half': 10.0,
@@ -176,7 +189,9 @@ class Herbivore(Animal):
 
 
     def feeding(self, fodder):
-        """Herbivore eats the amount of fodder given, or the maximum amount of fodder it can eat."""
+        """
+        Herbivore eats the amount of fodder given, or the maximum amount of fodder it can eat.
+        """
         if fodder < self.params["F"]:
             amount_eaten = fodder
         else:
@@ -188,6 +203,9 @@ class Herbivore(Animal):
 
 
 class Carnivore(Animal):
+    """
+    Carnivores depends on the availability of prey to survive and reproduce.
+    """
     default_parameters = {'w_birth': 6.0, 'sigma_birth': 1.0,
                           'beta': 0.75, 'eta': 0.125, 'a_half': 40.0,
                           'phi_age': 0.3, 'w_half': 4.0,
@@ -198,7 +216,16 @@ class Carnivore(Animal):
     params = default_parameters.copy()
 
     def feeding(self, sorted_lowest_fitness_herbivore):
-        """Carnivore kills the weakest herbivore until it has eaten the amount of fodder it can eat."""
+        """
+        Carnivore kills the weakest herbivore until it has eaten the amount of fodder it can eat.
+
+        Parameters
+        ----------
+        self : class
+        sorted_lowest_fitness_herbivore : list
+            List of herbivores sorted by lowest fitness.
+
+        """
         amount_eaten = 0
         for herbivore in sorted_lowest_fitness_herbivore:
             if amount_eaten >= self.params["F"]:

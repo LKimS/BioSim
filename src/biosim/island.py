@@ -28,13 +28,10 @@ class Island:
         Class constructor for island.
         Parameters
         ----------
-        self
-        input_island_map
-        random_seed
-
-        Returns
-        -------
-
+        input_island_map : str
+            Multi-line string with island geography
+        random_seed : int
+            Integer used as random number seed.
         """
         random.seed(random_seed)
 
@@ -54,14 +51,11 @@ class Island:
     # METHODS for input and processing
     def _process_input_map(self, input_island_map):
         """
-        Processes the input island map.
+        Processes string with island geography
+
         Parameters
         ----------
-        self
         input_island_map
-
-        Returns
-        -------
 
         """
         lines = input_island_map.split("\n")
@@ -75,6 +69,13 @@ class Island:
     def _island_compatibility_check(self, processed_lines):
         """
         Checks if input_island_map is compatible with the Island class.
+        Parameters
+        ----------
+        map_processed
+
+        Returns
+        -------
+        int : height of map
         """
 
         line_width = len(processed_lines[0])
@@ -96,9 +97,36 @@ class Island:
         return len(map_processed)
 
     def _get_map_width(self, map_processed):
+    def get_map_width(map_processed):
+        """
+        Get the width of the map
+
+        Parameters
+        ----------
+        map_processed
+
+        Returns
+        -------
+        int : width of map
+
+        """
         return len(map_processed[0])
 
     def _map_processed_to_dict(self, map_processed):
+    def map_processed_to_dict(self, map_processed):
+        """
+        Creates a map(dict) with coordinates as keys and cell objects as values
+
+        Parameters
+        ----------
+        self
+        map_processed
+
+        Returns
+        -------
+        dict : map with coordinates as keys and cell objects as values
+
+        """
         map = {}
 
         for x in range(1, self.map_height + 1):
@@ -110,12 +138,36 @@ class Island:
 
     # TODO: move into method above
     def _get_map_with_animals(self):
-        """Returns a dictionary with only habitable cells."""
+        """
+        Creates a map(dict) with only habitable cells
+
+        Parameters
+        ----------
+        self
+
+        Returns
+        -------
+        dict: map with animals
+
+        """
         map_with_animals = {loc: cell for loc, cell in self.map.items() if cell.is_habitable}
 
         return map_with_animals
 
     def _add_cell(self, cell_letter, loc):
+        """
+        Adds a cell object to the map
+
+        Parameters
+        ----------
+        cell_letter
+        loc
+
+        Returns
+        -------
+        cell object
+
+        """
         cells = {
             'W': Water,
             'L': Lowland,
@@ -128,6 +180,14 @@ class Island:
 
     # METHODS for adding animals
     def add_population(self, population):
+        """
+        Adds animals to the map
+
+        Parameters
+        ----------
+        population
+
+        """
         for item in population:
             loc = item["loc"]
             if loc not in self.map:
@@ -136,17 +196,16 @@ class Island:
             for animal_info in item['pop']:
                 self.map[loc].add_animal_from_dict(animal_info)
 
-    # TODO: check if this method is needed
-    def migrate_animals(self):
-        all_moving_animals = []
-        for old_location, cell in self.habital_map.items():
-            all_moving_animals.extend(cell.moving_animals_list())
-
-        self._move_all_animals(all_moving_animals)
 
     def _move_all_animals(self, list_of_moving_animals):
         """
         Moves animals from old location to new location.
+
+        Parameters
+        ----------
+        self
+        list_of_moving_animals
+
         """
         for animal, old_location, new_location in list_of_moving_animals:
 
@@ -156,7 +215,18 @@ class Island:
 
     # METHODS for creating bitmap and plotting
     def create_colormap(self, map_processed):
-        """Returns a color map of the island. List of list, same shape as processed map."""
+        """
+        Returns a color map of the island. List of list, same shape as processed map.
+        Creates a bitmap for plotting
+        Parameters
+        ----------
+        self
+        map_processed
+
+        Returns
+        -------
+        bitmap  : bitmap for plotting
+        """
 
         height = len(map_processed)
         width = len(map_processed[0])
@@ -171,6 +241,9 @@ class Island:
         return bitmap
 
     def plot_map(self):
+        """
+        Plots the map using bitmap
+        """
         plt.imshow(self.bitmap)
         # plt.legend()
         plt.show()
@@ -178,6 +251,9 @@ class Island:
     # METHODS for yearly cycle
 
     def yearly_island_cycle(self):
+        """
+        Runs the yearly cycle for the island
+        """
         migrating_animals = []
 
         self.specs = {'Herbivore': {'weight': [], 'age': [], 'fitness': []},
@@ -196,7 +272,16 @@ class Island:
         self.collect_data()
 
     def update_data(self, loc, cell):
-        """Update data for visualization of island map."""
+        """
+        Updates each cell with the number of animals of each species, and the specification for each animal.
+
+        Parameters
+        ----------
+        self
+        loc
+        cell
+
+        """
         self.pop_cell['Herbivore'][loc] = cell.count_herbivore
         self.pop_cell['Carnivore'][loc] = cell.count_carnivore
 
@@ -206,6 +291,8 @@ class Island:
             self.specs[animal.species]['fitness'].append(animal.fitness)
 
     def collect_data(self):
-        """Collects data from all cells on island."""
+        """
+        Summarizes number of animals of each species on the island.
+        """
         self.pop['Herbivore'] = sum(self.pop_cell['Herbivore'].values())
         self.pop['Carnivore'] = sum(self.pop_cell['Carnivore'].values())

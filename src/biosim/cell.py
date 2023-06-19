@@ -1,4 +1,4 @@
-"""Implements the Cell class."""
+"""Implements diffrent characteristics of cells."""
 
 from .animals import Herbivore, Carnivore
 
@@ -14,24 +14,74 @@ class Cell:
     _habitable = False
 
     def __init__(self, location):
+        """
+        Initializes the cell
+        Parameters
+        ----------
+        location
+        """
         self.location = location
 
     def add_animal_from_dict(self, animal_info):
+        """
+        Adds an animal to specified cell from a dictionary
+
+        Parameters
+        ----------
+        animal_info
+
+        Returns
+        -------
+
+        """
         raise ValueError(f"Cannot add animal to {type(self)} cell at loc: {self.location}")
 
     @classmethod
     def set_parameters(cls, params):
+        """
+        Sets parameters for the cell
+
+        Parameters
+        ----------
+        params
+
+        Returns
+        -------
+        ValueError if cell has no changeable parameters
+        """
         raise ValueError(f"{type(cls)} cell has no changeable parameters")
 
     @property
     def is_habitable(self):
+        """
+        Checks if cell is habitable
+
+        Parameters
+        ----------
+        self
+
+        Returns
+        -------
+        bool
+
+        """
         return self._habitable
 
 
 class Cell_with_animals(Cell):
+    """
+    Cell characteristics for animals
+    """
     _habitable = True
 
     def __init__(self, location):
+        """
+        Initializes the cell with animals
+
+        Parameters
+        ----------
+        location
+        """
         super().__init__(location)
         self.fauna = {'Herbivore': [], 'Carnivore': []}
         self.cell_pop_history = {'Herbivore': [], 'Carnivore': []}
@@ -48,6 +98,19 @@ class Cell_with_animals(Cell):
 
     # General methods
     def add_animal_from_dict(self, animal_info):
+        """
+        Adds new animal with information to an animal-object.
+
+        Parameters
+        ----------
+        self
+        animal_info
+
+        Returns
+        -------
+        ValueError if animal species is invalid
+
+        """
 
         valid_keys = ["species", "age", "weight"]
 
@@ -69,9 +132,13 @@ class Cell_with_animals(Cell):
         Adds an animal object to the cell
         Parameters
         ----------
+        self
         animal
-        """
 
+        Returns
+        -------
+        ValueError if animal species is invalid
+        """
         new_animal_species = animal.species
 
         if new_animal_species not in self.fauna.keys():
@@ -81,20 +148,39 @@ class Cell_with_animals(Cell):
 
     def remove_animal(self, animal):
         """
-        Removes an animal object from the cell
+        Removes an animal from the cell
+        Parameters
+        ----------
+        animal
+
         """
         animal_species = animal.species
         self.fauna[animal_species].remove(animal)
 
     def _sort_herbivore_after_fitness(self, descending=True):
+        """
+        Sorts herbivores after fitness
+        Parameters
+        ----------
+        self
+        descending=True
+
+        """
         self.fauna["Herbivore"].sort(key=lambda animal: animal.fitness, reverse=descending)
 
     # Annual cycle methods
 
     def add_newborns(self):
         """
-        Adds newborns to the cell
+        Adds newborns to the cell if there are any.
+
+        Parameters
+        ----------
+        self
+        animal_list
+
         """
+
         for species, animal_list in self.fauna.items():
             for animal in animal_list:
                 newborn = animal.procreation(len(animal_list))
@@ -102,7 +188,13 @@ class Cell_with_animals(Cell):
                     self.fauna[species].append(newborn)
 
     def feed_animals(self):
+        """
+        If there is any pray in the cell, preditors will eat.
+        Parameters
+        ----------
+        self
 
+        """
         # skip if there is no herbivores in the cell
         if self.count_herbivore > 0:
             self._sort_herbivore_after_fitness(descending=False)
@@ -115,7 +207,14 @@ class Cell_with_animals(Cell):
 
     def moving_animals_list(self):
         """
-        Returns a list of animals that will move
+        Returns a list of animals that will move in end of year.
+        Parameters
+        ----------
+        self
+
+        Returns
+        -------
+        list
         """
         moving_animals = []
         for animal in self.animals:
@@ -126,12 +225,24 @@ class Cell_with_animals(Cell):
         return moving_animals
 
     def reset_fodder(self):
+        """
+        Want to pass reset_fodder in this class due to no fodder.
+
+        """
         # this cell has no fodder
         pass
 
     def _get_random_neighboring_cell(self, location):
         """
         Returns a random neighboring cell.
+        Parameters
+        ----------
+        self
+        location
+
+        Returns
+        -------
+        tuple
         """
         new_location = []
 
@@ -153,7 +264,7 @@ class Cell_with_animals(Cell):
 
     def loss_of_weight(self):
         """
-        Updates the weight of all animals in the cell
+        Reduces weight of all animals in the cell.
         """
         for animal in self.animals:
             animal.loss_of_weight()
@@ -170,16 +281,36 @@ class Cell_with_animals(Cell):
 
     @property
     def count_herbivore(self):
+        """
+        Returns the number of herbivores in the cell.
+        Parameters
+        ----------
+        self
+
+        Returns
+        -------
+        int
+        """
         return len(self.fauna["Herbivore"])
 
     @property
     def count_carnivore(self):
+        """
+        Returns the number of carnivores in the cell.
+        Parameters
+        ----------
+        self
+
+        Returns
+        -------
+        int
+        """
         return len(self.fauna["Carnivore"])
 
 
 class Cell_with_fodder(Cell_with_animals):
     """
-    Class for a cell in the island
+    Cell characteristics with fodder for vegetarian animals
     """
     f_max = None
 
@@ -212,10 +343,24 @@ class Cell_with_fodder(Cell_with_animals):
         return {'f_max': cls.f_max}
 
     def __init__(self, location):
+        """
+        Initialize the cell
+        Parameters
+        ----------
+        location
+
+        """
         super().__init__(location)
         self.fodder = self.f_max
 
     def feed_animals(self):
+        """
+        Feed all vegetarian animals in the cell, and reset the fodder.
+        Parameters
+        ----------
+        self
+
+        """
         self._sort_herbivore_after_fitness()
         for animal in self.fauna["Herbivore"]:
             if self.fodder > 0:
@@ -228,20 +373,36 @@ class Cell_with_fodder(Cell_with_animals):
         self.reset_fodder()
 
     def reset_fodder(self):
+        """
+        Reset the fodder in the cell to the maximum value.
+        Parameters
+        ----------
+        self
+
+        """
         self.fodder = self.f_max
 
 
 class Water(Cell):
+    """
+    Cell characteristics with no fodder and no animals
+    """
     type = "Water"
     color = (0.13, 0.00, 1.00)
 
 
 class Desert(Cell_with_animals):
+    """
+    Cell characteristics with animals and no fodder.
+    """
     type = "Desert"
     color = (1.00, 1.00, 0.40)
 
 
 class Lowland(Cell_with_fodder):
+    """
+    Cell characteristics with animals and large amount of fodder.
+    """
     type = "Lowland"
     f_max = 800
     color = (0.00, 0.62, 0.00)
@@ -249,6 +410,9 @@ class Lowland(Cell_with_fodder):
 
 
 class Highland(Cell_with_fodder):
+    """
+    Cell characteristics with animals and limited amount of fodder.
+    """
     type = "Highland"
     f_max = 300
     color = (0.20, 1.00, 0.42)
