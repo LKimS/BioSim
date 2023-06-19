@@ -20,22 +20,7 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: gif
 
 class Graphics:
     """
-    Provides graphics support for BioSim.
-
-    :mod:`biosim.graphics` provides graphics support for BioSim.
-
-    This module was inspired by RandVis package by Hans Ekkehard Plesser
-
-    .. note::
-       * This module requires the program ``ffmpeg`` or ``convert``
-         available from `<https://ffmpeg.org>` and `<https://imagemagick.org>`.
-       * You can also install ``ffmpeg`` using ``conda install ffmpeg``
-       * You need to set the  :const:`_FFMPEG_BINARY` and :const:`_CONVERT_BINARY`
-         constants below to the command required to invoke the programs
-       * You need to set the :const:`_DEFAULT_FILEBASE` constant below to the
-         directory and file-name start you want to use for the graphics output
-         files.
-
+    Visualization of island
     """
 
 
@@ -58,7 +43,8 @@ class Graphics:
     def __init__(self, img_dir=None, img_name=None, img_fmt=None, img_years=None, vis_years=0,
                  ymax_animals=1200, cmax_animals=None, hist_specs=None):
         """
-        Setting up a new visualization object.
+        Initialization up a new visualization object.
+
         :param img_dir: directory for image files; no images if None
         :type img_dir: str
         :param img_name: beginning of name for image files
@@ -67,6 +53,17 @@ class Graphics:
         :type img_fmt: str
         :img_years: Years between visualizations saved to files (default: `vis_years`)
         :type img_years: int
+
+        .. note::
+           * This module requires the program ``ffmpeg`` or ``convert``
+             available from `<https://ffmpeg.org>` and `<https://imagemagick.org>`.
+           * You can also install ``ffmpeg`` using ``conda install ffmpeg``
+           * You need to set the  :const:`_FFMPEG_BINARY` and :const:`_CONVERT_BINARY`
+             constants below to the command required to invoke the programs
+           * You need to set the :const:`_DEFAULT_FILEBASE` constant below to the
+             directory and file-name start you want to use for the graphics output
+             files.
+
         """
 
         # check if ymax_animals is a positive number
@@ -188,27 +185,27 @@ class Graphics:
         """
         Updates graphics with current data and save to file if necessary.
 
-        :param year: current year
+        :param year: current year.
         :type year: int
-        :param herbivore_population: current herbivore population
+        :param herbivore_population: current herbivore population.
         :type herbivore_population: int
-        :param carnivore_population: current carnivore population
+        :param carnivore_population: current carnivore population.
         :type carnivore_population: int
-        :param herbivore_dict_map: current herbivore population distribution (dictionary)
+        :param herbivore_dict_map: current herbivore population distribution.
         :type herbivore_dict_map: dict
-        :param carnivore_dict_map: current carnivore population distribution (dictionary)
+        :param carnivore_dict_map: current carnivore population distribution.
         :type carnivore_dict_map: dict
-        :param herbivore_age_list: current herbivore age distribution (list)
+        :param herbivore_age_list: current herbivore age distribution.
         :type herbivore_age_list: list
-        :param carnivore_age_list: current carnivore age distribution (list)
+        :param carnivore_age_list: current carnivore age distribution.
         :type carnivore_age_list: list
-        :param herbivore_weight_list: current herbivore weight distribution (list)
+        :param herbivore_weight_list: current herbivore weight distribution.
         :type herbivore_weight_list: list
-        :param carnivore_weight_list: current carnivore weight distribution (list)
+        :param carnivore_weight_list: current carnivore weight distribution.
         :type carnivore_weight_list: list
-        :param herbivore_fitness_list: current herbivore fitness distribution (list)
+        :param herbivore_fitness_list: current herbivore fitness distribution.
         :type herbivore_fitness_list: list
-        :param carnivore_fitness_list: current carnivore fitness distribution (list)
+        :param carnivore_fitness_list: current carnivore fitness distribution.
         :type carnivore_fitness_list: list
         """
 
@@ -230,8 +227,10 @@ class Graphics:
     def make_movie(self, movie_fmt=None):
         """
         Creates MPEG4 movie from visualization images saved.
-        :param movie_fmt: Video format, either 'mp4' or 'gif'. Default 'mp4'.
+
+        :param movie_fmt: Video format, either mp4 (default) or gif.
         :type movie_fmt: str
+
         """
 
         if self._img_base is None:
@@ -267,15 +266,18 @@ class Graphics:
 
     def setup(self, geography, final_year, vis_years=1):
         """
-        Prepare graphics.
-
-        Call this before calling :meth:`update()` for the first time after
-        the final time step has changed.
+        Prepare graphics with population history, histograms and heatmaps for the island.
 
         :param geography: A list of lists containing the landscape. From Island.processed_map
         :type geography: list
         :param final_year: last time step to be visualised (upper limit of x-axis)
         :type final_year: int
+
+
+        .. note::
+            Call this before calling :meth:`update()` for the first time after
+            the final time step has changed.
+
 
         """
 
@@ -455,8 +457,8 @@ class Graphics:
 
     def _update_year_counter(self, year):
         """Update the year counter.
-        :param year: int
 
+        :param year: int
         """
         year_txt = f"Year: {year}"
         if self.year_counter is None:
@@ -468,6 +470,7 @@ class Graphics:
     def _update_population_graph(self, year, herbivore_population, carnivore_population):
         """
         Update the population graph.
+
         :param year: Current year
         :type year: int
         :param herbivore_population: Current herbivore population
@@ -488,6 +491,7 @@ class Graphics:
     def _update_herbivore_heatmap(self, herbivore_dict_map):
         """
         Update the herbivore heatmap.
+
         :param herbivore_dict_map: Dictionary with herbivore population history
         :type herbivore_dict_map: dict
         """
@@ -514,6 +518,7 @@ class Graphics:
     def _update_carnivore_heatmap(self, carnivore_dict_map):
         """
         Update the carnivore heatmap.
+
         :param carnivore_dict_map: Dictionary with carnivore population history
         :type carnivore_dict_map: dict
         """
@@ -540,6 +545,7 @@ class Graphics:
     def _update_histogram_age(self, herbivore_age_list, carnivore_age_list):
         """
         Update the age histogram.
+
         :param herbivore_age_list: List of herbivore ages
         :type herbivore_age_list: list
         :param carnivore_age_list: List of carnivore ages
@@ -571,6 +577,7 @@ class Graphics:
     def _update_histogram_weight(self, herbivore_weight_list, carnivore_weight_list):
         """
         Update the weight histogram.
+
         :param herbivore_weight_list: List of herbivore weights
         :type herbivore_weight_list: list
         :param carnivore_weight_list: List of carnivore weights
@@ -603,9 +610,10 @@ class Graphics:
 
     def _update_histogram_fitness(self, herbivore_fitness_list, carnivore_fitness_list):
         """
-        Update the histogram of fitness for herbivores and carnivores
+        Update the histogram of fitness for herbivores and carnivores.
 
         .. note::
+
             Normalized the histogram with the help from:
             https://stackoverflow.com/questions/21532667/numpy-histogram-cumulative-density-does-not-sum-to-1
 
@@ -641,6 +649,7 @@ class Graphics:
 
     def _save_graphics(self, year):
         """Saves graphics to file if file name given.
+
         :param year: Year of simulation
         :type year: int
         """
