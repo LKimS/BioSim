@@ -121,7 +121,8 @@ class Animal:
 
     def procreation(self, animal_in_pos):
         r"""
-        Methods checks if the animal can give birth to a new animal. Bellow is the steps taken by the method:
+        Methods checks if the animal can give birth to a new animal.
+        Bellow is the steps taken by the method:
 
         - If the offspring value is less than the weight of the animal, the animal can give birth.
         - If the animal can give birth, the probability of procreation is calculated.
@@ -143,7 +144,8 @@ class Animal:
 
         .. note::
 
-            - Relevant parameters are given in the table at the beginning of the Animal class documentation.
+            - Relevant parameters are given in the table at the beginning of the
+            Animal class documentation.
 
             The probability of procreation is given by the formula below.
 
@@ -153,8 +155,9 @@ class Animal:
 
             Where :math:`N_{same}` is the number of animals in the same position as the animal.
 
-            The weight of the newborn is calculated by a lognormal distribution from the python
-            ``random.lognormvariate(mu, sigma)``. Below is a figure of the lognormal distribution, and formulas for
+            The weight of the newborn is calculated by a log-normal distribution from the python
+            ``random.lognormvariate(mu, sigma)``.
+            Below is a figure of the log-normal distribution, and formulas for
             calculating the parameters mu and sigma.
 
             .. math::
@@ -194,7 +197,7 @@ class Animal:
                     newborn_info = {"species": self.species, "age": 0, "weight": newborn_weight}
                     return type(self)(newborn_info, self.loc)
 
-            #animal does not procreate
+        # animal does not procreate
         return None
 
     def calc_fitness(self):
@@ -251,7 +254,7 @@ class Animal:
         self.age += 1
 
     def loss_of_weight(self):
-        """
+        r"""
         Methods that makes the animal lose weight. Since animals lose weight,
         the fitness of the animal is updated.
         Animal loses an amount of weight given by the following formula:
@@ -265,7 +268,7 @@ class Animal:
         self._update_fitness()
 
     def death(self):
-        """
+        r"""
         Methods sets the animal to dead if the animals weight is below zero or
         if the animal dies by a probability of death.
 
@@ -283,11 +286,10 @@ class Animal:
         elif random.random() < probability_of_death:
             self.alive = False
         else:
-            #self.alive = True
             pass
 
     def migrate(self):
-        """
+        r"""
         Methods checks if the animal migrates or not. With a higher
         fitness the probability of migration increases.
 

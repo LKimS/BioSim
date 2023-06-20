@@ -64,7 +64,7 @@ class Graphics:
             self.ymax_animals = self.default_ymax_animals
 
         if vis_years is not None:
-            if vis_years < 0 or type(vis_years) != type(int()):
+            if vis_years < 0 or not isinstance(vis_years, int):
                 print(type(vis_years))
                 raise ValueError(f'vis_years must be a positive integer, not {vis_years}')
 

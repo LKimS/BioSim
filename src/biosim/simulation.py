@@ -18,7 +18,8 @@ import pickle
 class BioSim:
     """
     BioSim class is the top-level interface to BioSim package. It implements a complete simulation
-    of the ecosystem. Choose between multiple different parameters to adjust your simulation and preferred output.
+    of the ecosystem.
+    Choose between multiple different parameters to adjust your simulation and preferred output.
     """
     _default_map = """\
                WWWWWWWWWWWWWWWWWWWWW
@@ -119,9 +120,10 @@ class BioSim:
         self.vis_years = vis_years
 
         if self.vis_years != 0:
-            self.graphics = Graphics(img_dir=img_dir, img_name=img_base, img_fmt=img_fmt, img_years=img_years,
-                                     vis_years=vis_years,
-                                     ymax_animals=ymax_animals, cmax_animals=cmax_animals, hist_specs=hist_specs)
+            self.graphics = Graphics(img_dir=img_dir, img_name=img_base,
+                                     img_fmt=img_fmt, img_years=img_years,
+                                     vis_years=vis_years, ymax_animals=ymax_animals,
+                                     cmax_animals=cmax_animals, hist_specs=hist_specs)
 
             self.img_years = vis_years
 
@@ -194,7 +196,8 @@ class BioSim:
 
             sim.set_landscape_parameters('L', {'f_max': 700})
 
-        Parameter 'L' is for Lowland, and by decreasing the f_max, the amount of fodder is decreased.
+        Parameter 'L' is for Lowland,
+        and by decreasing the f_max, the amount of fodder is decreased.
 
         """
         if landscape == "L":
@@ -216,20 +219,18 @@ class BioSim:
 
         self.final_year = self.current_year + num_years
 
-
         if self.vis_years != 0:
             self.graphics.setup(self.island.map_processed, self.final_year)
 
         self.update_island_data()
-
 
         self.update_history_data()
 
         self.update_graphics()
 
         while self.current_year < self.final_year:
-
-            print(f"\rSimulating... year: {self.current_year} out of {self.final_year}", flush=True, end='')
+            year = self.current_year
+            print(f"\rSimulating... year: {year} out of {self.final_year}", flush=True, end='')
             self.island.yearly_island_cycle()
             self.current_year += 1
             self.update_history_data()
@@ -240,7 +241,6 @@ class BioSim:
         if self.log_file is not None:
             print(f"Saving log file to {self.log_file}")
             self.save_log_file()
-
 
     def update_graphics(self):
         if self.vis_years != 0 and self.current_year % self.vis_years == 0:
@@ -255,19 +255,19 @@ class BioSim:
                                  carnivore_weight_list=self.island.specs['Carnivore']['weight'],
                                  herbivore_fitness_list=self.island.specs['Herbivore']['fitness'],
                                  carnivore_fitness_list=self.island.specs['Carnivore']['fitness'])
+
     def update_history_data(self):
         """
         Updates history data for visualization.
         """
 
-        self.pop_history['Herbivore'][self.current_year] =  self.island.pop['Herbivore']
+        self.pop_history['Herbivore'][self.current_year] = self.island.pop['Herbivore']
         self.pop_history['Carnivore'][self.current_year] = self.island.pop['Carnivore']
 
     def update_island_data(self):
         for loc, cell in self.island.habital_map.items():
             self.island.update_data(loc, cell)
         self.island.collect_data()
-
 
     def add_population(self, population):
         """
@@ -320,9 +320,9 @@ class BioSim:
             writer.writerow(header)
 
             for year in range(self.current_year + 1):
-                row = [year] + [self.pop_history[species][year] for species in self.pop_history.keys()]
+                count = [self.pop_history[species][year] for species in self.pop_history.keys()]
+                row = [year] + count
                 writer.writerow(row)
-
 
     def _save_simulation(self, file_name):
         """
@@ -389,12 +389,14 @@ class BioSim:
         num_animals_per_species : dict
             Number of animals per species in island, as dictionary.
         """
-        #If population is None, return zero. If not None, return last population history
+        # If population is None, return zero. If not None, return last population history
 
         self.update_island_data()
         self.update_history_data()
 
-        current_pop = {species: pop_history[self.current_year] for species, pop_history in self.pop_history.items()}
+        year = self.current_year
+
+        current_pop = {species: p_history[year] for species, p_history in self.pop_history.items()}
         return current_pop
 
     def make_movie(self, movie_fmt='mp4'):
