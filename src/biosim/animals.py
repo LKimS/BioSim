@@ -154,12 +154,13 @@ class Animal:
             Where :math:`N_{same}` is the number of animals in the same position as the animal.
 
             The weight of the newborn is calculated by a lognormal distribution from the python
-            random.lognormvariate(:math:`\mu, \sigma`). The parameters are given by the following formula:
+            ``random.lognormvariate(mu, sigma)``. Below is a figure of the lognormal distribution, and formulas for
+            calculating the parameters mu and sigma.
 
             .. math::
-                \mu = \ln(\frac{w_{birth}^2}{\sqrt{w_{birth}^2 + \sigma_{birth}^2}})
+                mu = \ln \left( \frac{w_{birth}^2}{\sqrt{w_{birth}^2 + \sigma_{birth}^2}}\right)
 
-                \sigma = \sqrt{\ln(1 + \frac{\sigma_{birth}^2}{w_{birth}^2})}
+                sigma = \sqrt{\ln \left(1 + \frac{\sigma_{birth}^2}{w_{birth}^2} \right)}
 
             .. figure:: ../docs/figures/lognormdist.png
                 :width: 400
