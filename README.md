@@ -95,13 +95,13 @@ Includes the following keys:
   
 
 ## Roadmap
-### Ideas
+### Futher development
 - Tracking single animal
 - Track center of population
 - Serialisation: using pickle
 - Parallelization: using multiprocessing/threading
 ### Bugs
-- Biosim object does not update the information before the simulation is called.
-## License
+- No known bugs
 
-## Contact
+## License
+MIT License
