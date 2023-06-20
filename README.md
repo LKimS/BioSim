@@ -12,7 +12,7 @@ Create a simulation of Rossumøya with animals living
 and migration on the island through generations.
 
 ## Prerequisites
-To use this software you need to have `Python 3.11` and `The Python Standard library`.
+To use this software you need to have `Python 3.11` and with `scipy`, `numpy` and `matplotlib`.
 If you want to run the included tests, then you also need the python package: `pytest`.
 
 ## Installation

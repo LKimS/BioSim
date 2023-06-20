@@ -25,7 +25,7 @@ population = [{"loc": (5, 10),
 
 sim = BioSim(island_map=geogr, ini_pop=population, seed=123456, vis_years=1, ymax_animals=12000)
 
-sim.simulate(1)
+sim.simulate(3)
 
 end = perf_counter()
 print(f"Time elapsed: {end - start:0.4f} seconds")
