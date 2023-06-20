@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 """
-The Island class
+    The Island class introduce the yearly cycle of the simulation by:
+
+    - Create a map of the island.
+    - Add animals to the map.
+    - Run through an early lifecycle.
+    - Gather data from one year, and store it for visualization.
 """
 
 import numpy as np
@@ -13,7 +18,7 @@ from .cell import Water, Lowland, Highland, Desert
 
 class Island:
     """
-    Island class. Superclass for all landscape types.
+
     """
 
     allowed_cells = ['W', 'L', 'H', 'D']
@@ -52,7 +57,8 @@ class Island:
 
         Parameters
         ----------
-        input_island_map
+        input_island_map : str
+            Multi-line string with island geography
 
         """
         lines = input_island_map.split("\n")
@@ -66,13 +72,21 @@ class Island:
     def _island_compatibility_check(self, processed_lines):
         """
         Checks if input_island_map is compatible with the Island class.
+
         Parameters
         ----------
-        map_processed
+        processed_lines: list
+            List of strings with island geography
 
-        Returns
-        -------
-        int : height of map
+        Raises
+        ------
+        ValueError
+            If the island is not surrounded by water.
+        ValueError
+            If the island contains letters other than W, L, H, D.
+        ValueError
+            If the island contains lines with different lengths.
+
         """
 
         line_width = len(processed_lines[0])
@@ -91,6 +105,17 @@ class Island:
                         raise ValueError("Geography must be surrounded by water.")
 
     def _get_map_height(self, map_processed):
+        """
+        Get the height of the map
+
+        Parameters
+        ----------
+        map_processed : list
+
+        Returns
+        -------
+        int : height of map
+        """
         return len(map_processed)
 
     def _get_map_width(self, map_processed):
@@ -99,28 +124,25 @@ class Island:
 
         Parameters
         ----------
-        map_processed
+        map_processed : list
 
         Returns
         -------
         int : width of map
-
         """
         return len(map_processed[0])
 
     def _map_processed_to_dict(self, map_processed):
         """
-        Creates a map(dict) with coordinates as keys and cell objects as values
+        Creates a map (dict) with coordinates as keys and cell objects as values
 
         Parameters
         ----------
-        self
-        map_processed
+        map_processed : list
 
         Returns
         -------
         dict : map with coordinates as keys and cell objects as values
-
         """
         map = {}
 
@@ -136,14 +158,9 @@ class Island:
         """
         Creates a map(dict) with only habitable cells
 
-        Parameters
-        ----------
-        self
-
         Returns
         -------
         dict: map with animals
-
         """
         map_with_animals = {loc: cell for loc, cell in self.map.items() if cell.is_habitable}
 
@@ -155,13 +172,14 @@ class Island:
 
         Parameters
         ----------
-        cell_letter
-        loc
+        cell_letter : str
+            Letter representing the cell type
+        loc : tuple
+            Coordinates of the cell
 
         Returns
         -------
-        cell object
-
+        Cell : cell object
         """
         cells = {
             'W': Water,
@@ -176,11 +194,12 @@ class Island:
     # METHODS for adding animals
     def add_population(self, population):
         """
-        Adds animals to the map
+        Adds animals to the map with a given location.
 
         Parameters
         ----------
-        population
+        population : list
+            List of dictionaries with animals location and information.
 
         """
         for item in population:
@@ -197,8 +216,7 @@ class Island:
 
         Parameters
         ----------
-        self
-        list_of_moving_animals
+        list_of_moving_animals : list of tuples
 
         """
         for animal, old_location, new_location in list_of_moving_animals:
@@ -210,16 +228,19 @@ class Island:
     # METHODS for creating bitmap and plotting
     def create_colormap(self, map_processed):
         """
-        Returns a color map of the island. List of list, same shape as processed map.
-        Creates a bitmap for plotting
+        Creates a bitmap for plotting by using the length and width of the processed map.
+        Returns a color map of the island shown in visualization.
+
         Parameters
         ----------
-        self
-        map_processed
+        map_processed : list
+            List of strings with island geography.
 
         Returns
         -------
-        bitmap  : bitmap for plotting
+        bitmap  : numpy.ndarray
+            A island map with colors for visualization.
+
         """
 
         height = len(map_processed)
@@ -236,7 +257,7 @@ class Island:
 
     def plot_map(self):
         """
-        Plots the map using bitmap
+        Plots the map using bitmap.
         """
         plt.imshow(self.bitmap)
         # plt.legend()
@@ -246,7 +267,19 @@ class Island:
 
     def yearly_island_cycle(self):
         """
-        Runs the yearly cycle for the island
+        Method runs through each cell on the island.
+        For every year the method resets the data for statistics,
+        and puts in the data from the previous year.
+
+        Yearly island cycle calling cell methods for:
+
+        - adding newborns
+        - feeding animals
+        - moving animals
+        - aging animals
+        - loss of weight
+        - animal death
+        - resetting fodder
         """
         migrating_animals = []
 
@@ -267,13 +300,13 @@ class Island:
 
     def update_data(self, loc, cell):
         """
-        Updates each cell with the number of animals of each species, and the specification for each animal.
+        Refreshes gathered data in each cell on the island. Method is counting the species in one cell,
+        and gather their age, weight and fitness into lists.
 
         Parameters
         ----------
-        self
-        loc
-        cell
+        loc : tuple
+        cell : object
 
         """
         self.pop_cell['Herbivore'][loc] = cell.count_herbivore
@@ -287,6 +320,7 @@ class Island:
     def collect_data(self):
         """
         Summarizes number of animals of each species on the island.
+
         """
         self.pop['Herbivore'] = sum(self.pop_cell['Herbivore'].values())
         self.pop['Carnivore'] = sum(self.pop_cell['Carnivore'].values())
