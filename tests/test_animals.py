@@ -212,40 +212,7 @@ def test_procreation_prob(animal):
     assert stats.binom_test(num_babies, num_trials, probability_of_procreation) > .01
 
 
-@pytest.mark.parametrize("animal",
-                         [(Herbivore({"species": "Herbivore",
-                                      "age": 0,
-                                      "weight": 1000},
-                                     (1, 2))),
-                          (Carnivore({"species": "Carnivore",
-                                      "age": 0,
-                                      "weight": 1000},
-                                     (1, 2)))])
-def test_procreation_weight(reset_default_params, animal):
-    """
-    Test that the weight of newborns follow the lognormal distribution with a kstest.
-    This is not implimented yet.
-    """
-    animal.set_parameters({"gamma": 1})  # Ensure that procreation is called
 
-    num_trials = 1000
-    animal_in_cell = 2
-    weights = []
-    for i in range(num_trials):
-        baby = animal.procreation(animal_in_cell)
-        if baby is not None:
-            weights.append(baby.weight)
-        animal.weight = 1000
-
-    w_birth = animal.params["w_birth"]
-    sigma_birth = animal.params["sigma_birth"]
-
-    mu = math.log(sigma_birth ** 2 / (math.sqrt(w_birth ** 2 + sigma_birth ** 2)))
-    s = math.sqrt(math.log(1 + sigma_birth ** 2 / w_birth ** 2))
-
-    ks, p_value = stats.kstest(weights, stats.lognorm.cdf, args=(s, 0, math.exp(mu)))
-
-    # assert p_value > 0.01
 
 
 @pytest.mark.parametrize("species, age_change, weight", [["Herbivore", 5, 20],
@@ -504,3 +471,6 @@ def test_carn_eat_prob_fitness():
         carn.feeding([herb])
 
     assert herb.alive is True
+
+
+
