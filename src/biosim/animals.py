@@ -152,25 +152,14 @@ class Animal:
                 min(1, gamma \cdot fitness_{self} \cdot N_{same})
 
             Where :math:`N_{same}` is the number of animals in the same position as the animal.
-            And the other parameters given
 
-            The weight of the newborn is calculated by a lognormal distribution from the python random.lognormvariate(:math:`\mu, \sigma`). The parameters are given by the
-            following formula:
+            The weight of the newborn is calculated by a lognormal distribution from the python
+            random.lognormvariate(:math:`\mu, \sigma`). The parameters are given by the following formula:
 
             .. math::
                 \mu = \ln(\frac{w_{birth}^2}{\sqrt{w_{birth}^2 + \sigma_{birth}^2}})
 
                 \sigma = \sqrt{\ln(1 + \frac{\sigma_{birth}^2}{w_{birth}^2})}
-
-            The probability of procreation is given by the following formula:
-
-            .. math::
-                p_{procreation} = min(1, \gamma \cdot \phi \cdot N_{same})
-
-            The weight of the newborn is given by the following formula:
-
-            .. math::
-                w_{newborn} = \zeta \cdot (w_{birth} + \sigma_{birth})
 
             .. figure:: ../docs/figures/lognormdist.png
                 :width: 400
