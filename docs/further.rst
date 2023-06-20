@@ -1,25 +1,30 @@
 Further Development
 ===================
-- Tracking single animal
-- Track center of population
-- Serialisation: using pickle
-- Parallelization: using multiprocessing/threading
+This project allows to change parameters and add animals. The project opens for more development
+where addition features can be added. Bellow are some ideas for addition features:
 
-With this project we have created an simple simulation for the island. The
-project opens up for further development where additional variables can be
-added. We have discussed some ideas for additional features such as:
 
-Climate features
-----------------
+Use livedata from habitat
+--------------------------
+With being able to track a single animals you can
+simulate how the rest of population will develop
+and make a simulation forward in time.
 
-- Sea level rise. The sea level could increase in certain intervals, transforming island cells to ocean cells.
-- Temperature increase and decrease. This could affect the animal's fitness and thus their ability to migrate, procreate and feed.
 
-Animal features
----------------
+Track center of population
+---------------------------
+Follow how the center of population moves on the island with time.
 
-- Additional species such as *birds* that do not yield to the same movement restrictions. Birds could potentially move further each year, and across all landscape types.
-- Breeding features such as implementation of more defined breeding cycles. With inspiration from "`lemenår <https://snl.no/lemenår>`_". this can be done by tweaking parameters in relevant years.
+
+Serialisation
+-----------------------------
+Saving and loading the BioSim instance to/from file using pickle.
+This will allow the user to save the state of the simulation and continue it later,
+or share the state with other users.
+
+Parallelization
+-------------------------------------------------
+Using multiprocessing/threading under the simulation to help with visualization under the simulation.
 
 
 
