@@ -24,18 +24,49 @@ class Animal:
     @classmethod
     def set_parameters(cls, new_parameters):
         """
-        Set class parameters.
+        Set adjusted parameters from user for the animal class.
 
         Parameters
         ----------
         new_parameters : dict
-            Legal keys: 'w_birth', 'sigma_birth', 'beta', 'eta', 'a_half',
-            'phi_age', 'w_half', 'phi_weight', 'mu', 'gamma', 'zeta', 'xi',
-            'omega', 'F', 'DeltaPhiMax'.
+            Legal keys
 
         Raises
         ------
-        ValueError, KeyError
+        ValueError
+            If any of the parameters are invalid.
+
+        ValueError
+            If any of the parameters are negative.
+
+        ValueError
+            If DeltaPhiMax is not strictly positive.
+
+        ValueError
+            If eta is not less than 1.
+
+
+        .. note::
+            Legal keys are those in the default_parameters class attribute.
+
+            - 'w_birth'
+            - 'sigma_birth'
+            - 'beta'
+            - 'eta'
+            - 'a_half'
+            - 'phi_age'
+            - 'w_half'
+            - 'phi_weight'
+            - 'mu'
+            - 'gamma'
+            - 'zeta'
+            - 'xi'
+            - 'omega'
+            - 'F'
+            - 'DeltaPhiMax'
+
+
+
         """
 
         for key in new_parameters:
@@ -67,8 +98,13 @@ class Animal:
 
     @classmethod
     def get_parameters(cls):
-        """Get parameter for the Animal.
-        :return: dict
+        """
+        Get parameters returns the current parameters for the animal class.
+
+        Returns
+        --------
+        cls.param : dict
+            Dictionary with the current parameters for the animal class.
         """
         return cls.params
 
@@ -85,38 +121,49 @@ class Animal:
 
     def procreation(self, animal_in_pos):
         r"""
-        Procreation of an animal.
+        Methods checks if the animal can give birth to a new animal.
+        Bellow is the steps taken by the method:
 
-        :param animal_in_pos: number of animals in the same position
-        :type animal_in_pos: int
+        - If the offspring value is less than the weight of the animal, the animal can give birth.
+        - If the animal can give birth, the probability of procreation is calculated.
+        - If the animal procreates, the weight of the newborn is calculated.
+        - Newborn weight is subtracted from the parent.
+        - The fitness of the parent is updated.
+        - A newborn object is added to the list of newborns.
+
+        Parameters
+        ----------
+        animal_in_pos : int
+            Number of animals in the same position as the animal.
+
+        Returns
+        -------
+        Animal instance or None
+            If the animal procreates, a newborn animal is returned. Else None is returned.
+
 
         .. note::
-            The probaility of procreation is given by the following formula:
+
+            - Relevant parameters are given in the table at the beginning of the
+            Animal class documentation.
+
+            The probability of procreation is given by the formula below.
 
             .. math::
                 p_{procreation} =
                 min(1, gamma \cdot fitness_{self} \cdot N_{same})
 
             Where :math:`N_{same}` is the number of animals in the same position as the animal.
-            And the other parameters given :ref:`here <herb_params-label>`.
 
-            The weight of the newborn is calculated by a lognormal distribution from the python random.lognormvariate(:math:`\mu, \sigma`). The parameters are given by the
-            following formula:
-
-            .. math::
-                \mu = \ln(\frac{w_{birth}^2}{\sqrt{w_{birth}^2 + \sigma_{birth}^2}})
-
-                \sigma = \sqrt{\ln(1 + \frac{\sigma_{birth}^2}{w_{birth}^2})}
-
-            The probability of procreation is given by the following formula:
+            The weight of the newborn is calculated by a log-normal distribution from the python
+            ``random.lognormvariate(mu, sigma)``.
+            Below is a figure of the log-normal distribution, and formulas for
+            calculating the parameters mu and sigma.
 
             .. math::
-                p_{procreation} = min(1, \gamma \cdot \phi \cdot N_{same})
+                mu = \ln \left( \frac{w_{birth}^2}{\sqrt{w_{birth}^2 + \sigma_{birth}^2}}\right)
 
-            The weight of the newborn is given by the following formula:
-
-            .. math::
-                w_{newborn} = \zeta \cdot (w_{birth} + \sigma_{birth})
+                sigma = \sqrt{\ln \left(1 + \frac{\sigma_{birth}^2}{w_{birth}^2} \right)}
 
             .. figure:: ../docs/figures/lognormdist.png
                 :width: 400
@@ -124,8 +171,6 @@ class Animal:
                 :alt: lognormdist.png
 
                 Source: https://en.wikipedia.org/wiki/Log-normal_distribution
-
-
         """
         self.newborn = None
         zeta = self.params["zeta"]
@@ -152,11 +197,35 @@ class Animal:
                     newborn_info = {"species": self.species, "age": 0, "weight": newborn_weight}
                     return type(self)(newborn_info, self.loc)
 
-            #animal does not procreate
+        # animal does not procreate
         return None
 
     def calc_fitness(self):
-        """Calculates the fitness of the animal."""
+        r"""
+        The overall condition of the animal is described by the fitness.
+        This method calculates the fitness of the animal.
+
+        Returns
+        -------
+        float
+            The fitness of the animal.
+
+
+        .. note::
+            Fitness is calculated by the following formula:
+
+            .. math::
+
+                \Phi =
+                \frac{1}{1+e^{\phi_{age} \cdot (age - a_{half})}}
+                \cdot
+                \frac{1}{1+e^{-\phi_{weight} \cdot (weight - w_{half})}}
+
+            Where :math:`\phi_{age}` and :math:`\phi_{weight}` are parameters given by the user.
+            :math:`a_{half}` and :math:`w_{half}` are parameters given by the user.
+            :math:`age` and :math:`weight` are the age and weight of the animal.
+            :math:`\phi` is the fitness of the animal.
+        """
         if self.weight <= 0:
             return 0
         else:
@@ -177,22 +246,39 @@ class Animal:
         self.fitness = self.calc_fitness()
 
     def aging(self):
-        """Animal ages by one year."""
+        """
+        Methods that ages animals by one year.
+        Fitness of the animal is updated in next method loss_of_weight(). This
+        makes the code more efficient.
+        """
         self.age += 1
 
     def loss_of_weight(self):
-        """Animal loses weight by one year"""
+        r"""
+        Methods that makes the animal lose weight. Since animals lose weight,
+        the fitness of the animal is updated.
+        Animal loses an amount of weight given by the following formula:
+
+        .. math::
+            weight loss = \eta \cdot weight
+
+        Where eta, :math:`\eta`, is a default parameter or parameter given by the user.
+        """
         self.weight -= self.params["eta"] * self.weight
         self._update_fitness()
 
     def death(self):
-        """
-        Animals probability of death increases with low fitness.
+        r"""
+        Methods sets the animal to dead if the animals weight is below zero or
+        if the animal dies by a probability of death.
 
-        Parameters
-        ----------
-        self : class
+        Probability of death is given by the following formula:
 
+        .. math::
+            p_{death} = \omega \cdot (1 - \phi)
+
+        Where omega, :math:`\omega`, is a default parameter or given by the user.
+        Fitness, :math:`\phi`, is the fitness of the animal.
         """
         probability_of_death = self.params["omega"] * (1 - self.fitness)
         if self.weight <= 0:
@@ -200,12 +286,25 @@ class Animal:
         elif random.random() < probability_of_death:
             self.alive = False
         else:
-            #self.alive = True
             pass
 
     def migrate(self):
-        """
-        Animals probability of migration increases with high fitness.
+        r"""
+        Methods checks if the animal migrates or not. With a higher
+        fitness the probability of migration increases.
+
+        Probability of migration is given by the following formula:
+
+        .. math::
+            p_{migration} = \mu \cdot \phi
+
+        Where mu, :math:`\mu`, is a default parameter or given by the user.
+        Fitness, :math:`\phi`, is the fitness of the animal.
+
+        Returns
+        -------
+        bool
+            True if the animal migrates, False if the animal does not migrate.
         """
         probability_of_migration = self.params["mu"] * self.fitness
         if random.random() < probability_of_migration:
@@ -217,8 +316,6 @@ class Animal:
 class Herbivore(Animal):
     """
     Herbivores depends on the amount of food available to survive and reproduce.
-
-    .. _herb_params-label:
     """
     default_parameters = {'w_birth': 8.0, 'sigma_birth': 1.5,
                           'beta': 0.9, 'eta': 0.05, 'a_half': 40.0,
@@ -231,7 +328,19 @@ class Herbivore(Animal):
 
     def feeding(self, fodder):
         """
-        Herbivore eats the amount of fodder given, or the maximum amount of fodder it can eat.
+        Feeding method for planteating animals, herbivores. Herbivore eats the amount
+        of fodder given, or the maximum amount of fodder it can eat. After eating the animal
+        gains weight and the fitness is updated.
+
+        Parameters
+        ----------
+        fodder : float
+            The amount of fodder available to the animal.
+
+        Returns
+        -------
+        amount_eaten : float
+            The amount of fodder eaten by the animal.
         """
         if fodder < self.params["F"]:
             amount_eaten = fodder
@@ -258,14 +367,18 @@ class Carnivore(Animal):
 
     def feeding(self, sorted_lowest_fitness_herbivore):
         """
-        Carnivore kills the weakest herbivore until it has eaten the amount of fodder it can eat.
+        Feeding method for predators, carnivores.
+
+        - Carnivore tries to kill, with a probability, the weakest herbivore until it has eaten enough.
+        - After eating one animal it gains weight and the fitness is updated.
+        - If an animal is killed, the object variable "alive" is set to False.
+        - Carnivore continues to kill until it has tried to kill all Herbivores in the cell.
+
 
         Parameters
         ----------
-        self : class
         sorted_lowest_fitness_herbivore : list
             List of herbivores sorted by lowest fitness.
-
         """
         delta_phi_max = self.params["DeltaPhiMax"]
         amount_eaten = 0

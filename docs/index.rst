@@ -52,7 +52,7 @@ For more information about the documentation, see the following sections bellow.
 
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 3
    :caption: Contents:
 
 
