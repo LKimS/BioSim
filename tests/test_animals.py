@@ -1,6 +1,5 @@
 import pytest
 from pytest import approx
-import random
 import math
 from math import exp
 import scipy.stats as stats
@@ -149,6 +148,8 @@ def test_bad_params(reset_default_params, species, change):
                            {"phi_age": 0.3, "phi_weight": 0.4, "a_half": 60, "w_half": 20}],
                           [(2, 1), "Carnivore", 0, 1,
                            {"phi_age": 0.4, "phi_weight": 0.3, "a_half": 30, "w_half": 10}]])
+
+
 def test_init(reset_default_params, loc, species, age, weight, new_params):
     """Test that animal is created with correct attributes"""
     stat = {'species': species,
@@ -213,14 +214,23 @@ def test_procreation_prob(animal):
     assert stats.binom_test(num_babies, num_trials, probability_of_procreation) > .01
 
 
-@pytest.mark.parametrize("animal", [(Herbivore({"species": "Herbivore", "age": 0, "weight": 1000}, (1, 2))),
-                                    (Carnivore({"species": "Carnivore", "age": 0, "weight": 1000}, (1, 2)))])
+@pytest.mark.parametrize("animal",
+                         [(Herbivore({"species": "Herbivore",
+                                      "age": 0,
+                                      "weight": 1000},
+                                     (1, 2))),
+                          (Carnivore({"species": "Carnivore",
+                                      "age": 0,
+                                      "weight": 1000},
+                                     (1, 2)))])
+
 def test_procreation_weight(reset_default_params, animal):
+
     """
     Test that the weight of newborns follow the lognormal distribution with a kstest.
     This is not implimented yet.
     """
-    animal.set_parameters({"gamma": 1})  # ensure that procreation is called
+    animal.set_parameters({"gamma": 1}) # ensure that procreation is called
 
     num_trials = 1000
     animal_in_cell = 2
@@ -234,12 +244,13 @@ def test_procreation_weight(reset_default_params, animal):
     w_birth = animal.params["w_birth"]
     sigma_birth = animal.params["sigma_birth"]
 
-    mu = math.log(sigma_birth ** 2 / (math.sqrt(w_birth ** 2 + sigma_birth ** 2)))
-    s = math.sqrt(math.log(1 + sigma_birth ** 2 / w_birth ** 2))
+
+    mu = math.log(sigma_birth**2/(math.sqrt(w_birth**2 + sigma_birth**2)))
+    s = math.sqrt(math.log(1 + sigma_birth**2/w_birth**2))
 
     ks, p_value = stats.kstest(weights, stats.lognorm.cdf, args=(s, 0, math.exp(mu)))
 
-    # assert p_value > 0.01
+    #assert p_value > 0.01
 
 
 @pytest.mark.parametrize("species, age_change, weight", [["Herbivore", 5, 20],
