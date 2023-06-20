@@ -226,10 +226,9 @@ class BioSim:
         self.update_graphics()
 
         while self.current_year < self.final_year:
-
-            print(f"\rSimulating... year: {self.current_year} out of {self.final_year}", flush=True, end='')
             self.island.yearly_island_cycle()
             self.current_year += 1
+            print(f"\rSimulating... year: {self.current_year} out of {self.final_year}", flush=True, end='')
             self.update_history_data()
 
             self.update_graphics()
