@@ -74,6 +74,16 @@ Highland class
 
 Animals class
 --------------
+There are two types of animals in the simulation, Herbivores and Carnivores. Their behaviour is mostly similar,
+but they have some differences. One difference is how they get their food.
+Herbivores eat the fodder in the cell they are in, while Carnivores eats the herbivores in the cell they are in.
+Below is a table showing the respective parameters for the animals.
+
+.. figure:: ../docs/figures/param_table.png
+    :width: 400
+    :align: center
+    :alt: param_table.png
+
 
 Herbivore class
 ++++++++++++++++
