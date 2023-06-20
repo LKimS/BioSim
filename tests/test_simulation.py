@@ -2,7 +2,7 @@ import pytest
 from biosim.simulation import BioSim
 from biosim.island import Island
 from biosim.animals import Herbivore, Carnivore
-from biosim.cell import Lowland, Highland, Desert, Water
+from biosim.cell import Lowland, Highland
 
 geogr = """\
            WWWWWWWWWWWWWWWWWWWWW
@@ -296,18 +296,18 @@ def test_yearly_cycle(mocker):
 
     # Manually counted method calls:
     expect = {"h_calc_fit": 5,
-               "h_procreation": 2,
-               "h_feeding": 2,
-               "h_migrate": 2,
-               "h_aging": 2,
-               "h_loss_of_weight": 2,
-               "h_death": 2,
-               "c_calc_fit": 2,
-               "c_procreation": 1,
-               "c_feeding": 0,
-               "c_migrate": 1,
-               "c_aging": 1,
-               "c_loss_of_weight": 1,
-               "c_death": 1}
+              "h_procreation": 2,
+              "h_feeding": 2,
+              "h_migrate": 2,
+              "h_aging": 2,
+              "h_loss_of_weight": 2,
+              "h_death": 2,
+              "c_calc_fit": 2,
+              "c_procreation": 1,
+              "c_feeding": 0,
+              "c_migrate": 1,
+              "c_aging": 1,
+              "c_loss_of_weight": 1,
+              "c_death": 1}
 
     assert result == expect

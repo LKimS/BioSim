@@ -214,7 +214,8 @@ class Cell_with_animals(Cell):
     def moving_animals_list(self):
         """
         Method for moving animals from one cell to another.
-        The method checks if any animals will migrate, and returns a list with the object that will move.
+        The method checks if any animals will migrate, and
+        returns a list with the object that will move.
 
         Returns
         -------
@@ -380,7 +381,8 @@ class Cell_with_fodder(Cell_with_animals):
 
     def reset_fodder(self):
         """
-        Reset the fodder in the cell to the maximum value. This method is called at the end of each year.
+        Reset the fodder in the cell to the maximum value.
+        This method is called at the end of each year.
         """
         self.fodder = self.f_max
 

@@ -256,10 +256,10 @@ def test_calc_fitness(species, age_change, weight):
 
     animal.age = age_change
 
-    fitness_age_param = 1 / (1 + math.exp(animal.params["phi_age"] * (age_change - animal.params["a_half"])))
-    fitness_weight_param = 1 / (1 + math.exp(-animal.params["phi_weight"] * (weight - animal.params["w_half"])))
+    age_param = 1 / (1 + math.exp(animal.params["phi_age"] * (age_change-animal.params["a_half"])))
+    weight_param = 1/(1 +math.exp(-animal.params["phi_weight"] * (weight-animal.params["w_half"])))
 
-    fitness = fitness_age_param * fitness_weight_param
+    fitness = age_param * weight_param
     assert animal.calc_fitness() == approx(fitness)
 
 
@@ -424,7 +424,7 @@ def test_herb_death_eaten(reset_default_params, herb_weight):
 
     carn.feeding([herb])
 
-    assert carn.weight == approx(min(herb.weight, carn.params["F"]) * carn.params["beta"] + old_weight)
+    assert carn.weight == approx(min(herb.weight, carn.params["F"])*carn.params["beta"]+old_weight)
 
 
 def test_carn_eat_full(reset_default_params):

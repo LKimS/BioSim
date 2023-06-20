@@ -369,7 +369,7 @@ class Carnivore(Animal):
         """
         Feeding method for predators, carnivores.
 
-        - Carnivore tries to kill, with a probability, the weakest herbivore until it has eaten enough.
+        - Carnivore tries to kill, with a probability, the weakest herbivore until it's full.
         - After eating one animal it gains weight and the fitness is updated.
         - If an animal is killed, the object variable "alive" is set to False.
         - Carnivore continues to kill until it has tried to kill all Herbivores in the cell.

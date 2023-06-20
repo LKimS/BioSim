@@ -1,11 +1,10 @@
 """Test the Cell-class."""
 import pytest
 from pytest import approx
-import math
-import itertools
 
 from biosim.cell import Lowland, Highland, Desert, Water
 from biosim.animals import Herbivore, Carnivore, Animal
+
 
 @pytest.fixture
 def cell_with_animals():
@@ -28,6 +27,8 @@ def cell_with_animals():
     cell.add_animal_object(animal2)
 
     yield cell, animal1, animal2
+
+
 @pytest.fixture
 def reset_animal_defaults():
     """Reset animal parameters to default values after each test."""
@@ -36,6 +37,8 @@ def reset_animal_defaults():
     # reset class parameters to default values after each test
     Herbivore.set_parameters(Herbivore.default_parameters)
     Carnivore.set_parameters(Carnivore.default_parameters)
+
+
 @pytest.fixture
 def reset_cell_defaults():
     """Reset cell parameters to default values after each test."""
@@ -153,9 +156,6 @@ def test_add_animal_obj_wrong_species():
         cell.add_animal_object(animal)
 
 
-
-
-
 def test_remove_animals(cell_with_animals):
     """Test that the animals are removed from the cell."""
     cell, herb, carn = cell_with_animals
@@ -220,6 +220,7 @@ def test_change_params_error(cell_class):
     with pytest.raises(ValueError):
         cell.set_parameters(new_params)
 
+
 @pytest.mark.parametrize("cell_class", [Lowland, Highland])
 def test_change_params(reset_cell_defaults, cell_class):
     """Test that the method changes the parameters."""
@@ -241,6 +242,7 @@ def test_add_newborns(cell_with_animals, mocker):
     cell.add_newborns()
 
     assert Animal.procreation.call_count == 2
+
 
 def test_add_newborns_list(cell_with_animals, reset_animal_defaults):
     """
@@ -269,6 +271,7 @@ def test_feed_animals_count(cell_with_animals, mocker):
 
     assert Herbivore.feeding.call_count + Carnivore.feeding.call_count == 2
 
+
 def test_fodder_reset(cell_with_animals):
     """Test that the fodder is eaten."""
     cell, herb, carn = cell_with_animals
@@ -276,6 +279,7 @@ def test_fodder_reset(cell_with_animals):
     cell.feed_animals()
 
     assert cell.fodder == old_fodder - herb.params['F']
+
 
 def test_herb_full(reset_cell_defaults, mocker):
     """Test that the method is called the right number of times."""
@@ -287,9 +291,8 @@ def test_herb_full(reset_cell_defaults, mocker):
 
     mocker.spy(Herbivore, "feeding")
 
-    animals = [Herbivore({'species': 'Herbivore',
-                        'age': 5,
-                        'weight': 200}, (2, 2)) for _ in range(5)]
+    animals = [Herbivore({'species': 'Herbivore', 'age': 5, 'weight': 200},
+                         (2, 2)) for _ in range(5)]
 
     for animal in animals:
         cell.add_animal_object(animal)
@@ -298,12 +301,11 @@ def test_herb_full(reset_cell_defaults, mocker):
 
     assert Herbivore.feeding.call_count == eat_times
 
+
 def test_count_carn(cell_with_animals):
     """Test that the method is called the right number of times."""
     cell, herb, carn = cell_with_animals
     assert cell.count_carnivore == 1
-
-
 
 
 def test_moving_animals_list(cell_with_animals):
