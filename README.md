@@ -100,16 +100,19 @@ Includes the following keys:
         - weight: The weight of the animal. Must be a positive integer.
   
 
-## Roadmap
-### Futher development
-- Tracking single animal
-- Track center of population 
-#### Serialisation: using pickle
+
+## Futher development
+
+### Tracking single animal
+
+### Track center of population 
+
+### Serialisation: using pickle
 Saving and loading the BioSim instance to/from file using pickle. 
 This will allow the user to save the state of the simulation and continue it later, 
 or share the state with other users.
 
-#### Parallelization: using multiprocessing/threading
+### Parallelization: using multiprocessing/threading
 Using multiprocessing/threading under the simulation to help with visualization under the simulation.
 ### Bugs
 - No known bugs
