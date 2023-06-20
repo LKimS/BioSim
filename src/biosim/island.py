@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Implements of Island class.
+The Island class
 """
 
 import numpy as np
@@ -22,6 +22,7 @@ class Island:
     def __init__(self, input_island_map, random_seed=0):
         """
         Class constructor for island.
+
         Parameters
         ----------
         input_island_map : str

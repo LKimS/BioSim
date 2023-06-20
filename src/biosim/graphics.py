@@ -20,7 +20,7 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: gif
 
 class Graphics:
     """
-    Visualization of island
+    Visualization of island geography and animal populations.
     """
 
 
@@ -54,15 +54,6 @@ class Graphics:
         :img_years: Years between visualizations saved to files (default: `vis_years`)
         :type img_years: int
 
-        .. note::
-           * This module requires the program ``ffmpeg`` or ``convert``
-             available from `<https://ffmpeg.org>` and `<https://imagemagick.org>`.
-           * You can also install ``ffmpeg`` using ``conda install ffmpeg``
-           * You need to set the  :const:`_FFMPEG_BINARY` and :const:`_CONVERT_BINARY`
-             constants below to the command required to invoke the programs
-           * You need to set the :const:`_DEFAULT_FILEBASE` constant below to the
-             directory and file-name start you want to use for the graphics output
-             files.
 
         """
 
