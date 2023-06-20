@@ -375,10 +375,12 @@ class Carnivore(Animal):
     def feeding(self, sorted_lowest_fitness_herbivore):
         """
         Feeding method for predators, carnivores.
-        Carnivore tries to kill, with a probability, the weakest herbivore until
-        it has eaten the amount of fodder it can eat. After eating one animal it
-        gains weight and the fitness is updated. If an animal is killed, the
-        object gets
+
+        - Carnivore tries to kill, with a probability, the weakest herbivore until it has eaten enough.
+        - After eating one animal it gains weight and the fitness is updated.
+        - If an animal is killed, the object variable "alive" is set to False.
+        - Carnivore continues to kill until it has tried to kill all Herbivores in the cell.
+
 
         Parameters
         ----------
