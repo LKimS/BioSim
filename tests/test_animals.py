@@ -212,9 +212,6 @@ def test_procreation_prob(animal):
     assert stats.binom_test(num_babies, num_trials, probability_of_procreation) > .01
 
 
-
-
-
 @pytest.mark.parametrize("species, age_change, weight", [["Herbivore", 5, 20],
                                                          ["Herbivore", 0, 1],
                                                          ["Herbivore", 150, 2000],
@@ -471,6 +468,3 @@ def test_carn_eat_prob_fitness():
         carn.feeding([herb])
 
     assert herb.alive is True
-
-
-
