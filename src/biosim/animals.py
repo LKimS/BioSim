@@ -374,14 +374,16 @@ class Carnivore(Animal):
 
     def feeding(self, sorted_lowest_fitness_herbivore):
         """
-        Carnivore kills the weakest herbivore until it has eaten the amount of fodder it can eat.
+        Feeding method for predators, carnivores.
+        Carnivore tries to kill, with a probability, the weakest herbivore until
+        it has eaten the amount of fodder it can eat. After eating one animal it
+        gains weight and the fitness is updated. If an animal is killed, the
+        object gets
 
         Parameters
         ----------
-        self : class
         sorted_lowest_fitness_herbivore : list
             List of herbivores sorted by lowest fitness.
-
         """
         delta_phi_max = self.params["DeltaPhiMax"]
         amount_eaten = 0
