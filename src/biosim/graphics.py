@@ -18,7 +18,8 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: gif
 
 class Graphics:
     """
-    Visualization of island geography and animal populations.
+    Graphics class for BioSim used data from the island class to create
+    visualizations of the island and it's inhabitants.
     """
 
     # Default values for visualization parameters
@@ -40,7 +41,7 @@ class Graphics:
     def __init__(self, img_dir=None, img_name=None, img_fmt=None, img_years=None, vis_years=0,
                  ymax_animals=1200, cmax_animals=None, hist_specs=None):
         """
-        Initialization up a new visualization object.
+        Initialization of a new visualization object.
 
         :param img_dir: directory for image files; no images if None
         :type img_dir: str

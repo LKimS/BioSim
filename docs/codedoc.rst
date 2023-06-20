@@ -7,7 +7,7 @@ The simulation is run by the BioSim- and Graphics-class.
 BioSim simulates the ecosystem on the Island, Graphics visualizes the data from the simulation.
 If you run the simulation once, you simulate one year.
 
-BioSim
+BioSim class
 +++++++
 BioSim class is the top-level interface to BioSim package. It implements a complete simulation
 of the ecosystem. Choose between multiple different parameters to adjust your simulation and preferred output.
@@ -15,7 +15,7 @@ of the ecosystem. Choose between multiple different parameters to adjust your si
 .. autoclass:: biosim.simulation.BioSim
     :inherited-members:
 
-Graphics
+Graphics class
 ++++++++
 Graphics provides graphics support for BioSim.
 This module was inspired by RandVis package by Hans Ekkehard Plesser
@@ -29,33 +29,60 @@ This module was inspired by RandVis package by Hans Ekkehard Plesser
 .. autoclass:: biosim.graphics.Graphics
     :inherited-members:
 
-Island
+Island class
 ----------
 
 .. automodule:: biosim.island
     :inherited-members:
 
-Cell
+Cell class
 ----------
-Hei hei
+Each cell in the Cell class are bits of the Island, together they make up the Island.
+Structure of the cell class is shown below. Water, Dessert, Lowland and Highland are
+using the Cell class as a master class. All cells points to the same main class, Cell.
+
+
+.. figure:: ../docs/figures/diagram_cell_class.png
+    :width: 800
+    :align: left
+    :alt: diagram_cell_class.png
+
+
+Water class
++++++
 
 .. autoclass:: biosim.cell.Water
     :inherited-members:
 
+Desert class
++++++++
+
 .. autoclass:: biosim.cell.Desert
     :inherited-members:
+
+Lowland class
++++++++
 
 .. autoclass:: biosim.cell.Lowland
     :inherited-members:
 
+Highland class
+++++++++
+
 .. autoclass:: biosim.cell.Highland
     :inherited-members:
 
-Animals
+Animals class
 ----------
+
+Herbivore class
+++++++++++++++++
 
 .. autoclass:: biosim.animals.Herbivore
     :inherited-members:
+
+Carnivore class
++++++++++++++++
 
 .. autoclass:: biosim.animals.Carnivore
     :inherited-members:

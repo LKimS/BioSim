@@ -16,7 +16,7 @@ class Cell:
 
     def __init__(self, location):
         """
-        Initializes the cell with location.
+        Initializes the Cell class. A class without animals.
 
         Parameters
         ----------
@@ -82,7 +82,7 @@ class Cell_with_animals(Cell):
 
     def __init__(self, location):
         """
-        Initializes the cell with animals.
+        Initializes the Cell_with_animals class. A class with animals.
 
         Parameters
         ----------
@@ -159,11 +159,12 @@ class Cell_with_animals(Cell):
 
     def remove_animal(self, animal):
         """
-        Removes an animal from the cell
+        If method is called with an animal object, it is removed from the cell.
+
         Parameters
         ----------
-        animal
-
+        animal : object
+            Animal object.
         """
         animal_species = animal.species
         self.fauna[animal_species].remove(animal)
@@ -180,7 +181,6 @@ class Cell_with_animals(Cell):
         self.fauna["Herbivore"].sort(key=lambda animal: animal.fitness, reverse=descending)
 
     # Annual cycle methods
-
     def add_newborns(self):
         """
         Check if any animals will give birth, and adds newborns to the cell.
@@ -196,11 +196,9 @@ class Cell_with_animals(Cell):
 
     def feed_animals(self):
         """
-        If there is any pray in the cell, preditors will eat.
-        Parameters
-        ----------
-        self
-
+        Feeding method for predators, Carnivores, in a cell. A random Carnivore eats the
+        Herbivores with the lowest fitness first. Method calls the feeding method in the
+        Carnivore class. And removes dead animals from the cell.
         """
         # skip if there is no herbivores in the cell
         if self.count_herbivore > 0:
@@ -215,14 +213,14 @@ class Cell_with_animals(Cell):
 
     def moving_animals_list(self):
         """
-        Returns a list of animals that will move in end of year.
-        Parameters
-        ----------
-        self
+        Method for moving animals from one cell to another.
+        The method checks if any animals will migrate, and returns a list with the object that will move.
 
         Returns
         -------
-        list
+        list : list of tuples
+            List of tuples with animal object, old location and new location.
+
         """
         moving_animals = []
         for animal in self.animals:
@@ -234,23 +232,23 @@ class Cell_with_animals(Cell):
 
     def reset_fodder(self):
         """
-        Want to pass reset_fodder in this class due to no fodder.
-
+        Method for resetting fodder in the cell. This class has no fodder, so the method is empty.
         """
-        # this cell has no fodder
+        # this class has no fodder
         pass
 
     def _get_random_neighboring_cell(self, location):
         """
         Returns a random neighboring cell.
+
         Parameters
         ----------
-        self
-        location
+        location : tuple
 
         Returns
         -------
-        tuple
+        new location : tuple
+            Tuple with new coordinates.
         """
         new_location = []
 
@@ -273,6 +271,7 @@ class Cell_with_animals(Cell):
     def loss_of_weight(self):
         """
         Reduces weight of all animals in the cell.
+        Calls the loss_of_weight() method in the animal class.
         """
         for animal in self.animals:
             animal.loss_of_weight()
@@ -292,9 +291,6 @@ class Cell_with_animals(Cell):
     def count_herbivore(self):
         """
         Returns the number of herbivores in the cell.
-        Parameters
-        ----------
-        self
 
         Returns
         -------
@@ -306,9 +302,6 @@ class Cell_with_animals(Cell):
     def count_carnivore(self):
         """
         Returns the number of carnivores in the cell.
-        Parameters
-        ----------
-        self
 
         Returns
         -------
@@ -320,6 +313,7 @@ class Cell_with_animals(Cell):
 class Cell_with_fodder(Cell_with_animals):
     """
     Cell characteristics with fodder for vegetarian animals
+    This is a subclass of Cell_with_animals.
     """
     f_max = None
 
@@ -329,10 +323,16 @@ class Cell_with_fodder(Cell_with_animals):
     def set_parameters(cls, new_parameters):
         """
         Set the default parameters for the cell
+
         Parameters
         ----------
-        new_parameters
+        new_parameters : dict
+            Dictionary with new parameters
 
+        Raises
+        ------
+        ValueError
+            If the parameter is not valid
         """
         for key in new_parameters:
             if key not in (cls.default_parameters.keys()):
@@ -346,29 +346,28 @@ class Cell_with_fodder(Cell_with_animals):
     @classmethod
     def get_parameters(cls):
         """
-        Get the default parameters for the cell
-        :return: dict
+        Get the actual parameters for the cell.
+        Collects the parameter form the class and returns f_max.
         """
         return {'f_max': cls.f_max}
 
     def __init__(self, location):
         """
-        Initialize the cell
+        Initialize the Cell_with_fodder class. A class with fodder and animals.
+
         Parameters
         ----------
-        location
-
+        location : tuple
+            Tuple with coordinates for the cell.
         """
         super().__init__(location)
         self.fodder = self.f_max
 
     def feed_animals(self):
         """
-        Feed all vegetarian animals in the cell, and reset the fodder.
-        Parameters
-        ----------
-        self
-
+        Feed all vegetarian animals, Herbivores, in the cell.
+        Animals with the highest fitness eats first.
+        Methods calls the feeding method in the Herbivore class.
         """
         self._sort_herbivore_after_fitness()
         for animal in self.fauna["Herbivore"]:
@@ -379,22 +378,17 @@ class Cell_with_fodder(Cell_with_animals):
 
         super().feed_animals()
 
-        self.reset_fodder()
-
     def reset_fodder(self):
         """
-        Reset the fodder in the cell to the maximum value.
-        Parameters
-        ----------
-        self
-
+        Reset the fodder in the cell to the maximum value. This method is called at the end of each year.
         """
         self.fodder = self.f_max
 
 
 class Water(Cell):
     """
-    Cell characteristics with no fodder and no animals
+    Water is a subclass of Cell. And in this class there is no fodder and no animals.
+    This class is not habitable.
     """
     type = "Water"
     color = (0.13, 0.00, 1.00)
@@ -402,7 +396,7 @@ class Water(Cell):
 
 class Desert(Cell_with_animals):
     """
-    Cell characteristics with animals and no fodder.
+    Dessert is a subclass of Cell_with_animals. In this class animals can move, and predators can eat.
     """
     type = "Desert"
     color = (1.00, 1.00, 0.40)
@@ -410,7 +404,7 @@ class Desert(Cell_with_animals):
 
 class Lowland(Cell_with_fodder):
     """
-    Cell characteristics with animals and large amount of fodder.
+    Lowland is a subclass of Cell_with_fodder. Lowland has a large amount of fodder, and all animals will thrive.
     """
     type = "Lowland"
     f_max = 800
@@ -420,7 +414,8 @@ class Lowland(Cell_with_fodder):
 
 class Highland(Cell_with_fodder):
     """
-    Cell characteristics with animals and limited amount of fodder.
+    Highland is a subclass of Cell_with_fodder. Highland has a limited amount of fodder, and Herbivores will
+    struggle to find food. Predators can live on their prey until there is no Herbivores left.
     """
     type = "Highland"
     f_max = 300

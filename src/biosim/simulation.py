@@ -40,7 +40,7 @@ class BioSim:
                  img_years=None, img_dir=None, img_base=None, img_fmt='png',
                  log_file=None):
         """
-        __init__ method initializes the BioSim class with the following parameters:
+        Initializes the BioSim class with the following parameters:
 
         Parameters
         ----------
