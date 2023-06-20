@@ -100,6 +100,8 @@ class BioSim:
 
         - `img_dir` and `img_base` must either be both None or both strings.
         """
+
+        self.final_year = None
         self.current_year = 0
 
         if island_map is None:

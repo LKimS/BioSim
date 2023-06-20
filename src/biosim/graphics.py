@@ -1,5 +1,3 @@
-
-
 import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
@@ -22,7 +20,6 @@ class Graphics:
     """
     Visualization of island
     """
-
 
     # Default values for visualization parameters
     default_ymax_animals = 30000
