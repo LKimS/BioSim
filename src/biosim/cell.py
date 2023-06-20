@@ -7,8 +7,8 @@ import random
 
 class Cell:
     """
-    Class for a cell in the island
-
+    Cell characteristics for cells without animals.
+    The cell can have a type, color and if it is habitable or not.
     """
     type = None
     color = None
@@ -16,23 +16,28 @@ class Cell:
 
     def __init__(self, location):
         """
-        Initializes the cell
+        Initializes the cell with location.
+
         Parameters
         ----------
-        location
+        location : tuple
+            Location of the cell
         """
         self.location = location
 
     def add_animal_from_dict(self, animal_info):
         """
-        Adds an animal to specified cell from a dictionary
+        Raises an error if animal is added to a cell that is not habitable.
 
         Parameters
         ----------
-        animal_info
+        animal_info : dict
+            Dictionary with information about the animal
 
-        Returns
+        Raises
         -------
+        ValueError
+            If animal species is invalid
 
         """
         raise ValueError(f"Cannot add animal to {type(self)} cell at loc: {self.location}")
@@ -40,30 +45,29 @@ class Cell:
     @classmethod
     def set_parameters(cls, params):
         """
-        Sets parameters for the cell
+        Raises an error if this class has no changeable parameters.
 
         Parameters
         ----------
-        params
+        params : dict
+            Dictionary with parameters
 
-        Returns
+        Raises
         -------
-        ValueError if cell has no changeable parameters
+        ValueError
+            If this class has no changeable parameters
         """
         raise ValueError(f"{type(cls)} cell has no changeable parameters")
 
     @property
     def is_habitable(self):
         """
-        Checks if cell is habitable
-
-        Parameters
-        ----------
-        self
+        Checks if cell is habitable.
 
         Returns
         -------
-        bool
+        bool: True if habitable, False if not
+
 
         """
         return self._habitable
@@ -71,17 +75,19 @@ class Cell:
 
 class Cell_with_animals(Cell):
     """
-    Cell characteristics for animals
+    Cell characteristics for cells with animals.
+    This is a subclass of Cell.
     """
     _habitable = True
 
     def __init__(self, location):
         """
-        Initializes the cell with animals
+        Initializes the cell with animals.
 
         Parameters
         ----------
-        location
+        location : tuple
+            Location of the cell
         """
         super().__init__(location)
         self.fauna = {'Herbivore': [], 'Carnivore': []}
@@ -100,17 +106,18 @@ class Cell_with_animals(Cell):
     # General methods
     def add_animal_from_dict(self, animal_info):
         """
-        Adds new animal with information to an animal-object.
+        If the animal dictionary keys is valid, it creates an animal object and adds it to the cell.
+        Raises an error if animal dictionary keys has invalid type of species, age or weight.
 
         Parameters
         ----------
-        self
-        animal_info
+        animal_info : dict
+            Dictionary with information about the animal.
 
-        Returns
+        Raises
         -------
-        ValueError if animal species is invalid
-
+        ValueError
+            Animal species, age or weight is invalid.
         """
 
         valid_keys = ["species", "age", "weight"]
@@ -130,15 +137,18 @@ class Cell_with_animals(Cell):
 
     def add_animal_object(self, animal):
         """
-        Adds an animal object to the cell
+        If an animal object is valid, it is added to the cell.
+        Raises an error if object has invalid species.
+
         Parameters
         ----------
-        self
-        animal
+        animal : object
+            Animal object.
 
-        Returns
+        Raises
         -------
-        ValueError if animal species is invalid
+        ValueError
+            Invalid animal species.
         """
         new_animal_species = animal.species
 
@@ -173,13 +183,9 @@ class Cell_with_animals(Cell):
 
     def add_newborns(self):
         """
-        Adds newborns to the cell if there are any.
-
-        Parameters
-        ----------
-        self
-        animal_list
-
+        Check if any animals will give birth, and adds newborns to the cell.
+        The method sends the number of animals in the cell to the procreation method,
+        and it returns a newborn object.
         """
 
         for species, animal_list in self.fauna.items():
@@ -273,12 +279,13 @@ class Cell_with_animals(Cell):
 
     def animal_death(self):
         """
-        Removes dead animals from the cell
+        Checks if any animals will die in the cell, and removes them from the cell.
+        Uses the death method in the animal class.
         """
         for species, animal_list in self.fauna.items():
             for animal in animal_list:
                 animal.death()
-
+            # Remove dead animals
             self.fauna[species] = [animal for animal in animal_list if animal.alive]
 
     @property

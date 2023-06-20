@@ -201,6 +201,10 @@ class Island:
         population : list
             List of dictionaries with animals location and information.
 
+        Raises
+        ------
+        ValueError
+            If location does not exist on island.
         """
         for item in population:
             loc = item["loc"]
