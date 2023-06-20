@@ -1,7 +1,7 @@
 from biosim.simulation import BioSim
 
 
-sim = BioSim().load_simulation('test.pkl')
+sim = BioSim()._load_simulation('test.pkl')
 
 ini_carns = [{'loc': (3, 2),
               'pop': [{'species': 'Carnivore',

@@ -16,4 +16,4 @@ sim = BioSim()
 sim.add_population(population=ini_herbs)
 sim.simulate(100)
 
-sim.save_simulation('test.pkl')
+sim._save_simulation('test.pkl')

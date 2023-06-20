@@ -47,7 +47,7 @@ if __name__ == '__main__':
                            'weight': 20}
                           for _ in range(40)]}]
 
-    sim = BioSim(ini_pop=ini_herbs, island_map=geogr, vis_years=1)
+    sim = BioSim(ini_pop=ini_herbs, island_map=geogr, vis_years=1, log_file="log")
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
     sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,
@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
     sim.simulate(num_years=100)
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=300)
+    sim.simulate(num_years=100)
 
 
     end = time.perf_counter()

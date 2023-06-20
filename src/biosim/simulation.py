@@ -106,12 +106,13 @@ class BioSim:
 
         if island_map is None:
             island_map = self._default_map
+            print('Using default map')
 
         self.island = Island(island_map, seed)
 
         if ini_pop is not None:
             self.island.add_population(ini_pop)
-        self.pop_history = {'Herbivore': [], 'Carnivore': []}
+        self.pop_history = {'Herbivore': {}, 'Carnivore': {}}
 
         if vis_years <= 0 and type(vis_years) != int:
             raise ValueError('vis_years must be a positive integer')
@@ -215,47 +216,58 @@ class BioSim:
 
         self.final_year = self.current_year + num_years
 
-        if self.current_year != 0:
-            self.current_year += 1
 
         if self.vis_years != 0:
             self.graphics.setup(self.island.map_processed, self.final_year)
 
-        while self.current_year <= self.final_year:
+        self.update_island_data()
+
+
+        self.update_history_data()
+
+        self.update_graphics()
+
+        while self.current_year < self.final_year:
+
             print(f"\rSimulating... year: {self.current_year} out of {self.final_year}", flush=True, end='')
             self.island.yearly_island_cycle()
+            self.current_year += 1
             self.update_history_data()
 
-            if self.vis_years != 0 and self.current_year % self.vis_years == 0:
-                self.graphics.update(self.current_year,
-                                     herbivore_population=self.island.pop['Herbivore'],
-                                     carnivore_population=self.island.pop['Carnivore'],
-                                     herbivore_dict_map=self.island.pop_cell['Herbivore'],
-                                     carnivore_dict_map=self.island.pop_cell['Carnivore'],
-                                     herbivore_age_list=self.island.specs['Herbivore']['age'],
-                                     carnivore_age_list=self.island.specs['Carnivore']['age'],
-                                     herbivore_weight_list=self.island.specs['Herbivore']['weight'],
-                                     carnivore_weight_list=self.island.specs['Carnivore']['weight'],
-                                     herbivore_fitness_list=self.island.specs['Herbivore']['fitness'],
-                                     carnivore_fitness_list=self.island.specs['Carnivore']['fitness'])
-
-            self.current_year += 1
-
-        # Subtract one year to get the last year of the simulation
-        self.current_year -= 1
+            self.update_graphics()
         print()
 
         if self.log_file is not None:
             print(f"Saving log file to {self.log_file}")
             self.save_log_file()
 
+
+    def update_graphics(self):
+        if self.vis_years != 0 and self.current_year % self.vis_years == 0:
+            self.graphics.update(self.current_year,
+                                 herbivore_population=self.island.pop['Herbivore'],
+                                 carnivore_population=self.island.pop['Carnivore'],
+                                 herbivore_dict_map=self.island.pop_in_cell['Herbivore'],
+                                 carnivore_dict_map=self.island.pop_in_cell['Carnivore'],
+                                 herbivore_age_list=self.island.specs['Herbivore']['age'],
+                                 carnivore_age_list=self.island.specs['Carnivore']['age'],
+                                 herbivore_weight_list=self.island.specs['Herbivore']['weight'],
+                                 carnivore_weight_list=self.island.specs['Carnivore']['weight'],
+                                 herbivore_fitness_list=self.island.specs['Herbivore']['fitness'],
+                                 carnivore_fitness_list=self.island.specs['Carnivore']['fitness'])
     def update_history_data(self):
         """
         Updates history data for visualization.
         """
 
-        self.pop_history['Herbivore'].append(self.island.pop['Herbivore'])
-        self.pop_history['Carnivore'].append(self.island.pop['Carnivore'])
+        self.pop_history['Herbivore'][self.current_year] =  self.island.pop['Herbivore']
+        self.pop_history['Carnivore'][self.current_year] = self.island.pop['Carnivore']
+
+    def update_island_data(self):
+        for loc, cell in self.island.habital_map.items():
+            self.island.update_data(loc, cell)
+        self.island.collect_data()
+
 
     def add_population(self, population):
         """
@@ -290,10 +302,10 @@ class BioSim:
         -------
         .. code:: python
 
-            herbivore,carnivore
-            150,50
-            200,40
-            300,30
+            year,Herbivore,Carnivore
+            0,150,50
+            1,200,40
+            2,300,30
 
         """
         if self.log_file is None:
@@ -304,12 +316,15 @@ class BioSim:
 
         with open(self.log_file, "w") as file:
             writer = csv.writer(file)
+            header = ["year"] + list(self.pop_history.keys())
+            writer.writerow(header)
 
-            writer.writerow(self.pop_history.keys())
+            for year in range(self.current_year + 1):
+                row = [year] + [self.pop_history[species][year] for species in self.pop_history.keys()]
+                writer.writerow(row)
 
-            writer.writerows(zip(*self.pop_history.values()))
 
-    def save_simulation(self, file_name):
+    def _save_simulation(self, file_name):
         """
         Save the simulation to a file.
 
@@ -324,7 +339,7 @@ class BioSim:
             pickle.dump(self, file)
 
     @staticmethod
-    def load_simulation(file_name):
+    def _load_simulation(file_name):
         """
         Load a simulation from a file.
 
@@ -355,10 +370,12 @@ class BioSim:
 
         """
         num_animal = 0
-        for species, pop_history in self.pop_history.items():
-            if pop_history == []:
-                continue
-            num_animal += pop_history[-1]
+
+        self.update_island_data()
+        self.update_history_data()
+
+        for pop_history in self.pop_history.values():
+            num_animal += pop_history[self.current_year]
 
         return num_animal
 
@@ -373,8 +390,11 @@ class BioSim:
             Number of animals per species in island, as dictionary.
         """
         #If population is None, return zero. If not None, return last population history
-        current_pop = {species: (pop_history[-1] if pop_history != [] else 0) for species, pop_history in
-                       self.pop_history.items()}
+
+        self.update_island_data()
+        self.update_history_data()
+
+        current_pop = {species: pop_history[self.current_year] for species, pop_history in self.pop_history.items()}
         return current_pop
 
     def make_movie(self, movie_fmt='mp4'):

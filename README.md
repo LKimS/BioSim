@@ -86,6 +86,14 @@ Includes the following keys:
         - weight: The weight of the animal. Must be a positive integer.
   
 
+## Roadmap
+### Ideas
+- Tracking single animal
+- Track center of population
+- Serialisation: using pickle
+- Parallelization: using multiprocessing/threading
+### Bugs
+- Biosim object does not update the information before the simulation is called.
 ## License
 
 ## Contact
