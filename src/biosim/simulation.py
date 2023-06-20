@@ -110,7 +110,7 @@ class BioSim:
 
         if ini_pop is not None:
             self.island.add_population(ini_pop)
-        self.pop_history = {'Herbivore': [], 'Carnivore': []}
+        self.pop_history = {'Herbivore': {}, 'Carnivore': {}}
 
         if vis_years <= 0 and type(vis_years) != int:
             raise ValueError('vis_years must be a positive integer')
@@ -214,47 +214,58 @@ class BioSim:
 
         self.final_year = self.current_year + num_years
 
-        if self.current_year != 0:
-            self.current_year += 1
 
         if self.vis_years != 0:
             self.graphics.setup(self.island.map_processed, self.final_year)
 
-        while self.current_year <= self.final_year:
+        self.update_island_data()
+
+
+        self.update_history_data()
+
+        self.update_graphics()
+
+        while self.current_year < self.final_year:
+
             print(f"\rSimulating... year: {self.current_year} out of {self.final_year}", flush=True, end='')
             self.island.yearly_island_cycle()
+            self.current_year += 1
             self.update_history_data()
 
-            if self.vis_years != 0 and self.current_year % self.vis_years == 0:
-                self.graphics.update(self.current_year,
-                                     herbivore_population=self.island.pop['Herbivore'],
-                                     carnivore_population=self.island.pop['Carnivore'],
-                                     herbivore_dict_map=self.island.pop_cell['Herbivore'],
-                                     carnivore_dict_map=self.island.pop_cell['Carnivore'],
-                                     herbivore_age_list=self.island.specs['Herbivore']['age'],
-                                     carnivore_age_list=self.island.specs['Carnivore']['age'],
-                                     herbivore_weight_list=self.island.specs['Herbivore']['weight'],
-                                     carnivore_weight_list=self.island.specs['Carnivore']['weight'],
-                                     herbivore_fitness_list=self.island.specs['Herbivore']['fitness'],
-                                     carnivore_fitness_list=self.island.specs['Carnivore']['fitness'])
-
-            self.current_year += 1
-
-        # Subtract one year to get the last year of the simulation
-        self.current_year -= 1
+            self.update_graphics()
         print()
 
         if self.log_file is not None:
             print(f"Saving log file to {self.log_file}")
             self.save_log_file()
 
+
+    def update_graphics(self):
+        if self.vis_years != 0 and self.current_year % self.vis_years == 0:
+            self.graphics.update(self.current_year,
+                                 herbivore_population=self.island.pop['Herbivore'],
+                                 carnivore_population=self.island.pop['Carnivore'],
+                                 herbivore_dict_map=self.island.pop_in_cell['Herbivore'],
+                                 carnivore_dict_map=self.island.pop_in_cell['Carnivore'],
+                                 herbivore_age_list=self.island.specs['Herbivore']['age'],
+                                 carnivore_age_list=self.island.specs['Carnivore']['age'],
+                                 herbivore_weight_list=self.island.specs['Herbivore']['weight'],
+                                 carnivore_weight_list=self.island.specs['Carnivore']['weight'],
+                                 herbivore_fitness_list=self.island.specs['Herbivore']['fitness'],
+                                 carnivore_fitness_list=self.island.specs['Carnivore']['fitness'])
     def update_history_data(self):
         """
         Updates history data for visualization.
         """
 
-        self.pop_history['Herbivore'].append(self.island.pop['Herbivore'])
-        self.pop_history['Carnivore'].append(self.island.pop['Carnivore'])
+        self.pop_history['Herbivore'][self.current_year] =  self.island.pop['Herbivore']
+        self.pop_history['Carnivore'][self.current_year] = self.island.pop['Carnivore']
+
+    def update_island_data(self):
+        for loc, cell in self.island.habital_map.items():
+            self.island.update_data(loc, cell)
+        self.island.collect_data()
+
 
     def add_population(self, population):
         """

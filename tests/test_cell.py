@@ -275,7 +275,7 @@ def test_fodder_reset(cell_with_animals):
     old_fodder = cell.fodder
     cell.feed_animals()
 
-    assert cell.fodder == old_fodder
+    assert cell.fodder == old_fodder - herb.params['F']
 
 def test_herb_full(reset_cell_defaults, mocker):
     """Test that the method is called the right number of times."""

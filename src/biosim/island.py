@@ -39,7 +39,7 @@ class Island:
         self.habital_map = self._get_map_with_animals()
         self.bitmap = self.create_colormap(self.map_processed)
 
-        self.pop_cell = {'Herbivore': {}, 'Carnivore': {}}
+        self.pop_in_cell = {'Herbivore': {}, 'Carnivore': {}}
         self.pop = {'Herbivore': 0, 'Carnivore': 0}
 
         self.specs = {'Herbivore': {'weight': [], 'age': [], 'fitness': []},
@@ -253,7 +253,7 @@ class Island:
                       'Carnivore': {'weight': [], 'age': [], 'fitness': []}}
 
         for loc, cell in self.habital_map.items():
-            self.update_data(loc, cell)
+
             cell.add_newborns()
             cell.feed_animals()
             migrating_animals.extend(cell.moving_animals_list())
@@ -261,6 +261,7 @@ class Island:
             cell.loss_of_weight()
             cell.animal_death()
             cell.reset_fodder()
+            self.update_data(loc, cell)
         self._move_all_animals(migrating_animals)
         self.collect_data()
 
@@ -275,8 +276,8 @@ class Island:
         cell
 
         """
-        self.pop_cell['Herbivore'][loc] = cell.count_herbivore
-        self.pop_cell['Carnivore'][loc] = cell.count_carnivore
+        self.pop_in_cell['Herbivore'][loc] = cell.count_herbivore
+        self.pop_in_cell['Carnivore'][loc] = cell.count_carnivore
 
         for animal in cell.animals:
             self.specs[animal.species]['age'].append(animal.age)
@@ -287,5 +288,5 @@ class Island:
         """
         Summarizes number of animals of each species on the island.
         """
-        self.pop['Herbivore'] = sum(self.pop_cell['Herbivore'].values())
-        self.pop['Carnivore'] = sum(self.pop_cell['Carnivore'].values())
+        self.pop['Herbivore'] = sum(self.pop_in_cell['Herbivore'].values())
+        self.pop['Carnivore'] = sum(self.pop_in_cell['Carnivore'].values())

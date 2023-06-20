@@ -294,7 +294,8 @@ def test_yearly_cycle(mocker):
               "c_loss_of_weight": Carnivore.loss_of_weight.call_count,
               "c_death": Carnivore.death.call_count}
 
-    expect = {"h_calc_fit": 4,
+    # Manually counted method calls:
+    expect = {"h_calc_fit": 5,
                "h_procreation": 2,
                "h_feeding": 2,
                "h_migrate": 2,
