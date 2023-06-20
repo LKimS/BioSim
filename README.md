@@ -59,19 +59,25 @@ sim.simulate(num_years=100)
 sim.make_movie()
 ```
 
+
 First you import the BioSim class from the simulation module. 
 Then you create a string that represents the map of the island. 
-The map is a grid of cells, where each cell is either water (W), desert (D), lowland (L) or highland (H). 
-The map is surrounded by water. The map is given as a string, where each line represents a row of cells. 
+The map is a grid of cells, where each cell is either water (W), desert (D), 
+lowland (L) or highland (H) and has to be surrounded by water. All the lines in this string has to be the same length.
+
+
 The upper left corner of the map has coordinates (0, 0). 
 Coordiantes (1,0) is the cell below (0, 0) and (0, 1) is the cell to the right of (0, 0).
-The map string is given as a parameter to the BioSim class. 
-To add animals to the simulation, you create a list of dictionaries as shown above. 
-Create an instance of the BioSim class and use the add_population method to add the animals to the simulation.
+
+To create an instance of BioSim, you need to give the map string as a parameter. 
+You can either add animals to the simulation by giving the ini_pop parameter to the BioSim class,
+or you can add animals to the simulation later by using the add_population method.
+These two methods of adding animals take in a list of dictionaries as a parameter, as shown above.
+
 The simulation is run by calling the simulate method, which will create a live visualization of the simulation.
 The simulation can be run for a given number of years by giving the num_years parameter to the simulate method.
 After which you can eiter add more animals to the simulation and continue the simulation or stop. 
-If you choose to give a img_dir parameter to the BioSim class, 
+If you choose to give an img_dir parameter to the BioSim class, 
 then the simulation will save images of the simulation to the given directory. If you call the make_movie method, 
 then the images will be combined into a video. Here is a picture of live visualization of the simulation:
 
@@ -97,9 +103,14 @@ Includes the following keys:
 ## Roadmap
 ### Futher development
 - Tracking single animal
-- Track center of population
-- Serialisation: using pickle
-- Parallelization: using multiprocessing/threading
+- Track center of population 
+#### Serialisation: using pickle
+Saving and loading the BioSim instance to/from file using pickle. 
+This will allow the user to save the state of the simulation and continue it later, 
+or share the state with other users.
+
+#### Parallelization: using multiprocessing/threading
+Using multiprocessing/threading under the simulation to help with visualization under the simulation.
 ### Bugs
 - No known bugs
 
