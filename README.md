@@ -1,7 +1,15 @@
 # BioSim: Modelling the ecosystem of Rossumøya
 
-## About The Project
+## Background
+The Environmental Protection Agency of Pylandia (EPAP)
+established research groups to develop a simulation of
+the population dynamics of Rossumøya. The long term goal
+is to use the simulation to preserve Rossumøya as a nature
+park for further generations.
 
+## Project mandate
+Create a simulation of Rossumøya with animals living
+and migration on the island through generations.
 
 ## Prerequisites
 To use this software you need to have `Python 3.11` and `The Python Standard library`.

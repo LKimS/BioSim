@@ -1,5 +1,9 @@
 Further Development
 ===================
+- Tracking single animal
+- Track center of population
+- Serialisation: using pickle
+- Parallelization: using multiprocessing/threading
 
 With this project we have created an simple simulation for the island. The
 project opens up for further development where additional variables can be
