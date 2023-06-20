@@ -76,7 +76,7 @@ class Graphics:
         # check if cmax_animals is a dictionary with valid keys
         if cmax_animals is not None:
             animals_species = list(self.default_cmax_animals.keys())
-            self.cmax_animals = {}
+            self.cmax_animals = self.default_cmax_animals.copy()
             for key in cmax_animals:
                 if key not in animals_species:
                     raise ValueError(f'Invalid key in cmax_animals: \
