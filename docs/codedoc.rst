@@ -8,7 +8,7 @@ BioSim simulates the ecosystem on the Island, Graphics visualizes the data from 
 If you run the simulation once, you simulate one year.
 
 BioSim class
-+++++++
+++++++++++++
 BioSim class is the top-level interface to BioSim package. It implements a complete simulation
 of the ecosystem. Choose between multiple different parameters to adjust your simulation and preferred output.
 
@@ -16,7 +16,7 @@ of the ecosystem. Choose between multiple different parameters to adjust your si
     :inherited-members:
 
 Graphics class
-++++++++
++++++++++++++++
 Graphics provides graphics support for BioSim.
 This module was inspired by RandVis package by Hans Ekkehard Plesser
 
@@ -30,7 +30,7 @@ This module was inspired by RandVis package by Hans Ekkehard Plesser
     :inherited-members:
 
 Island class
-----------
+------------
 
 .. automodule:: biosim.island
     :inherited-members:
@@ -49,31 +49,31 @@ using the Cell class as a master class. All cells points to the same main class,
 
 
 Water class
-+++++
++++++++++++
 
 .. autoclass:: biosim.cell.Water
     :inherited-members:
 
 Desert class
-+++++++
+++++++++++++
 
 .. autoclass:: biosim.cell.Desert
     :inherited-members:
 
 Lowland class
-+++++++
+++++++++++++++
 
 .. autoclass:: biosim.cell.Lowland
     :inherited-members:
 
 Highland class
-++++++++
++++++++++++++++
 
 .. autoclass:: biosim.cell.Highland
     :inherited-members:
 
 Animals class
-----------
+--------------
 
 Herbivore class
 ++++++++++++++++

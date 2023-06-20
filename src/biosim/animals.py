@@ -67,7 +67,9 @@ class Animal:
 
     @classmethod
     def get_parameters(cls):
-        """Get parameter for the Animal.
+        """
+        Get parameter for the Animal.
+
         :return: dict
         """
         return cls.params
@@ -156,7 +158,31 @@ class Animal:
         return None
 
     def calc_fitness(self):
-        """Calculates the fitness of the animal."""
+        r"""
+        The overall condition of the animal is described by the fitness.
+        This method calculates the fitness of the animal.
+
+        Returns
+        -------
+        float
+            The fitness of the animal.
+
+
+        .. note::
+            Fitness is calculated by the following formula:
+
+            .. math::
+
+                \Phi =
+                \frac{1}{1+e^{\phi_{age} \cdot (age - a_{half})}}
+                \cdot
+                \frac{1}{1+e^{-\phi_{weight} \cdot (weight - w_{half})}}
+
+            Where :math:`\phi_{age}` and :math:`\phi_{weight}` are parameters given by the user.
+            :math:`a_{half}` and :math:`w_{half}` are parameters given by the user.
+            :math:`age` and :math:`weight` are the age and weight of the animal.
+            :math:`\phi` is the fitness of the animal.
+        """
         if self.weight <= 0:
             return 0
         else:
@@ -177,7 +203,9 @@ class Animal:
         self.fitness = self.calc_fitness()
 
     def aging(self):
-        """Animal ages by one year."""
+        """
+        Methods that ages animals by one year.
+        """
         self.age += 1
 
     def loss_of_weight(self):
@@ -187,12 +215,16 @@ class Animal:
 
     def death(self):
         """
-        Animals probability of death increases with low fitness.
+        Methods sets the animal to dead if the animals weight is below zero or
+        if the animal dies by a probability of death.
 
-        Parameters
-        ----------
-        self : class
+        Probability of death is given by the following formula:
 
+        .. math::
+            p_{death} = \omega \cdot (1 - \phi)
+
+        Where omega, :math:`\omega`, is a default parameter or given by the user.
+        Fitness, :math:`\phi`, is the fitness of the animal.
         """
         probability_of_death = self.params["omega"] * (1 - self.fitness)
         if self.weight <= 0:
@@ -231,7 +263,19 @@ class Herbivore(Animal):
 
     def feeding(self, fodder):
         """
-        Herbivore eats the amount of fodder given, or the maximum amount of fodder it can eat.
+        Feeding method for planteating animals, herbivores. Herbivore eats the amount
+        of fodder given, or the maximum amount of fodder it can eat. After eating the animal
+        gains weight and the fitness is updated.
+
+        Parameters
+        ----------
+        fodder : float
+            The amount of fodder available to the animal.
+
+        Returns
+        -------
+        amount_eaten : float
+            The amount of fodder eaten by the animal.
         """
         if fodder < self.params["F"]:
             amount_eaten = fodder
