@@ -300,10 +300,10 @@ class BioSim:
         -------
         .. code:: python
 
-            herbivore,carnivore
-            150,50
-            200,40
-            300,30
+            year,Herbivore,Carnivore
+            0,150,50
+            1,200,40
+            2,300,30
 
         """
         if self.log_file is None:
@@ -314,10 +314,13 @@ class BioSim:
 
         with open(self.log_file, "w") as file:
             writer = csv.writer(file)
+            header = ["year"] + list(self.pop_history.keys())
+            writer.writerow(header)
 
-            writer.writerow(self.pop_history.keys())
+            for year in range(self.current_year + 1):
+                row = [year] + [self.pop_history[species][year] for species in self.pop_history.keys()]
+                writer.writerow(row)
 
-            writer.writerows(zip(*self.pop_history.values()))
 
     def _save_simulation(self, file_name):
         """
@@ -365,10 +368,12 @@ class BioSim:
 
         """
         num_animal = 0
-        for species, pop_history in self.pop_history.items():
-            if pop_history == []:
-                continue
-            num_animal += pop_history[-1]
+
+        self.update_island_data()
+        self.update_history_data()
+
+        for pop_history in self.pop_history.values():
+            num_animal += pop_history[self.current_year]
 
         return num_animal
 
@@ -383,8 +388,11 @@ class BioSim:
             Number of animals per species in island, as dictionary.
         """
         #If population is None, return zero. If not None, return last population history
-        current_pop = {species: (pop_history[-1] if pop_history != [] else 0) for species, pop_history in
-                       self.pop_history.items()}
+
+        self.update_island_data()
+        self.update_history_data()
+
+        current_pop = {species: pop_history[self.current_year] for species, pop_history in self.pop_history.items()}
         return current_pop
 
     def make_movie(self, movie_fmt='mp4'):
