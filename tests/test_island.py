@@ -16,7 +16,7 @@ Not implemented yet
 Requirements violated
 - raise value error
 '''
-
+from biosim.cell import Water, Desert, Highland, Lowland
 from biosim.island import Island
 import pytest
 
@@ -124,6 +124,42 @@ def test_add_population():
     island.add_population(ini_herbs)
 
     assert len(island.map[(2,2)].fauna["Herbivore"]) == number
+
+@pytest.mark.parametrize("letter", ["W", "L", "H", "D"])
+def test_add_cell(letter):
+    cells = {
+        'W': Water,
+        'L': Lowland,
+        'H': Highland,
+        'D': Desert
+    }
+
+    island = Island("WWW\nWLW\nWWW")
+
+    assert type(island._add_cell(letter, (2,2))) == cells[letter]
+
+def test_move_all_animals():
+    """Test that the move_all_animals moves all animals to the right cell"""
+    map_string = """\
+                    WWWW
+                    WLDW
+                    WWWW
+                    WWWW
+                    """
+    number = 5
+    island = Island(map_string)
+    ini_herbs = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(number)]}]
+
+    island.add_population(ini_herbs)
+
+    animals = island.map[(2,2)].animals
+
+    moving_list = [(animal, (2,2), (2,3)) for animal in animals]
+
+    island._move_all_animals(moving_list)
+
+    assert len(island.map[(2,3)].fauna["Herbivore"]) == number
+
 
 
 

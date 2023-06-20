@@ -7,6 +7,44 @@ import itertools
 from biosim.cell import Lowland, Highland, Desert, Water
 from biosim.animals import Herbivore, Carnivore, Animal
 
+@pytest.fixture
+def cell_with_animals():
+    """Create a cell with two animals."""
+    cell = Lowland((2, 2))
+
+    animal1 = {'species': 'Herbivore',
+               'age': 5,
+               'weight': 20}
+
+    animal1 = Herbivore(animal1, (2, 2))
+
+    cell.add_animal_object(animal1)
+
+    animal2 = {'species': 'Carnivore',
+               'age': 5,
+               'weight': 20}
+
+    animal2 = Carnivore(animal2, (2, 2))
+    cell.add_animal_object(animal2)
+
+    yield cell, animal1, animal2
+@pytest.fixture
+def reset_animal_defaults():
+    """Reset animal parameters to default values after each test."""
+    yield
+
+    # reset class parameters to default values after each test
+    Herbivore.set_parameters(Herbivore.default_parameters)
+    Carnivore.set_parameters(Carnivore.default_parameters)
+@pytest.fixture
+def reset_cell_defaults():
+    """Reset cell parameters to default values after each test."""
+    yield
+
+    # reset class parameters to default values after each test
+    Lowland.set_parameters(Lowland.default_parameters)
+    Highland.set_parameters(Highland.default_parameters)
+
 
 @pytest.mark.parametrize("cell_class", [Lowland, Highland, Desert, Water])
 def test_init(cell_class):
@@ -100,6 +138,7 @@ def test_add_animal_obj(cell_class):
 
     assert cell.animals[0] == animal
 
+
 def test_add_animal_obj_wrong_species():
     """Test that the animal is added to the cell."""
     animal_info = {'species': 'Herivore',
@@ -114,27 +153,7 @@ def test_add_animal_obj_wrong_species():
         cell.add_animal_object(animal)
 
 
-@pytest.fixture
-def cell_with_animals():
-    """Create a cell with two animals."""
-    cell = Lowland((2, 2))
 
-    animal1 = {'species': 'Herbivore',
-               'age': 5,
-               'weight': 20}
-
-    animal1 = Herbivore(animal1, (2, 2))
-
-    cell.add_animal_object(animal1)
-
-    animal2 = {'species': 'Herbivore',
-               'age': 5,
-               'weight': 20}
-
-    animal2 = Herbivore(animal2, (2, 2))
-    cell.add_animal_object(animal2)
-
-    yield cell, animal1, animal2
 
 
 def test_remove_animals(cell_with_animals):
@@ -201,6 +220,17 @@ def test_change_params_error(cell_class):
     with pytest.raises(ValueError):
         cell.set_parameters(new_params)
 
+@pytest.mark.parametrize("cell_class", [Lowland, Highland])
+def test_change_params(reset_cell_defaults, cell_class):
+    """Test that the method changes the parameters."""
+    cell = cell_class((2, 2))
+
+    new_params = {'f_max': 100}
+
+    cell.set_parameters(new_params)
+
+    assert cell.f_max == 100
+
 
 def test_add_newborns(cell_with_animals, mocker):
     """Test that the method is called the right number of times."""
@@ -212,6 +242,24 @@ def test_add_newborns(cell_with_animals, mocker):
 
     assert Animal.procreation.call_count == 2
 
+def test_add_newborns_list(cell_with_animals, reset_animal_defaults):
+    """
+    Test that newborn gets added to the cell.
+    """
+    Herbivore.set_parameters({'gamma': 100})  # Ensure that all herbivores procreate
+    animal = Herbivore({'species': 'Herbivore',
+                        'age': 5,
+                        'weight': 200}, (2, 2))
+
+    cell = Lowland((2, 2))
+
+    cell.add_animal_object(animal)
+
+    cell.add_newborns()
+
+    assert len(cell.animals) == 2
+
+
 def test_feed_animals_count(cell_with_animals, mocker):
     """Test that the method is called the right number of times."""
     mocker.spy(Herbivore, "feeding")
@@ -219,7 +267,44 @@ def test_feed_animals_count(cell_with_animals, mocker):
     cell, herb, carn = cell_with_animals
     cell.feed_animals()
 
-    assert Herbivore.feeding.call_count + Carnivore.feeding.call_count  == 2
+    assert Herbivore.feeding.call_count + Carnivore.feeding.call_count == 2
+
+def test_fodder_reset(cell_with_animals):
+    """Test that the fodder is eaten."""
+    cell, herb, carn = cell_with_animals
+    old_fodder = cell.fodder
+    cell.feed_animals()
+
+    assert cell.fodder == old_fodder
+
+def test_herb_full(reset_cell_defaults, mocker):
+    """Test that the method is called the right number of times."""
+    cell = Lowland((2, 2))
+    eat = Herbivore.params['F']
+    eat_times = 3
+    cell.set_parameters({'f_max': eat*eat_times})
+    cell.reset_fodder()
+
+    mocker.spy(Herbivore, "feeding")
+
+    animals = [Herbivore({'species': 'Herbivore',
+                        'age': 5,
+                        'weight': 200}, (2, 2)) for _ in range(5)]
+
+    for animal in animals:
+        cell.add_animal_object(animal)
+
+    cell.feed_animals()
+
+    assert Herbivore.feeding.call_count == eat_times
+
+def test_count_carn(cell_with_animals):
+    """Test that the method is called the right number of times."""
+    cell, herb, carn = cell_with_animals
+    assert cell.count_carnivore == 1
+
+
+
 
 def test_moving_animals_list(cell_with_animals):
     """Test that the new location is in the list of possible locations."""
@@ -228,11 +313,9 @@ def test_moving_animals_list(cell_with_animals):
     for _ in range(100):
         list = cell.moving_animals_list()
 
-        for animal, loc , new_loc in list:
-            if new_loc not in ((1,2),(2,1),(2,3),(3,2)):
-                assert loc in ((1,2),(2,1),(2,3),(3,2))
-
-
+        for animal, loc, new_loc in list:
+            if new_loc not in ((1, 2), (2, 1), (2, 3), (3, 2)):
+                assert loc in ((1, 2), (2, 1), (2, 3), (3, 2))
 
 
 @pytest.fixture
@@ -242,6 +325,7 @@ def reset_fodder():
 
     Lowland.set_parameters({'f_max': 800})
     Highland.set_parameters({'f_max': 300})
+
 
 @pytest.mark.parametrize("cell_class", [Lowland, Highland])
 def test_set_parameters(reset_fodder, cell_class):
@@ -254,6 +338,8 @@ def test_set_parameters(reset_fodder, cell_class):
     cell.set_parameters(new_params)
 
     assert cell.get_parameters() == new_params
+
+
 @pytest.mark.parametrize("cell_class", [Lowland, Highland])
 def test_reset_fodder(reset_fodder, cell_class):
     cell = cell_class((2, 2))
@@ -264,6 +350,7 @@ def test_reset_fodder(reset_fodder, cell_class):
     cell.reset_fodder()
     assert cell.fodder == 1000
 
+
 def test_wrong_parameters(reset_fodder):
     """Test that the method raises an error."""
     cell = Lowland((2, 2))
@@ -272,6 +359,7 @@ def test_wrong_parameters(reset_fodder):
 
     with pytest.raises(ValueError):
         cell.set_parameters(new_params)
+
 
 def test_wrong_param_key(reset_fodder):
     """Test that the method raises an error."""
@@ -282,6 +370,7 @@ def test_wrong_param_key(reset_fodder):
     with pytest.raises(ValueError):
         cell.set_parameters(new_params)
 
+
 def test_age_animals_count(cell_with_animals, mocker):
     """Test that the method is called the right number of times."""
     mocker.spy(Animal, "aging")
@@ -289,6 +378,7 @@ def test_age_animals_count(cell_with_animals, mocker):
     cell.age_animals()
 
     assert Animal.aging.call_count == 2
+
 
 def test_loss_of_weight_count(cell_with_animals, mocker):
     """Test that the method is called the right number of times."""
@@ -298,6 +388,7 @@ def test_loss_of_weight_count(cell_with_animals, mocker):
 
     assert Animal.loss_of_weight.call_count == 2
 
+
 def test_animal_death_count(cell_with_animals, mocker):
     """Test that the method is called the right number of times."""
     mocker.spy(Animal, "death")
@@ -305,6 +396,3 @@ def test_animal_death_count(cell_with_animals, mocker):
     cell.animal_death()
 
     assert Animal.death.call_count == 2
-
-
-

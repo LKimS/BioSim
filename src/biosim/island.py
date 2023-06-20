@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Implements of Island class.
+The Island class
 """
 
 import numpy as np
@@ -11,21 +11,18 @@ import random
 from .cell import Water, Lowland, Highland, Desert
 
 
-
-
-
 class Island:
-
     """
     Island class. Superclass for all landscape types.
     """
 
     allowed_cells = ['W', 'L', 'H', 'D']
 
-#INIT METHOD
+    # INIT METHOD
     def __init__(self, input_island_map, random_seed=0):
         """
         Class constructor for island.
+
         Parameters
         ----------
         input_island_map : str
@@ -193,7 +190,6 @@ class Island:
 
             for animal_info in item['pop']:
                 self.map[loc].add_animal_from_dict(animal_info)
-
 
     def _move_all_animals(self, list_of_moving_animals):
         """
