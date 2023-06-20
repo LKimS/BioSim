@@ -372,7 +372,6 @@ class Cell_with_fodder(Cell_with_animals):
 
         super().feed_animals()
 
-        self.reset_fodder()
 
     def reset_fodder(self):
         """

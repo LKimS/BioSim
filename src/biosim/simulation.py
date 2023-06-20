@@ -104,6 +104,7 @@ class BioSim:
 
         if island_map is None:
             island_map = self._default_map
+            print('Using default map')
 
         self.island = Island(island_map, seed)
 
@@ -307,7 +308,7 @@ class BioSim:
 
             writer.writerows(zip(*self.pop_history.values()))
 
-    def save_simulation(self, file_name):
+    def _save_simulation(self, file_name):
         """
         Save the simulation to a file.
 
@@ -322,7 +323,7 @@ class BioSim:
             pickle.dump(self, file)
 
     @staticmethod
-    def load_simulation(file_name):
+    def _load_simulation(file_name):
         """
         Load a simulation from a file.
 

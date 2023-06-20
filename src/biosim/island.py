@@ -248,7 +248,6 @@ class Island:
         Runs the yearly cycle for the island
         """
         migrating_animals = []
-
         self.specs = {'Herbivore': {'weight': [], 'age': [], 'fitness': []},
                       'Carnivore': {'weight': [], 'age': [], 'fitness': []}}
 
