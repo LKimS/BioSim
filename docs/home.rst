@@ -15,8 +15,6 @@ Project mandate
 Create a simulation of Rossumøya with animals living
 and migration on the island through generations.
 
-For more information follow the link:
-
 Development Process
 -------------------
 The development process started with understanding all
@@ -37,7 +35,7 @@ up progression each day. Two days we got really stuck on some bugs that
 where hard to find.
 
 At our first profiling, we saw that our code were preforming very well.
-By only looping on habitat areas at the island we made the code faster,
+By only looping on habitable areas at the island we made the code faster,
 the drawback is that the code don't work with animals that lives in the ocean.
 Another smart idea was to only let the animals eat if they have something
 to eat in that cell. This makes the code a lot faster!

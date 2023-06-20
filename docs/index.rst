@@ -60,8 +60,6 @@ For more information about the documentation, see the following sections bellow.
 
    codedoc
 
-   examples
-
    further
 
 

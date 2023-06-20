@@ -47,8 +47,8 @@ using the Cell class as a master class. All cells points to the same main class,
 
 
 .. figure:: ../docs/figures/diagram_cell_class.png
-    :width: 800
-    :align: left
+    :width: 400
+    :align: center
     :alt: diagram_cell_class.png
 
 
