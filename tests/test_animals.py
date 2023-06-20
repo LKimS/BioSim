@@ -1,6 +1,5 @@
 import pytest
 from pytest import approx
-import random
 import math
 from math import exp
 import scipy.stats as stats
@@ -215,7 +214,15 @@ def test_procreation_prob(animal):
     assert stats.binom_test(num_babies, num_trials, probability_of_procreation) > .01
 
 
-@pytest.mark.parametrize("animal", [(Herbivore({"species": "Herbivore", "age": 0, "weight": 1000}, (1, 2))), (Carnivore({"species": "Carnivore", "age": 0, "weight": 1000}, (1, 2)))])
+@pytest.mark.parametrize("animal",
+                         [(Herbivore({"species": "Herbivore",
+                                      "age": 0,
+                                      "weight": 1000},
+                                     (1, 2))),
+                          (Carnivore({"species": "Carnivore",
+                                      "age": 0,
+                                      "weight": 1000},
+                                     (1, 2)))])
 
 def test_procreation_weight(reset_default_params, animal):
 
