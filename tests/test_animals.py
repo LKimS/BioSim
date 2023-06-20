@@ -139,12 +139,18 @@ def test_bad_params(reset_default_params, species, change):
 
 
 @pytest.mark.parametrize("loc, species, age, weight, new_params",
-                         [[(1, 2), "Herbivore", 5, 20, {"phi_age": 0.6, "phi_weight": 0.1, "a_half": 40, "w_half": 10}],
-                          [(2, 1), "Herbivore", 0, 1, {"phi_age": 0.1, "phi_weight": 0.6, "a_half": 20, "w_half": 15}],
+                         [[(1, 2), "Herbivore", 5, 20,
+                           {"phi_age": 0.6, "phi_weight": 0.1, "a_half": 40, "w_half": 10}],
+                          [(2, 1), "Herbivore", 0, 1,
+                           {"phi_age": 0.1, "phi_weight": 0.6, "a_half": 20, "w_half": 15}],
                           [(10, 3), "Herbivore", 150, 2000,
                            {"phi_age": 0.1, "phi_weight": 0.6, "a_half": 20, "w_half": 15}],
-                          [(1, 2), "Carnivore", 5, 20, {"phi_age": 0.3, "phi_weight": 0.4, "a_half": 60, "w_half": 20}],
-                          [(2, 1), "Carnivore", 0, 1, {"phi_age": 0.4, "phi_weight": 0.3, "a_half": 30, "w_half": 10}]])
+                          [(1, 2), "Carnivore", 5, 20,
+                           {"phi_age": 0.3, "phi_weight": 0.4, "a_half": 60, "w_half": 20}],
+                          [(2, 1), "Carnivore", 0, 1,
+                           {"phi_age": 0.4, "phi_weight": 0.3, "a_half": 30, "w_half": 10}]])
+
+
 def test_init(reset_default_params, loc, species, age, weight, new_params):
     """Test that animal is created with correct attributes"""
     stat = {'species': species,
@@ -167,10 +173,10 @@ def test_init(reset_default_params, loc, species, age, weight, new_params):
               "newborn": animal.newborn
               }
 
-    fitness_age_param = 1 / (1 + math.exp(new_params["phi_age"] * (age - new_params["a_half"])))
-    fitness_weight_param = 1 / (1 + math.exp(-new_params["phi_weight"] * (weight - new_params["w_half"])))
+    age_param = 1 / (1 + math.exp(new_params["phi_age"] * (age - new_params["a_half"])))
+    weight_param = 1 / (1 + math.exp(-new_params["phi_weight"] * (weight - new_params["w_half"])))
 
-    fitness = fitness_age_param * fitness_weight_param
+    fitness = age_param * weight_param
 
     expected = {'loc': loc,
                 'species': species,
@@ -183,8 +189,9 @@ def test_init(reset_default_params, loc, species, age, weight, new_params):
     assert result == approx(expected)
 
 
-@pytest.mark.parametrize("animal", [(Herbivore({"species": "Herbivore", "age": 0, "weight": 1000}, (1, 2))),
-                                    (Carnivore({"species": "Carnivore", "age": 0, "weight": 1000}, (1, 2)))])
+@pytest.mark.parametrize("animal",
+                         [(Herbivore({"species": "Herbivore", "age": 0, "weight": 1000}, (1, 2))),
+                          (Carnivore({"species": "Carnivore", "age": 0, "weight": 1000}, (1, 2)))])
 # Set high weight and low age to get high probability of procreation
 def test_procreation_age(animal):
     """Test that procreation works"""
@@ -208,34 +215,35 @@ def test_procreation_prob(animal):
     assert stats.binom_test(num_babies, num_trials, probability_of_procreation) > .01
 
 
-# @pytest.mark.parametrize("animal", [(Herbivore({"species": "Herbivore", "age": 0, "weight": 1000}, (1, 2))),
-#                                    (Carnivore({"species": "Carnivore", "age": 0, "weight": 1000}, (1, 2)))])
-# def test_procreation_weight(reset_default_params, animal):
-#    # TODO
-#    """
-#    Test that the weight of newborns follow the lognormal distribution with a kstest. This is not implimented yet.
-#    """
-#    animal.set_parameters({"gamma": 1}) # ensure that procreation is called
-#
-#    num_trials = 1000
-#    animal_in_cell = 2
-#    weights = []
-#    for i in range(num_trials):
-#        baby = animal.procreation(animal_in_cell)
-#        if baby is not None:
-#            weights.append(baby.weight)
-#        animal.weight = 1000
-#
-#    w_birth = animal.params["w_birth"]
-#    sigma_birth = animal.params["sigma_birth"]
-#
-#
-#    mu = math.log(sigma_birth**2/(math.sqrt(w_birth**2 + sigma_birth**2)))
-#    s = math.sqrt(math.log(1 + sigma_birth**2/w_birth**2))
-#
-#    ks, p_value = stats.kstest(weights, stats.lognorm.cdf, args=(s, 0, math.exp(mu)))
-#
-#    #assert p_value > 0.01
+@pytest.mark.parametrize("animal", [(Herbivore({"species": "Herbivore", "age": 0, "weight": 1000}, (1, 2))), (Carnivore({"species": "Carnivore", "age": 0, "weight": 1000}, (1, 2)))])
+
+def test_procreation_weight(reset_default_params, animal):
+
+    """
+    Test that the weight of newborns follow the lognormal distribution with a kstest.
+    This is not implimented yet.
+    """
+    animal.set_parameters({"gamma": 1}) # ensure that procreation is called
+
+    num_trials = 1000
+    animal_in_cell = 2
+    weights = []
+    for i in range(num_trials):
+        baby = animal.procreation(animal_in_cell)
+        if baby is not None:
+            weights.append(baby.weight)
+        animal.weight = 1000
+
+    w_birth = animal.params["w_birth"]
+    sigma_birth = animal.params["sigma_birth"]
+
+
+    mu = math.log(sigma_birth**2/(math.sqrt(w_birth**2 + sigma_birth**2)))
+    s = math.sqrt(math.log(1 + sigma_birth**2/w_birth**2))
+
+    ks, p_value = stats.kstest(weights, stats.lognorm.cdf, args=(s, 0, math.exp(mu)))
+
+    #assert p_value > 0.01
 
 
 @pytest.mark.parametrize("species, age_change, weight", [["Herbivore", 5, 20],

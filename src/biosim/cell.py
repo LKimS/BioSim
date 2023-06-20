@@ -398,7 +398,8 @@ class Water(Cell):
 
 class Desert(Cell_with_animals):
     """
-    Dessert is a subclass of Cell_with_animals. In this class animals can move, and predators can eat.
+    Dessert is a subclass of Cell_with_animals.
+    In this class animals can move, and predators can eat.
     """
     type = "Desert"
     color = (1.00, 1.00, 0.40)
@@ -406,7 +407,8 @@ class Desert(Cell_with_animals):
 
 class Lowland(Cell_with_fodder):
     """
-    Lowland is a subclass of Cell_with_fodder. Lowland has a large amount of fodder, and all animals will thrive.
+    Lowland is a subclass of Cell_with_fodder.
+    Lowland has a large amount of fodder, and all animals will thrive.
     """
     type = "Lowland"
     f_max = 800
@@ -416,8 +418,9 @@ class Lowland(Cell_with_fodder):
 
 class Highland(Cell_with_fodder):
     """
-    Highland is a subclass of Cell_with_fodder. Highland has a limited amount of fodder, and Herbivores will
-    struggle to find food. Predators can live on their prey until there is no Herbivores left.
+    Highland is a subclass of Cell_with_fodder.
+    Highland has a limited amount of fodder, and Herbivores will struggle to find food.
+    Predators can live on their prey until there is no Herbivores left.
     """
     type = "Highland"
     f_max = 300

@@ -304,7 +304,8 @@ class Island:
 
     def update_data(self, loc, cell):
         """
-        Refreshes gathered data in each cell on the island. Method is counting the species in one cell,
+        Refreshes gathered data in each cell on the island.
+        Method is counting the species in one cell,
         and gather their age, weight and fitness into lists.
 
         Parameters
