@@ -2,6 +2,7 @@ import pytest
 from pytest import approx
 import random
 import math
+from math import exp
 import scipy.stats as stats
 
 from biosim.animals import Herbivore, Carnivore
@@ -207,9 +208,9 @@ def test_procreation_prob(animal):
     assert stats.binom_test(num_babies, num_trials, probability_of_procreation) > .01
 
 
-#@pytest.mark.parametrize("animal", [(Herbivore({"species": "Herbivore", "age": 0, "weight": 1000}, (1, 2))),
+# @pytest.mark.parametrize("animal", [(Herbivore({"species": "Herbivore", "age": 0, "weight": 1000}, (1, 2))),
 #                                    (Carnivore({"species": "Carnivore", "age": 0, "weight": 1000}, (1, 2)))])
-#def test_procreation_weight(reset_default_params, animal):
+# def test_procreation_weight(reset_default_params, animal):
 #    # TODO
 #    """
 #    Test that the weight of newborns follow the lognormal distribution with a kstest. This is not implimented yet.
@@ -256,8 +257,8 @@ def test_calc_fitness(species, age_change, weight):
 
     animal.age = age_change
 
-    age_param = 1 / (1 + math.exp(animal.params["phi_age"] * (age_change-animal.params["a_half"])))
-    weight_param = 1/(1 +math.exp(-animal.params["phi_weight"] * (weight-animal.params["w_half"])))
+    age_param = 1 / (1 + exp(animal.params["phi_age"] * (age_change - animal.params["a_half"])))
+    weight_param = 1 / (1 + exp(-animal.params["phi_weight"] * (weight - animal.params["w_half"])))
 
     fitness = age_param * weight_param
     assert animal.calc_fitness() == approx(fitness)
@@ -340,7 +341,7 @@ def test_death_weight():
     animal.weight = 0
     animal.death()
 
-    assert animal.alive == False
+    assert animal.alive is False
 
 
 @pytest.mark.parametrize("animal", [std_herb(), std_carn()])
@@ -381,7 +382,7 @@ def test_feeding_herb(animal, fodder):
 def test_feeding_herb_weight(animal, fodder):
     """Test that feeding increases weight correctly"""
     old_weight = animal.weight
-    amount_eaten = animal.feeding(fodder)
+    animal.feeding(fodder)
 
     if fodder < animal.params["F"]:
         assert animal.weight == approx(animal.params["beta"] * fodder + old_weight)
@@ -405,7 +406,7 @@ def test_herb_death_eaten(reset_default_params):
 
 
 @pytest.mark.parametrize("herb_weight", [1, 10, 15, 25, 40, 50, 60])
-def test_herb_death_eaten(reset_default_params, herb_weight):
+def test_carn_weight_increase_eaten(reset_default_params, herb_weight):
     """Test that carnivore gains the right amount of weight when eating"""
 
     herb_stat = {'species': "Herbivore",
@@ -424,7 +425,9 @@ def test_herb_death_eaten(reset_default_params, herb_weight):
 
     carn.feeding([herb])
 
-    assert carn.weight == approx(min(herb.weight, carn.params["F"])*carn.params["beta"]+old_weight)
+    expected = approx(min(herb.weight, carn.params["F"]) * carn.params["beta"] + old_weight)
+
+    assert carn.weight == expected
 
 
 def test_carn_eat_full(reset_default_params):
@@ -490,4 +493,4 @@ def test_carn_eat_prob_fitness():
     for i in range(10000):
         carn.feeding([herb])
 
-    assert herb.alive == True
+    assert herb.alive is True

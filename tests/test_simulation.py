@@ -52,7 +52,7 @@ def test_create_object():
     """
     Test that the object is created
     """
-    sim = BioSim()
+    BioSim()
 
 
 def test_map():

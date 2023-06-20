@@ -26,7 +26,7 @@ def test_create_island():
     map_string = """\
                     W
                     """
-    island = Island(map_string)
+    Island(map_string)
 
 
 @pytest.mark.parametrize("letter", ["W", "L", "H", "D"])
@@ -55,7 +55,7 @@ def test_wrong_boundry(letter):
                     """
 
     with pytest.raises(ValueError):
-        island = Island(map_string)
+        Island(map_string)
 
 
 @pytest.mark.parametrize("letter", ["L", "H", "D"])
@@ -69,7 +69,7 @@ def test_wrong_boundry2(letter):
                     """
 
     with pytest.raises(ValueError):
-        island = Island(map_string)
+        Island(map_string)
 
 
 def test_wrong_character():
@@ -82,7 +82,7 @@ def test_wrong_character():
                     """
 
     with pytest.raises(ValueError):
-        island = Island(map_string)
+        Island(map_string)
 
 
 def test_wrong_length():
@@ -95,7 +95,7 @@ def test_wrong_length():
                     """
 
     with pytest.raises(ValueError):
-        island = Island(map_string)
+        Island(map_string)
 
 
 def test_correct_map():
