@@ -1,6 +1,7 @@
 from biosim.simulation import BioSim
 import pytest
 
+
 @pytest.mark.parametrize("species", ["Herbivore", "Carnivore"])
 def test_migration_integration(species):
     """Test migration integration test.
