@@ -65,5 +65,4 @@ if __name__ == '__main__':
         sim.set_landscape_parameters('H', {'f_max': 300})
         sim.simulate(num_years=50)
 
-
     plt.savefig('Example2.pdf')
