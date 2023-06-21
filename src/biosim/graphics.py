@@ -567,7 +567,11 @@ class Graphics:
         :type herbivore_age_list: list
         :param carnivore_age_list: List of carnivore ages
         :type carnivore_age_list: list
+
+
         """
+        counts_age_herb_norm = []
+        counts_age_carn_norm = []
 
         if herbivore_age_list is not None and herbivore_age_list != []:
             hist_counts_age_herbivore, _ = np.histogram(herbivore_age_list,
@@ -575,11 +579,10 @@ class Graphics:
                                                         density=True)
             counts_age_herb_norm = hist_counts_age_herbivore / np.sum(hist_counts_age_herbivore)
 
-            # Update y-axis
-            if self._frame_ctr % self.hist_update_y_ax == 0:
-                y_max = max(self.age_y_max, max(counts_age_herb_norm) * 1.1)
-                self._hist_age_ax.set_ylim([0, y_max])
+            self.age_herbivore_hist.set_data(counts_age_herb_norm)
 
+        if herbivore_age_list == []:
+            counts_age_herb_norm = np.zeros(len(self.age_bin_edges) - 1)
             self.age_herbivore_hist.set_data(counts_age_herb_norm)
 
         if carnivore_age_list is not None and carnivore_age_list != []:
@@ -588,12 +591,19 @@ class Graphics:
                                                    density=True)
             counts_age_carn_norm = hist_counts_age_carn / np.sum(hist_counts_age_carn)
 
-            if self._frame_ctr % self.hist_update_y_ax == 0:
-                y_max = max(self.age_y_max, max(counts_age_herb_norm) * 1.1,
-                            max(counts_age_carn_norm) * 1.1)
-                self._hist_age_ax.set_ylim([0, y_max])
-
             self.age_carnivore_hist.set_data(counts_age_carn_norm)
+
+        if carnivore_age_list == []:
+            counts_age_carn_norm = np.zeros(len(self.age_bin_edges) - 1)
+            self.age_carnivore_hist.set_data(counts_age_carn_norm)
+
+        if self._frame_ctr % self.hist_update_y_ax == 0:
+            y_data = np.concatenate((counts_age_herb_norm, counts_age_carn_norm))
+            if y_data.size != 0:
+                y_max = max(self.age_y_max, np.max(y_data) * 1.1)
+                self._hist_age_ax.set_ylim([0, y_max])
+            else:
+                self._hist_age_ax.set_ylim([0, self.age_y_max])
 
     def _update_histogram_weight(self, herbivore_weight_list, carnivore_weight_list):
         """
@@ -605,16 +615,19 @@ class Graphics:
         :type carnivore_weight_list: list
         """
 
+        counts_weight_herb_norm = []
+        counts_weight_carn_norm = []
+
         if herbivore_weight_list is not None and herbivore_weight_list != []:
             counts_weight_herb, _ = np.histogram(herbivore_weight_list,
                                                  bins=self.weight_bin_edges,
                                                  density=True)
             counts_weight_herb_norm = counts_weight_herb / np.sum(counts_weight_herb)
 
-            if self._frame_ctr % self.hist_update_y_ax == 0:
-                y_max = max(self.weight_y_max, max(counts_weight_herb_norm) * 1.1)
-                self._hist_weight_ax.set_ylim([0, y_max])
+            self.weight_herbivore_hist.set_data(counts_weight_herb_norm)
 
+        if herbivore_weight_list == []:
+            counts_weight_herb_norm = np.zeros(len(self.weight_bin_edges) - 1)
             self.weight_herbivore_hist.set_data(counts_weight_herb_norm)
 
         if carnivore_weight_list is not None and carnivore_weight_list != []:
@@ -623,13 +636,19 @@ class Graphics:
                                                  density=True)
             counts_weight_carn_norm = counts_weight_carn / np.sum(counts_weight_carn)
 
-            if self._frame_ctr % self.hist_update_y_ax == 0:
-                y_max = max(self.weight_y_max, max(counts_weight_herb_norm) * 1.1,
-                            max(counts_weight_carn_norm) * 1.1)
-
-                self._hist_weight_ax.set_ylim([0, y_max])
-
             self.weight_carnivore_hist.set_data(counts_weight_carn_norm)
+
+        if carnivore_weight_list == []:
+            counts_weight_carn_norm = np.zeros(len(self.weight_bin_edges) - 1)
+            self.weight_carnivore_hist.set_data(counts_weight_carn_norm)
+
+        if self._frame_ctr % self.hist_update_y_ax == 0:
+            y_data = np.concatenate((counts_weight_herb_norm, counts_weight_carn_norm))
+            if y_data.size != 0:
+                y_max = max(self.weight_y_max, np.max(y_data) * 1.1)
+                self._hist_weight_ax.set_ylim([0, y_max])
+            else:
+                self._hist_weight_ax.set_ylim([0, self.weight_y_max])
 
     def _update_histogram_fitness(self, herbivore_fitness_list, carnivore_fitness_list):
         """
@@ -644,7 +663,10 @@ class Graphics:
         :type herbivore_fitness_list: list
         :param carnivore_fitness_list: List of carnivore fitness
 
-"""
+        """
+
+        counts_fitness_herb_norm = []
+        counts_fitness_carn_norm = []
 
         if herbivore_fitness_list is not None and herbivore_fitness_list != []:
             counts_fitness_herb, _ = np.histogram(herbivore_fitness_list,
@@ -652,10 +674,10 @@ class Graphics:
                                                   density=True)
             counts_fitness_herb_norm = counts_fitness_herb / np.sum(counts_fitness_herb)
 
-            if self._frame_ctr % self.hist_update_y_ax == 0:
-                y_max = max(self.fitness_y_max, max(counts_fitness_herb_norm) * 1.1)
-                self._hist_fitness_ax.set_ylim([0, y_max])
+            self.fitness_herbivore_hist.set_data(counts_fitness_herb_norm)
 
+        if herbivore_fitness_list == []:
+            counts_fitness_herb_norm = np.zeros(len(self.fitness_bin_edges) - 1)
             self.fitness_herbivore_hist.set_data(counts_fitness_herb_norm)
 
         if carnivore_fitness_list is not None and carnivore_fitness_list != []:
@@ -664,13 +686,19 @@ class Graphics:
                                                   density=True)
             counts_fit_carn_norm = counts_fitness_carn / np.sum(counts_fitness_carn)
 
-            if self._frame_ctr % self.hist_update_y_ax == 0:
-                y_max = max(self.fitness_y_max,
-                            max(counts_fitness_herb_norm) * 1.1,
-                            max(counts_fit_carn_norm) * 1.1)
-                self._hist_fitness_ax.set_ylim([0, y_max])
-
             self.fitness_carnivore_hist.set_data(counts_fit_carn_norm)
+
+        if carnivore_fitness_list == []:
+            counts_fitness_carn_norm = np.zeros(len(self.fitness_bin_edges) - 1)
+            self.fitness_carnivore_hist.set_data(counts_fitness_carn_norm)
+
+        if self._frame_ctr % self.hist_update_y_ax == 0:
+            y_data = np.concatenate((counts_fitness_herb_norm, counts_fitness_carn_norm))
+            if y_data.size != 0:
+                y_max = max(self.fitness_y_max, np.max(y_data) * 1.1)
+                self._hist_fitness_ax.set_ylim([0, y_max])
+            else:
+                self._hist_fitness_ax.set_ylim([0, self.fitness_y_max])
 
     def _save_graphics(self, year):
         """Saves graphics to file if file name given.
