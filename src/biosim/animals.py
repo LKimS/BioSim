@@ -68,7 +68,7 @@ class Animal:
 
 
         """
-
+        # check for invalid parameters
         for key in new_parameters:
             if key not in cls.default_parameters.keys():
                 raise ValueError('Invalid parameter name: ' + key)
@@ -172,6 +172,7 @@ class Animal:
 
                 Source: https://en.wikipedia.org/wiki/Log-normal_distribution
         """
+        # Initialize variables
         self.newborn = None
         zeta = self.params["zeta"]
         w_birth = self.params["w_birth"]
@@ -179,16 +180,19 @@ class Animal:
         gamma = self.params["gamma"]
         xi = self.params["xi"]
 
+        # Calculate probability of procreation
         offspring_value = zeta * (w_birth + sigma_birth)
         if self.weight >= offspring_value:
             probability_of_procreation = min(1, gamma * self.fitness * animal_in_pos)
+
             if random.random() < probability_of_procreation:
-                # 'newborn log calc'
+                # Calculate weight of newborn
                 mu = math.log(w_birth ** 2 / (
                     math.sqrt(w_birth ** 2 + sigma_birth ** 2)))
                 sigma = math.sqrt(math.log(1 + (sigma_birth ** 2 / w_birth ** 2)))
                 newborn_weight = random.lognormvariate(mu, sigma)
 
+                # Check if parent has enough weight to give birth
                 parent_loss = xi * newborn_weight
                 if self.weight > parent_loss:
                     self.weight -= parent_loss
@@ -234,8 +238,7 @@ class Animal:
             a_half = self.params["a_half"]
             w_half = self.params["w_half"]
 
-            age_parameter = 1 / (1 + math.exp(
-                phi_age * (self.age - a_half)))
+            age_parameter = 1 / (1 + math.exp(phi_age * (self.age - a_half)))
             weight_parameter = 1 / (1 + math.exp(-phi_weight * (self.weight - w_half)))
             return age_parameter * weight_parameter
 
@@ -347,6 +350,7 @@ class Herbivore(Animal):
         else:
             amount_eaten = self.params["F"]
 
+        # Add weight and update fitness
         self.weight += (amount_eaten * self.params["beta"])
         self._update_fitness()
         return amount_eaten
@@ -383,6 +387,7 @@ class Carnivore(Animal):
         delta_phi_max = self.params["DeltaPhiMax"]
         amount_eaten = 0
 
+        # loop over all herbivores in the cell and eats them if the conditions are met.
         for herbivore in sorted_lowest_fitness_herbivore:
             if amount_eaten >= self.params["F"]:
                 break
