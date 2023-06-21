@@ -19,8 +19,6 @@ Project mandate
 Create a simulation of Rossumøya with animals living
 and migration on the island through generations.
 
-For more information follow the link:
-
 Development Process
 -------------------
 The development process started with understanding all

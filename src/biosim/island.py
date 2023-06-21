@@ -273,7 +273,7 @@ class Island:
         """
         Method runs through each cell on the island.
         For every year the method resets the data for statistics,
-        and puts in the data from the previous year.
+        and puts in the data from the current year.
 
         Yearly island cycle calling cell methods for:
 
@@ -311,7 +311,9 @@ class Island:
         Parameters
         ----------
         loc : tuple
+            Coordinates of the cell
         cell : object
+            Cell object
 
         """
         self.pop_in_cell['Herbivore'][loc] = cell.count_herbivore

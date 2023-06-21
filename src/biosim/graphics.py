@@ -260,7 +260,7 @@ class Graphics:
         else:
             raise ValueError('Unknown movie format: ' + movie_fmt)
 
-    def setup(self, geography, final_year, vis_years=1):
+    def setup(self, geography, final_year):
         """
         Prepare graphics with population history, histograms and heatmaps for the island.
 

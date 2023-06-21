@@ -214,7 +214,7 @@ class BioSim:
 
         :param num_years: number of simulation steps to execute
 
-        .. note:: Image files will be numbered consecutively.
+        .. note:: If image directory is given then image files will be numbered consecutively.
         """
 
         self.final_year = self.current_year + num_years
@@ -356,7 +356,16 @@ class BioSim:
 
     @property
     def year(self):
-        """Last year simulated."""
+        """
+        Last year simulated.
+
+        Return
+        -------
+        year : int
+            Last year simulated.
+
+        """
+
         return self.current_year
 
     @property

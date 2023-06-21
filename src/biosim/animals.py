@@ -131,6 +131,7 @@ class Animal:
         - The fitness of the parent is updated.
         - A newborn object is added to the list of newborns.
 
+
         Parameters
         ----------
         animal_in_pos : int
@@ -145,7 +146,7 @@ class Animal:
         .. note::
 
             - Relevant parameters are given in the table at the beginning of the
-            Animal class documentation.
+              Animal class documentation.
 
             The probability of procreation is given by the formula below.
 
