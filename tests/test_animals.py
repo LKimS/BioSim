@@ -198,6 +198,10 @@ def test_procreation_age(animal):
 
 @pytest.mark.parametrize("animal", [std_herb(), std_carn()])
 def test_procreation_prob(animal):
+    """
+    The outcome of procreation follows a binomial distribution. This test if the p-value of the binomial test is
+    larger than 0.01, which is the significance level.
+    """
     num_trials = 10000
     animal_in_cell = 2
     probability_of_procreation = min(1, animal.params["gamma"] * animal.fitness * animal_in_cell)

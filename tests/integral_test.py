@@ -32,14 +32,14 @@ def test_migration_integration(species):
 
     sim = BioSim(island_map=geography, seed=23456,
                  cmax_animals={"Herbivore": 1, 'Carnivore': 1},
-                 ymax_animals=100, vis_years=0)
+                 ymax_animals=100, vis_years=1, img_dir='pp')
     sim.set_animal_parameters(species, {'mu': 100000, 'eta': 0})  # Ensures that the animals move
 
     ini_pop = [{'loc': (10, 10),
                 'pop': [{'species': species,
                          'age': 5,
                          'weight': 20}
-                        for _ in range(100)]}]
+                        for _ in range(1000)]}]
 
     sim.add_population(population=ini_pop)
     map = sim.island.habital_map
