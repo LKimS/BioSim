@@ -79,7 +79,7 @@ The simulation can be run for a given number of years by giving the num_years pa
 After which you can eiter add more animals to the simulation and continue the simulation or stop. 
 If you choose to give an img_dir parameter to the BioSim class, 
 then the simulation will save images of the simulation to the given directory. If you call the make_movie method, 
-then the images will be combined into a video. Here is a picture of live visualization of the simulation:
+then the images will be combined into a video. Here is a live visualization of the simulation:
 
 <!-- <img src="docs/figures/live.png" alt="Logo" width="1120" height="630"> -->
 
