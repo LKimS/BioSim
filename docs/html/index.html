@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Biosim - A model of the ecosystem Rossumøya &mdash; biosim-u22-kim-mathias 23.June.2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Biosim - A model of the ecosystem Rossumøya" href="home.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="#" class="icon icon-home"> biosim-u22-kim-mathias
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="home.html">Biosim - A model of the ecosystem Rossumøya</a></li>
+<li class="toctree-l1"><a class="reference internal" href="codedoc.html">Code documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="further.html">Further Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">biosim-u22-kim-mathias</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Biosim - A model of the ecosystem Rossumøya</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="biosim-a-model-of-the-ecosystem-rossumoya">
+<h1>Biosim - A model of the ecosystem Rossumøya<a class="headerlink" href="#biosim-a-model-of-the-ecosystem-rossumoya" title="Permalink to this heading"></a></h1>
+<section id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this heading"></a></h2>
+<p>The Environmental Protection Agency of Pylandia (EPAP)
+established research groups to develop a simulation of
+the population dynamics of Rossumøya. The long term goal
+is to use the simulation to preserve Rossumøya as a nautre
+park for futher generations.</p>
+</section>
+<section id="project-mandate">
+<h2>Project mandate<a class="headerlink" href="#project-mandate" title="Permalink to this heading"></a></h2>
+<p>Create a simulation of Rossumøya with animals living
+and migration on the island through generations.</p>
+<p>For more information follow the link:</p>
+</section>
+<section id="development-process">
+<h2>Development Process<a class="headerlink" href="#development-process" title="Permalink to this heading"></a></h2>
+<p>The development process started with understanding all
+principles of animals lifecycle the island.
+All information where allocated to GitLab issueboard, and to
+a hierarchic map for our code. The code is driven by test-development
+and coding simultaneously.</p>
+<p>To get going quickly first step is to settle inputs and outputs from
+each level in the hierarchy. Second step is to make de code separate,
+and third step is to make the code work together. With more and more
+features the code gets more and more complex. At one point we
+saw a big performance gain by changing the code-structure. After reorganizing
+the code we saw a big performance gain.</p>
+<p>With following the milestones and using the issuebord we managed to keep
+up progression each day. Two days we got really stuck on some bugs that
+where hard to find.</p>
+<p>At our first profiling, we saw that our code were preforming very well.
+By only looping on habitat areas at the island we made the code faster,
+the drawback is that the code don’t work with animals that lives in the ocean.
+Another smart idea was to only let the animals eat if they have something
+to eat in that cell. This makes the code a lot faster!</p>
+<p>For more information about the documentation, see the following sections bellow.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="home.html">Biosim - A model of the ecosystem Rossumøya</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="home.html#background">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="home.html#project-mandate">Project mandate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="home.html#development-process">Development Process</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="codedoc.html">Code documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="codedoc.html#simulation">Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="codedoc.html#module-biosim.island">Island class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="codedoc.html#cell-class">Cell class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="codedoc.html#water-class">Water class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="codedoc.html#desert-class">Desert class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="codedoc.html#lowland-class">Lowland class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="codedoc.html#highland-class">Highland class</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="codedoc.html#animals-class">Animals class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#simulation-illustration">Simulation Illustration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#graphical-user-interface">Graphical User Interface</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="further.html">Further Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="further.html#climate-features">Climate features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="further.html#animal-features">Animal features</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="home.html" class="btn btn-neutral float-right" title="Biosim - A model of the ecosystem Rossumøya" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Kim Ly and Mathias Mollatt.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

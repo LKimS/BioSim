@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code documentation &mdash; biosim-u22-kim-mathias 23.June.2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Biosim - A model of the ecosystem Rossumøya" href="home.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> biosim-u22-kim-mathias
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="home.html">Biosim - A model of the ecosystem Rossumøya</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Code documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#simulation">Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-biosim.island">Island class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cell-class">Cell class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#water-class">Water class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#desert-class">Desert class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lowland-class">Lowland class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#highland-class">Highland class</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#animals-class">Animals class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="further.html">Further Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">biosim-u22-kim-mathias</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Code documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/codedoc.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="code-documentation">
+<h1>Code documentation<a class="headerlink" href="#code-documentation" title="Permalink to this heading"></a></h1>
+<section id="simulation">
+<h2>Simulation<a class="headerlink" href="#simulation" title="Permalink to this heading"></a></h2>
+<p>The simulation is run by the BioSim- and Graphics-class.
+BioSim simulates the ecosystem on the Island, Graphics visualizes the data from the simulation.
+If you run the simulation once, you simulate one year.</p>
+<p class="rubric">BioSim class</p>
+<p>BioSim class is the top-level interface to BioSim package. It implements a complete simulation
+of the ecosystem. Choose between multiple different parameters to adjust your simulation and preferred output.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="biosim.simulation.BioSim">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biosim.simulation.</span></span><span class="sig-name descname"><span class="pre">BioSim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">island_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ini_pop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">123</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vis_years</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax_animals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmax_animals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hist_specs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_years</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/simulation.html#BioSim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.simulation.BioSim" title="Permalink to this definition"></a></dt>
+<dd><p>BioSim class is the top-level interface to BioSim package. It implements a complete simulation
+of the ecosystem.
+Choose between multiple different parameters to adjust your simulation and preferred output.</p>
+<p>Initializes the BioSim class with the following parameters:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>island_map</strong> (<em>str</em>) – Multi-line string specifying island geography</p></li>
+<li><p><strong>ini_pop</strong> (<em>list</em>) – List of dictionaries specifying initial population</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Integer used as random number seed</p></li>
+<li><p><strong>vis_years</strong> (<em>int</em>) – Years between visualization updates (if 0, disable graphics)</p></li>
+<li><p><strong>ymax_animals</strong> (<em>int</em>) – Number specifying y-axis limit for graph showing animal numbers</p></li>
+<li><p><strong>cmax_animals</strong> (<em>dict</em>) – Color-scale limits for animal densities, see below</p></li>
+<li><p><strong>hist_specs</strong> (<em>dict</em>) – Specifications for histograms, see below</p></li>
+<li><p><strong>img_years</strong> (<em>int</em>) – Years between visualizations saved to files (default: <cite>vis_years</cite>)</p></li>
+<li><p><strong>img_dir</strong> (<em>str</em>) – Path to directory for figures</p></li>
+<li><p><strong>img_base</strong> (<em>str</em>) – Beginning of file name for figures</p></li>
+<li><p><strong>img_fmt</strong> (<em>str</em>) – File type for figures, e.g. ‘png’ or ‘pdf’</p></li>
+<li><p><strong>log_file</strong> (<em>str</em>) – If given, write animal counts to this file</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul>
+<li><p>If <cite>ymax_animals</cite> is None, the y-axis limit should be adjusted automatically.</p></li>
+<li><p>If <cite>cmax_animals</cite> is None, sensible, fixed default values should be used.</p></li>
+<li><p><cite>cmax_animals</cite> is a dict mapping species names to numbers, e.g.,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;Herbivore&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;Carnivore&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p><cite>hist_specs</cite> is a dictionary with one entry per property for which a histogram
+shall be shown. For each property, a dictionary providing the maximum value
+and the bin width must be given, e.g.,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+ <span class="s1">&#39;fitness&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>Permitted properties are ‘weight’, ‘age’, ‘fitness’.</p>
+</li>
+<li><p>If <cite>img_dir</cite> is None, no figures are written to file.</p></li>
+<li><p>Filenames are formed as</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Path</span><span class="p">(</span><span class="n">img_dir</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">img_base</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">img_number</span><span class="si">:</span><span class="s1">05d</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">img_fmt</span><span class="si">}</span><span class="s1">&#39;</span>
+</pre></div>
+</div>
+<p>where <cite>img_number</cite> are consecutive image numbers starting from 0.</p>
+</li>
+<li><p><cite>img_dir</cite> and <cite>img_base</cite> must either be both None or both strings.</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.simulation.BioSim.add_population">
+<span class="sig-name descname"><span class="pre">add_population</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/simulation.html#BioSim.add_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.simulation.BioSim.add_population" title="Permalink to this definition"></a></dt>
+<dd><p>Adds population on a location on the Island.
+Follow examples bellow for list-format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>population</strong> (<em>List of dictionaries</em>) – List with dictionary. Keys ‘loc’ and ‘pop’.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ini_herbs</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;loc&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+<span class="s1">&#39;pop&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;species&#39;</span><span class="p">:</span> <span class="s1">&#39;Herbivore&#39;</span><span class="p">,</span>
+<span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">}</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">150</span><span class="p">)]}]</span>
+</pre></div>
+</div>
+<p>Permitted keys within ‘pop’ are age, weight and species.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.simulation.BioSim.make_movie">
+<span class="sig-name descname"><span class="pre">make_movie</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">movie_fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mp4'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/simulation.html#BioSim.make_movie"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.simulation.BioSim.make_movie" title="Permalink to this definition"></a></dt>
+<dd><p>Create MPEG4 movie from visualization images saved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>movie_fmt</strong> (<em>mp4</em>) – Format of movie, defaults to ‘mp4’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.simulation.BioSim.num_animals">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_animals</span></span><a class="headerlink" href="#biosim.simulation.BioSim.num_animals" title="Permalink to this definition"></a></dt>
+<dd><p>Total number of animals on island.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num_animal</strong> – Number of animals on island</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.simulation.BioSim.num_animals_per_species">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_animals_per_species</span></span><a class="headerlink" href="#biosim.simulation.BioSim.num_animals_per_species" title="Permalink to this definition"></a></dt>
+<dd><p>Number of animals per species in island, as dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num_animals_per_species</strong> – Number of animals per species in island, as dictionary.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.simulation.BioSim.save_log_file">
+<span class="sig-name descname"><span class="pre">save_log_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/simulation.html#BioSim.save_log_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.simulation.BioSim.save_log_file" title="Permalink to this definition"></a></dt>
+<dd><p>Save population history as a csv file.</p>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">year</span><span class="p">,</span><span class="n">Herbivore</span><span class="p">,</span><span class="n">Carnivore</span>
+<span class="mi">0</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">50</span>
+<span class="mi">1</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">40</span>
+<span class="mi">2</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">30</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.simulation.BioSim.set_animal_parameters">
+<span class="sig-name descname"><span class="pre">set_animal_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/simulation.html#BioSim.set_animal_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.simulation.BioSim.set_animal_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Set parameters for animal species.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>species</strong> (<em>str</em>) – Name of species for which parameters shall be set.</p></li>
+<li><p><strong>new_parameters</strong> (<em>dict</em>) – New parameter values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If invalid parameter values are passed.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span><span class="o">.</span><span class="n">set_animal_parameters</span><span class="p">(</span><span class="s1">&#39;Carnivore&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a_half&#39;</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span>
+                                        <span class="s1">&#39;phi_age&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                                        <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+                                        <span class="s1">&#39;DeltaPhiMax&#39;</span><span class="p">:</span> <span class="mf">9.</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Parameters can be used to simulate sickness and changes in the animal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.simulation.BioSim.set_landscape_parameters">
+<span class="sig-name descname"><span class="pre">set_landscape_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">landscape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/simulation.html#BioSim.set_landscape_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.simulation.BioSim.set_landscape_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Set parameters for landscape type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>landscape</strong> (<em>str</em>) – Code letter for landscape</p></li>
+<li><p><strong>new_parameters</strong> (<em>dict</em>) – New parameter values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If invalid parameter values are passed.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span><span class="o">.</span><span class="n">set_landscape_parameters</span><span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;f_max&#39;</span><span class="p">:</span> <span class="mi">700</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Parameter ‘L’ is for Lowland,
+and by decreasing the f_max, the amount of fodder is decreased.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.simulation.BioSim.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_years</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/simulation.html#BioSim.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.simulation.BioSim.simulate" title="Permalink to this definition"></a></dt>
+<dd><p>Run simulation while visualizing the result. Look at __init__
+for information about the parameters and features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num_years</strong> – number of simulation steps to execute</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Image files will be numbered consecutively.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.simulation.BioSim.update_history_data">
+<span class="sig-name descname"><span class="pre">update_history_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/simulation.html#BioSim.update_history_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.simulation.BioSim.update_history_data" title="Permalink to this definition"></a></dt>
+<dd><p>Updates history data for visualization.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.simulation.BioSim.year">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">year</span></span><a class="headerlink" href="#biosim.simulation.BioSim.year" title="Permalink to this definition"></a></dt>
+<dd><p>Last year simulated.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p class="rubric">Graphics class</p>
+<p>Graphics provides graphics support for BioSim.
+This module was inspired by RandVis package by Hans Ekkehard Plesser</p>
+<ul class="simple">
+<li><p>This module requires the program <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> or <code class="docutils literal notranslate"><span class="pre">convert</span></code> available from <cite>&lt;https://ffmpeg.org&gt;</cite> and <cite>&lt;https://imagemagick.org&gt;</cite>.</p></li>
+<li><p>You can also install <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> using <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">ffmpeg</span></code></p></li>
+<li><p>You need to set the  <code class="xref py py-const docutils literal notranslate"><span class="pre">_FFMPEG_BINARY</span></code> and <code class="xref py py-const docutils literal notranslate"><span class="pre">_CONVERT_BINARY</span></code> constants below to the command required to invoke the programs</p></li>
+<li><p>You need to set the <code class="xref py py-const docutils literal notranslate"><span class="pre">_DEFAULT_FILEBASE</span></code> constant below to the directory and file-name start you want to use for the graphics output files.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="biosim.graphics.Graphics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biosim.graphics.</span></span><span class="sig-name descname"><span class="pre">Graphics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_years</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vis_years</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax_animals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmax_animals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hist_specs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/graphics.html#Graphics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.graphics.Graphics" title="Permalink to this definition"></a></dt>
+<dd><p>Graphics class for BioSim used data from the island class to create
+visualizations of the island and it’s inhabitants.</p>
+<p>Initialization of a new visualization object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img_dir</strong> (<em>str</em>) – directory for image files; no images if None</p></li>
+<li><p><strong>img_name</strong> (<em>str</em>) – beginning of name for image files</p></li>
+<li><p><strong>img_fmt</strong> (<em>str</em>) – image file format suffix</p></li>
+</ul>
+</dd>
+<dt class="field-even">Img_years<span class="colon">:</span></dt>
+<dd class="field-even"><p>Years between visualizations saved to files (default: <cite>vis_years</cite>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.graphics.Graphics.make_movie">
+<span class="sig-name descname"><span class="pre">make_movie</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">movie_fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/graphics.html#Graphics.make_movie"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.graphics.Graphics.make_movie" title="Permalink to this definition"></a></dt>
+<dd><p>Creates MPEG4 movie from visualization images saved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>movie_fmt</strong> (<em>str</em>) – Video format, either mp4 (default) or gif.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.graphics.Graphics.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geography</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vis_years</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/graphics.html#Graphics.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.graphics.Graphics.setup" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare graphics with population history, histograms and heatmaps for the island.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geography</strong> (<em>list</em>) – A list of lists containing the landscape. From Island.processed_map</p></li>
+<li><p><strong>final_year</strong> (<em>int</em>) – last time step to be visualised (upper limit of x-axis)</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Call this before calling <a class="reference internal" href="#biosim.graphics.Graphics.update" title="biosim.graphics.Graphics.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> for the first time after
+the final time step has changed.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.graphics.Graphics.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">herbivore_population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carnivore_population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">herbivore_dict_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carnivore_dict_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">herbivore_age_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carnivore_age_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">herbivore_weight_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carnivore_weight_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">herbivore_fitness_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carnivore_fitness_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/graphics.html#Graphics.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.graphics.Graphics.update" title="Permalink to this definition"></a></dt>
+<dd><p>Updates graphics with current data and save to file if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>year</strong> (<em>int</em>) – current year.</p></li>
+<li><p><strong>herbivore_population</strong> (<em>int</em>) – current herbivore population.</p></li>
+<li><p><strong>carnivore_population</strong> (<em>int</em>) – current carnivore population.</p></li>
+<li><p><strong>herbivore_dict_map</strong> (<em>dict</em>) – current herbivore population distribution.</p></li>
+<li><p><strong>carnivore_dict_map</strong> (<em>dict</em>) – current carnivore population distribution.</p></li>
+<li><p><strong>herbivore_age_list</strong> (<em>list</em>) – current herbivore age distribution.</p></li>
+<li><p><strong>carnivore_age_list</strong> (<em>list</em>) – current carnivore age distribution.</p></li>
+<li><p><strong>herbivore_weight_list</strong> (<em>list</em>) – current herbivore weight distribution.</p></li>
+<li><p><strong>carnivore_weight_list</strong> (<em>list</em>) – current carnivore weight distribution.</p></li>
+<li><p><strong>herbivore_fitness_list</strong> (<em>list</em>) – current herbivore fitness distribution.</p></li>
+<li><p><strong>carnivore_fitness_list</strong> (<em>list</em>) – current carnivore fitness distribution.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-biosim.island">
+<span id="island-class"></span><h2>Island class<a class="headerlink" href="#module-biosim.island" title="Permalink to this heading"></a></h2>
+<p>The Island class introduce the yearly cycle of the simulation by:</p>
+<ul class="simple">
+<li><p>Create a map of the island.</p></li>
+<li><p>Add animals to the map.</p></li>
+<li><p>Run through an early lifecycle.</p></li>
+<li><p>Gather data from one year, and store it for visualization.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="biosim.island.Island">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biosim.island.</span></span><span class="sig-name descname"><span class="pre">Island</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_island_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/island.html#Island"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.island.Island" title="Permalink to this definition"></a></dt>
+<dd><p>Class constructor for island.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_island_map</strong> (<em>str</em>) – Multi-line string with island geography</p></li>
+<li><p><strong>random_seed</strong> (<em>int</em>) – Integer used as random number seed.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.island.Island.add_population">
+<span class="sig-name descname"><span class="pre">add_population</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/island.html#Island.add_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.island.Island.add_population" title="Permalink to this definition"></a></dt>
+<dd><p>Adds animals to the map with a given location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>population</strong> (<em>list</em>) – List of dictionaries with animals location and information.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If location does not exist on island.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.island.Island.collect_data">
+<span class="sig-name descname"><span class="pre">collect_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/island.html#Island.collect_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.island.Island.collect_data" title="Permalink to this definition"></a></dt>
+<dd><p>Summarizes number of animals of each species on the island.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.island.Island.create_colormap">
+<span class="sig-name descname"><span class="pre">create_colormap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_processed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/island.html#Island.create_colormap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.island.Island.create_colormap" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a bitmap for plotting by using the length and width of the processed map.
+Returns a color map of the island shown in visualization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>map_processed</strong> (<em>list</em>) – List of strings with island geography.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>bitmap</strong> – A island map with colors for visualization.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.island.Island.plot_map">
+<span class="sig-name descname"><span class="pre">plot_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/island.html#Island.plot_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.island.Island.plot_map" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the map using bitmap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.island.Island.update_data">
+<span class="sig-name descname"><span class="pre">update_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/island.html#Island.update_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.island.Island.update_data" title="Permalink to this definition"></a></dt>
+<dd><p>Refreshes gathered data in each cell on the island. Method is counting the species in one cell,
+and gather their age, weight and fitness into lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc</strong> (<em>tuple</em>) – </p></li>
+<li><p><strong>cell</strong> (<em>object</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.island.Island.yearly_island_cycle">
+<span class="sig-name descname"><span class="pre">yearly_island_cycle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/island.html#Island.yearly_island_cycle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.island.Island.yearly_island_cycle" title="Permalink to this definition"></a></dt>
+<dd><p>Method runs through each cell on the island.
+For every year the method resets the data for statistics,
+and puts in the data from the previous year.</p>
+<p>Yearly island cycle calling cell methods for:</p>
+<ul class="simple">
+<li><p>adding newborns</p></li>
+<li><p>feeding animals</p></li>
+<li><p>moving animals</p></li>
+<li><p>aging animals</p></li>
+<li><p>loss of weight</p></li>
+<li><p>animal death</p></li>
+<li><p>resetting fodder</p></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="cell-class">
+<h2>Cell class<a class="headerlink" href="#cell-class" title="Permalink to this heading"></a></h2>
+<p>Each cell in the Cell class are bits of the Island, together they make up the Island.
+Structure of the cell class is shown below. Water, Dessert, Lowland and Highland are
+using the Cell class as a master class. All cells points to the same main class, Cell.</p>
+<figure class="align-left">
+<a class="reference internal image-reference" href="_images/diagram_cell_class.png"><img alt="diagram_cell_class.png" src="_images/diagram_cell_class.png" style="width: 800px;" /></a>
+</figure>
+<section id="water-class">
+<h3>Water class<a class="headerlink" href="#water-class" title="Permalink to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="biosim.cell.Water">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biosim.cell.</span></span><span class="sig-name descname"><span class="pre">Water</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/cell.html#Water"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.cell.Water" title="Permalink to this definition"></a></dt>
+<dd><p>Water is a subclass of Cell. And in this class there is no fodder and no animals.
+This class is not habitable.</p>
+<p>Initializes the Cell class. A class without animals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<em>tuple</em>) – Location of the cell</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Water.add_animal_from_dict">
+<span class="sig-name descname"><span class="pre">add_animal_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal_info</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Water.add_animal_from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Raises an error if animal is added to a cell that is not habitable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animal_info</strong> (<em>dict</em>) – Dictionary with information about the animal</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If animal species is invalid</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.cell.Water.is_habitable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_habitable</span></span><a class="headerlink" href="#biosim.cell.Water.is_habitable" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if cell is habitable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bool</strong></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if habitable, False if not</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Water.set_parameters">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Water.set_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Raises an error if this class has no changeable parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>params</strong> (<em>dict</em>) – Dictionary with parameters</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If this class has no changeable parameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="desert-class">
+<h3>Desert class<a class="headerlink" href="#desert-class" title="Permalink to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="biosim.cell.Desert">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biosim.cell.</span></span><span class="sig-name descname"><span class="pre">Desert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/cell.html#Desert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.cell.Desert" title="Permalink to this definition"></a></dt>
+<dd><p>Dessert is a subclass of Cell_with_animals. In this class animals can move, and predators can eat.</p>
+<p>Initializes the Cell_with_animals class. A class with animals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<em>tuple</em>) – Location of the cell</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Desert.add_animal_from_dict">
+<span class="sig-name descname"><span class="pre">add_animal_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal_info</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Desert.add_animal_from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>If the animal dictionary keys is valid, it creates an animal object and adds it to the cell.
+Raises an error if animal dictionary keys has invalid type of species, age or weight.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animal_info</strong> (<em>dict</em>) – Dictionary with information about the animal.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Animal species, age or weight is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Desert.add_animal_object">
+<span class="sig-name descname"><span class="pre">add_animal_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Desert.add_animal_object" title="Permalink to this definition"></a></dt>
+<dd><p>If an animal object is valid, it is added to the cell.
+Raises an error if object has invalid species.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animal</strong> (<em>object</em>) – Animal object.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Invalid animal species.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Desert.add_newborns">
+<span class="sig-name descname"><span class="pre">add_newborns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Desert.add_newborns" title="Permalink to this definition"></a></dt>
+<dd><p>Check if any animals will give birth, and adds newborns to the cell.
+The method sends the number of animals in the cell to the procreation method,
+and it returns a newborn object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Desert.age_animals">
+<span class="sig-name descname"><span class="pre">age_animals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Desert.age_animals" title="Permalink to this definition"></a></dt>
+<dd><p>Ages all animals in the cell with one year</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Desert.animal_death">
+<span class="sig-name descname"><span class="pre">animal_death</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Desert.animal_death" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if any animals will die in the cell, and removes them from the cell.
+Uses the death method in the animal class.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.cell.Desert.count_carnivore">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">count_carnivore</span></span><a class="headerlink" href="#biosim.cell.Desert.count_carnivore" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the number of carnivores in the cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.cell.Desert.count_herbivore">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">count_herbivore</span></span><a class="headerlink" href="#biosim.cell.Desert.count_herbivore" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the number of herbivores in the cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Desert.feed_animals">
+<span class="sig-name descname"><span class="pre">feed_animals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Desert.feed_animals" title="Permalink to this definition"></a></dt>
+<dd><p>Feeding method for predators, Carnivores, in a cell. A random Carnivore eats the
+Herbivores with the lowest fitness first. Method calls the feeding method in the
+Carnivore class. And removes dead animals from the cell.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.cell.Desert.is_habitable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_habitable</span></span><a class="headerlink" href="#biosim.cell.Desert.is_habitable" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if cell is habitable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bool</strong></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if habitable, False if not</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Desert.loss_of_weight">
+<span class="sig-name descname"><span class="pre">loss_of_weight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Desert.loss_of_weight" title="Permalink to this definition"></a></dt>
+<dd><p>Reduces weight of all animals in the cell.
+Calls the loss_of_weight() method in the animal class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Desert.moving_animals_list">
+<span class="sig-name descname"><span class="pre">moving_animals_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Desert.moving_animals_list" title="Permalink to this definition"></a></dt>
+<dd><p>Method for moving animals from one cell to another.
+The method checks if any animals will migrate, and returns a list with the object that will move.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>list</strong> – List of tuples with animal object, old location and new location.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of tuples</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Desert.remove_animal">
+<span class="sig-name descname"><span class="pre">remove_animal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Desert.remove_animal" title="Permalink to this definition"></a></dt>
+<dd><p>If method is called with an animal object, it is removed from the cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animal</strong> (<em>object</em>) – Animal object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Desert.reset_fodder">
+<span class="sig-name descname"><span class="pre">reset_fodder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Desert.reset_fodder" title="Permalink to this definition"></a></dt>
+<dd><p>Method for resetting fodder in the cell. This class has no fodder, so the method is empty.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Desert.set_parameters">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Desert.set_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Raises an error if this class has no changeable parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>params</strong> (<em>dict</em>) – Dictionary with parameters</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If this class has no changeable parameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="lowland-class">
+<h3>Lowland class<a class="headerlink" href="#lowland-class" title="Permalink to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="biosim.cell.Lowland">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biosim.cell.</span></span><span class="sig-name descname"><span class="pre">Lowland</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/cell.html#Lowland"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.cell.Lowland" title="Permalink to this definition"></a></dt>
+<dd><p>Lowland is a subclass of Cell_with_fodder. Lowland has a large amount of fodder, and all animals will thrive.</p>
+<p>Initialize the Cell_with_fodder class. A class with fodder and animals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<em>tuple</em>) – Tuple with coordinates for the cell.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.add_animal_from_dict">
+<span class="sig-name descname"><span class="pre">add_animal_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal_info</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Lowland.add_animal_from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>If the animal dictionary keys is valid, it creates an animal object and adds it to the cell.
+Raises an error if animal dictionary keys has invalid type of species, age or weight.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animal_info</strong> (<em>dict</em>) – Dictionary with information about the animal.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Animal species, age or weight is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.add_animal_object">
+<span class="sig-name descname"><span class="pre">add_animal_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Lowland.add_animal_object" title="Permalink to this definition"></a></dt>
+<dd><p>If an animal object is valid, it is added to the cell.
+Raises an error if object has invalid species.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animal</strong> (<em>object</em>) – Animal object.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Invalid animal species.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.add_newborns">
+<span class="sig-name descname"><span class="pre">add_newborns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Lowland.add_newborns" title="Permalink to this definition"></a></dt>
+<dd><p>Check if any animals will give birth, and adds newborns to the cell.
+The method sends the number of animals in the cell to the procreation method,
+and it returns a newborn object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.age_animals">
+<span class="sig-name descname"><span class="pre">age_animals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Lowland.age_animals" title="Permalink to this definition"></a></dt>
+<dd><p>Ages all animals in the cell with one year</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.animal_death">
+<span class="sig-name descname"><span class="pre">animal_death</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Lowland.animal_death" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if any animals will die in the cell, and removes them from the cell.
+Uses the death method in the animal class.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.count_carnivore">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">count_carnivore</span></span><a class="headerlink" href="#biosim.cell.Lowland.count_carnivore" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the number of carnivores in the cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.count_herbivore">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">count_herbivore</span></span><a class="headerlink" href="#biosim.cell.Lowland.count_herbivore" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the number of herbivores in the cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.feed_animals">
+<span class="sig-name descname"><span class="pre">feed_animals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Lowland.feed_animals" title="Permalink to this definition"></a></dt>
+<dd><p>Feed all vegetarian animals, Herbivores, in the cell.
+Animals with the highest fitness eats first.
+Methods calls the feeding method in the Herbivore class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.get_parameters">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Lowland.get_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Get the actual parameters for the cell.
+Collects the parameter form the class and returns f_max.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.is_habitable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_habitable</span></span><a class="headerlink" href="#biosim.cell.Lowland.is_habitable" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if cell is habitable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bool</strong></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if habitable, False if not</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.loss_of_weight">
+<span class="sig-name descname"><span class="pre">loss_of_weight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Lowland.loss_of_weight" title="Permalink to this definition"></a></dt>
+<dd><p>Reduces weight of all animals in the cell.
+Calls the loss_of_weight() method in the animal class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.moving_animals_list">
+<span class="sig-name descname"><span class="pre">moving_animals_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Lowland.moving_animals_list" title="Permalink to this definition"></a></dt>
+<dd><p>Method for moving animals from one cell to another.
+The method checks if any animals will migrate, and returns a list with the object that will move.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>list</strong> – List of tuples with animal object, old location and new location.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of tuples</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.remove_animal">
+<span class="sig-name descname"><span class="pre">remove_animal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Lowland.remove_animal" title="Permalink to this definition"></a></dt>
+<dd><p>If method is called with an animal object, it is removed from the cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animal</strong> (<em>object</em>) – Animal object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.reset_fodder">
+<span class="sig-name descname"><span class="pre">reset_fodder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Lowland.reset_fodder" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the fodder in the cell to the maximum value. This method is called at the end of each year.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Lowland.set_parameters">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_parameters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Lowland.set_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Set the default parameters for the cell</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_parameters</strong> (<em>dict</em>) – Dictionary with new parameters</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the parameter is not valid</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="highland-class">
+<h3>Highland class<a class="headerlink" href="#highland-class" title="Permalink to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="biosim.cell.Highland">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biosim.cell.</span></span><span class="sig-name descname"><span class="pre">Highland</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/cell.html#Highland"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.cell.Highland" title="Permalink to this definition"></a></dt>
+<dd><p>Highland is a subclass of Cell_with_fodder. Highland has a limited amount of fodder, and Herbivores will
+struggle to find food. Predators can live on their prey until there is no Herbivores left.</p>
+<p>Initialize the Cell_with_fodder class. A class with fodder and animals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<em>tuple</em>) – Tuple with coordinates for the cell.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Highland.add_animal_from_dict">
+<span class="sig-name descname"><span class="pre">add_animal_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal_info</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Highland.add_animal_from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>If the animal dictionary keys is valid, it creates an animal object and adds it to the cell.
+Raises an error if animal dictionary keys has invalid type of species, age or weight.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animal_info</strong> (<em>dict</em>) – Dictionary with information about the animal.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Animal species, age or weight is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Highland.add_animal_object">
+<span class="sig-name descname"><span class="pre">add_animal_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Highland.add_animal_object" title="Permalink to this definition"></a></dt>
+<dd><p>If an animal object is valid, it is added to the cell.
+Raises an error if object has invalid species.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animal</strong> (<em>object</em>) – Animal object.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Invalid animal species.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Highland.add_newborns">
+<span class="sig-name descname"><span class="pre">add_newborns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Highland.add_newborns" title="Permalink to this definition"></a></dt>
+<dd><p>Check if any animals will give birth, and adds newborns to the cell.
+The method sends the number of animals in the cell to the procreation method,
+and it returns a newborn object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Highland.age_animals">
+<span class="sig-name descname"><span class="pre">age_animals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Highland.age_animals" title="Permalink to this definition"></a></dt>
+<dd><p>Ages all animals in the cell with one year</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Highland.animal_death">
+<span class="sig-name descname"><span class="pre">animal_death</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Highland.animal_death" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if any animals will die in the cell, and removes them from the cell.
+Uses the death method in the animal class.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.cell.Highland.count_carnivore">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">count_carnivore</span></span><a class="headerlink" href="#biosim.cell.Highland.count_carnivore" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the number of carnivores in the cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.cell.Highland.count_herbivore">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">count_herbivore</span></span><a class="headerlink" href="#biosim.cell.Highland.count_herbivore" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the number of herbivores in the cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Highland.feed_animals">
+<span class="sig-name descname"><span class="pre">feed_animals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Highland.feed_animals" title="Permalink to this definition"></a></dt>
+<dd><p>Feed all vegetarian animals, Herbivores, in the cell.
+Animals with the highest fitness eats first.
+Methods calls the feeding method in the Herbivore class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Highland.get_parameters">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Highland.get_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Get the actual parameters for the cell.
+Collects the parameter form the class and returns f_max.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biosim.cell.Highland.is_habitable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_habitable</span></span><a class="headerlink" href="#biosim.cell.Highland.is_habitable" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if cell is habitable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bool</strong></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if habitable, False if not</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Highland.loss_of_weight">
+<span class="sig-name descname"><span class="pre">loss_of_weight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Highland.loss_of_weight" title="Permalink to this definition"></a></dt>
+<dd><p>Reduces weight of all animals in the cell.
+Calls the loss_of_weight() method in the animal class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Highland.moving_animals_list">
+<span class="sig-name descname"><span class="pre">moving_animals_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Highland.moving_animals_list" title="Permalink to this definition"></a></dt>
+<dd><p>Method for moving animals from one cell to another.
+The method checks if any animals will migrate, and returns a list with the object that will move.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>list</strong> – List of tuples with animal object, old location and new location.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of tuples</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Highland.remove_animal">
+<span class="sig-name descname"><span class="pre">remove_animal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Highland.remove_animal" title="Permalink to this definition"></a></dt>
+<dd><p>If method is called with an animal object, it is removed from the cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animal</strong> (<em>object</em>) – Animal object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Highland.reset_fodder">
+<span class="sig-name descname"><span class="pre">reset_fodder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Highland.reset_fodder" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the fodder in the cell to the maximum value. This method is called at the end of each year.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.cell.Highland.set_parameters">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_parameters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.cell.Highland.set_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Set the default parameters for the cell</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_parameters</strong> (<em>dict</em>) – Dictionary with new parameters</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the parameter is not valid</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="animals-class">
+<h2>Animals class<a class="headerlink" href="#animals-class" title="Permalink to this heading"></a></h2>
+<p>There are two types of animals in the simulation, Herbivores and Carnivores. Their behaviour is mostly similar,
+but they have some differences. One difference is how they get their food.
+Herbivores eat the fodder in the cell they are in, while Carnivores eats the herbivores in the cell they are in.
+Below is a table showing the respective parameters for the animals.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/param_table.png"><img alt="param_table.png" src="_images/param_table.png" style="width: 400px;" /></a>
+</figure>
+<dl class="py class">
+<dt class="sig sig-object py" id="biosim.animals.Herbivore">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biosim.animals.</span></span><span class="sig-name descname"><span class="pre">Herbivore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animals.html#Herbivore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.animals.Herbivore" title="Permalink to this definition"></a></dt>
+<dd><p>Herbivores depends on the amount of food available to survive and reproduce.</p>
+<p>Create an animal with attributes from row and loc.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Herbivore.aging">
+<span class="sig-name descname"><span class="pre">aging</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Herbivore.aging" title="Permalink to this definition"></a></dt>
+<dd><p>Methods that ages animals by one year.
+Fitness of the animal is updated in next method loss_of_weight(). This
+makes the code more efficient.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Herbivore.calc_fitness">
+<span class="sig-name descname"><span class="pre">calc_fitness</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Herbivore.calc_fitness" title="Permalink to this definition"></a></dt>
+<dd><p>The overall condition of the animal is described by the fitness.
+This method calculates the fitness of the animal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The fitness of the animal.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Fitness is calculated by the following formula:</p>
+<div class="math notranslate nohighlight">
+\[\Phi =
+\frac{1}{1+e^{\phi_{age} \cdot (age - a_{half})}}
+\cdot
+\frac{1}{1+e^{-\phi_{weight} \cdot (weight - w_{half})}}\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\phi_{age}\)</span> and <span class="math notranslate nohighlight">\(\phi_{weight}\)</span> are parameters given by the user.
+<span class="math notranslate nohighlight">\(a_{half}\)</span> and <span class="math notranslate nohighlight">\(w_{half}\)</span> are parameters given by the user.
+<span class="math notranslate nohighlight">\(age\)</span> and <span class="math notranslate nohighlight">\(weight\)</span> are the age and weight of the animal.
+<span class="math notranslate nohighlight">\(\phi\)</span> is the fitness of the animal.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Herbivore.death">
+<span class="sig-name descname"><span class="pre">death</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Herbivore.death" title="Permalink to this definition"></a></dt>
+<dd><p>Methods sets the animal to dead if the animals weight is below zero or
+if the animal dies by a probability of death.</p>
+<p>Probability of death is given by the following formula:</p>
+<div class="math notranslate nohighlight">
+\[p_{death} = \omega \cdot (1 - \phi)\]</div>
+<p>Where omega, <span class="math notranslate nohighlight">\(\omega\)</span>, is a default parameter or given by the user.
+Fitness, <span class="math notranslate nohighlight">\(\phi\)</span>, is the fitness of the animal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Herbivore.feeding">
+<span class="sig-name descname"><span class="pre">feeding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fodder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animals.html#Herbivore.feeding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.animals.Herbivore.feeding" title="Permalink to this definition"></a></dt>
+<dd><p>Feeding method for planteating animals, herbivores. Herbivore eats the amount
+of fodder given, or the maximum amount of fodder it can eat. After eating the animal
+gains weight and the fitness is updated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fodder</strong> (<em>float</em>) – The amount of fodder available to the animal.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>amount_eaten</strong> – The amount of fodder eaten by the animal.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Herbivore.get_parameters">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Herbivore.get_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Get parameters returns the current parameters for the animal class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cls.param</strong> – Dictionary with the current parameters for the animal class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Herbivore.loss_of_weight">
+<span class="sig-name descname"><span class="pre">loss_of_weight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Herbivore.loss_of_weight" title="Permalink to this definition"></a></dt>
+<dd><p>Methods that makes the animal lose weight. Since animals lose weight,
+the fitness of the animal is updated.
+Animal loses an amount of weight given by the following formula:</p>
+<div class="math notranslate nohighlight">
+\[weight loss = \eta \cdot weight\]</div>
+<p>Where eta, <span class="math notranslate nohighlight">\(\eta\)</span>, is a default parameter or parameter given by the user.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Herbivore.migrate">
+<span class="sig-name descname"><span class="pre">migrate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Herbivore.migrate" title="Permalink to this definition"></a></dt>
+<dd><p>Methods checks if the animal migrates or not. With a higher
+fitness the probability of migration increases.</p>
+<p>Probability of migration is given by the following formula:</p>
+<div class="math notranslate nohighlight">
+\[p_{migration} = \mu \cdot \phi\]</div>
+<p>Where mu, <span class="math notranslate nohighlight">\(\mu\)</span>, is a default parameter or given by the user.
+Fitness, <span class="math notranslate nohighlight">\(\phi\)</span>, is the fitness of the animal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the animal migrates, False if the animal does not migrate.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Herbivore.procreation">
+<span class="sig-name descname"><span class="pre">procreation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal_in_pos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Herbivore.procreation" title="Permalink to this definition"></a></dt>
+<dd><p>Methods checks if the animal can give birth to a new animal.
+Bellow is the steps taken by the method:</p>
+<ul class="simple">
+<li><p>If the offspring value is less than the weight of the animal, the animal can give birth.</p></li>
+<li><p>If the animal can give birth, the probability of procreation is calculated.</p></li>
+<li><p>If the animal procreates, the weight of the newborn is calculated.</p></li>
+<li><p>Newborn weight is subtracted from the parent.</p></li>
+<li><p>The fitness of the parent is updated.</p></li>
+<li><p>A newborn object is added to the list of newborns.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animal_in_pos</strong> (<em>int</em>) – Number of animals in the same position as the animal.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the animal procreates, a newborn animal is returned. Else None is returned.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Animal instance or None</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Relevant parameters are given in the table at the beginning of the</p></li>
+</ul>
+<p>Animal class documentation.</p>
+<p>The probability of procreation is given by the formula below.</p>
+<div class="math notranslate nohighlight">
+\[p_{procreation} =
+min(1, gamma \cdot fitness_{self} \cdot N_{same})\]</div>
+<p>Where <span class="math notranslate nohighlight">\(N_{same}\)</span> is the number of animals in the same position as the animal.</p>
+<p>The weight of the newborn is calculated by a log-normal distribution from the python
+<code class="docutils literal notranslate"><span class="pre">random.lognormvariate(mu,</span> <span class="pre">sigma)</span></code>.
+Below is a figure of the log-normal distribution, and formulas for
+calculating the parameters mu and sigma.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}mu = \ln \left( \frac{w_{birth}^2}{\sqrt{w_{birth}^2 + \sigma_{birth}^2}}\right)\\sigma = \sqrt{\ln \left(1 + \frac{\sigma_{birth}^2}{w_{birth}^2} \right)}\end{aligned}\end{align} \]</div>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="_images/lognormdist.png"><img alt="lognormdist.png" src="_images/lognormdist.png" style="width: 400px;" /></a>
+<figcaption>
+<p><span class="caption-text">Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Log-normal_distribution">https://en.wikipedia.org/wiki/Log-normal_distribution</a></span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Herbivore.set_parameters">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_parameters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Herbivore.set_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Set adjusted parameters from user for the animal class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_parameters</strong> (<em>dict</em>) – Legal keys</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If any of the parameters are invalid.</p></li>
+<li><p><strong>ValueError</strong> – If any of the parameters are negative.</p></li>
+<li><p><strong>ValueError</strong> – If DeltaPhiMax is not strictly positive.</p></li>
+<li><p><strong>ValueError</strong> – If eta is not less than 1.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Legal keys are those in the default_parameters class attribute.</p>
+<ul class="simple">
+<li><p>‘w_birth’</p></li>
+<li><p>‘sigma_birth’</p></li>
+<li><p>‘beta’</p></li>
+<li><p>‘eta’</p></li>
+<li><p>‘a_half’</p></li>
+<li><p>‘phi_age’</p></li>
+<li><p>‘w_half’</p></li>
+<li><p>‘phi_weight’</p></li>
+<li><p>‘mu’</p></li>
+<li><p>‘gamma’</p></li>
+<li><p>‘zeta’</p></li>
+<li><p>‘xi’</p></li>
+<li><p>‘omega’</p></li>
+<li><p>‘F’</p></li>
+<li><p>‘DeltaPhiMax’</p></li>
+</ul>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="biosim.animals.Carnivore">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biosim.animals.</span></span><span class="sig-name descname"><span class="pre">Carnivore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animals.html#Carnivore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.animals.Carnivore" title="Permalink to this definition"></a></dt>
+<dd><p>Carnivores depends on the availability of prey to survive and reproduce.</p>
+<p>Create an animal with attributes from row and loc.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Carnivore.aging">
+<span class="sig-name descname"><span class="pre">aging</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Carnivore.aging" title="Permalink to this definition"></a></dt>
+<dd><p>Methods that ages animals by one year.
+Fitness of the animal is updated in next method loss_of_weight(). This
+makes the code more efficient.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Carnivore.calc_fitness">
+<span class="sig-name descname"><span class="pre">calc_fitness</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Carnivore.calc_fitness" title="Permalink to this definition"></a></dt>
+<dd><p>The overall condition of the animal is described by the fitness.
+This method calculates the fitness of the animal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The fitness of the animal.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Fitness is calculated by the following formula:</p>
+<div class="math notranslate nohighlight">
+\[\Phi =
+\frac{1}{1+e^{\phi_{age} \cdot (age - a_{half})}}
+\cdot
+\frac{1}{1+e^{-\phi_{weight} \cdot (weight - w_{half})}}\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\phi_{age}\)</span> and <span class="math notranslate nohighlight">\(\phi_{weight}\)</span> are parameters given by the user.
+<span class="math notranslate nohighlight">\(a_{half}\)</span> and <span class="math notranslate nohighlight">\(w_{half}\)</span> are parameters given by the user.
+<span class="math notranslate nohighlight">\(age\)</span> and <span class="math notranslate nohighlight">\(weight\)</span> are the age and weight of the animal.
+<span class="math notranslate nohighlight">\(\phi\)</span> is the fitness of the animal.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Carnivore.death">
+<span class="sig-name descname"><span class="pre">death</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Carnivore.death" title="Permalink to this definition"></a></dt>
+<dd><p>Methods sets the animal to dead if the animals weight is below zero or
+if the animal dies by a probability of death.</p>
+<p>Probability of death is given by the following formula:</p>
+<div class="math notranslate nohighlight">
+\[p_{death} = \omega \cdot (1 - \phi)\]</div>
+<p>Where omega, <span class="math notranslate nohighlight">\(\omega\)</span>, is a default parameter or given by the user.
+Fitness, <span class="math notranslate nohighlight">\(\phi\)</span>, is the fitness of the animal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Carnivore.feeding">
+<span class="sig-name descname"><span class="pre">feeding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sorted_lowest_fitness_herbivore</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animals.html#Carnivore.feeding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biosim.animals.Carnivore.feeding" title="Permalink to this definition"></a></dt>
+<dd><p>Feeding method for predators, carnivores.</p>
+<ul class="simple">
+<li><p>Carnivore tries to kill, with a probability, the weakest herbivore until it has eaten enough.</p></li>
+<li><p>After eating one animal it gains weight and the fitness is updated.</p></li>
+<li><p>If an animal is killed, the object variable “alive” is set to False.</p></li>
+<li><p>Carnivore continues to kill until it has tried to kill all Herbivores in the cell.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sorted_lowest_fitness_herbivore</strong> (<em>list</em>) – List of herbivores sorted by lowest fitness.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Carnivore.get_parameters">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Carnivore.get_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Get parameters returns the current parameters for the animal class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cls.param</strong> – Dictionary with the current parameters for the animal class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Carnivore.loss_of_weight">
+<span class="sig-name descname"><span class="pre">loss_of_weight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Carnivore.loss_of_weight" title="Permalink to this definition"></a></dt>
+<dd><p>Methods that makes the animal lose weight. Since animals lose weight,
+the fitness of the animal is updated.
+Animal loses an amount of weight given by the following formula:</p>
+<div class="math notranslate nohighlight">
+\[weight loss = \eta \cdot weight\]</div>
+<p>Where eta, <span class="math notranslate nohighlight">\(\eta\)</span>, is a default parameter or parameter given by the user.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Carnivore.migrate">
+<span class="sig-name descname"><span class="pre">migrate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Carnivore.migrate" title="Permalink to this definition"></a></dt>
+<dd><p>Methods checks if the animal migrates or not. With a higher
+fitness the probability of migration increases.</p>
+<p>Probability of migration is given by the following formula:</p>
+<div class="math notranslate nohighlight">
+\[p_{migration} = \mu \cdot \phi\]</div>
+<p>Where mu, <span class="math notranslate nohighlight">\(\mu\)</span>, is a default parameter or given by the user.
+Fitness, <span class="math notranslate nohighlight">\(\phi\)</span>, is the fitness of the animal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the animal migrates, False if the animal does not migrate.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Carnivore.procreation">
+<span class="sig-name descname"><span class="pre">procreation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal_in_pos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Carnivore.procreation" title="Permalink to this definition"></a></dt>
+<dd><p>Methods checks if the animal can give birth to a new animal.
+Bellow is the steps taken by the method:</p>
+<ul class="simple">
+<li><p>If the offspring value is less than the weight of the animal, the animal can give birth.</p></li>
+<li><p>If the animal can give birth, the probability of procreation is calculated.</p></li>
+<li><p>If the animal procreates, the weight of the newborn is calculated.</p></li>
+<li><p>Newborn weight is subtracted from the parent.</p></li>
+<li><p>The fitness of the parent is updated.</p></li>
+<li><p>A newborn object is added to the list of newborns.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animal_in_pos</strong> (<em>int</em>) – Number of animals in the same position as the animal.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the animal procreates, a newborn animal is returned. Else None is returned.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Animal instance or None</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Relevant parameters are given in the table at the beginning of the</p></li>
+</ul>
+<p>Animal class documentation.</p>
+<p>The probability of procreation is given by the formula below.</p>
+<div class="math notranslate nohighlight">
+\[p_{procreation} =
+min(1, gamma \cdot fitness_{self} \cdot N_{same})\]</div>
+<p>Where <span class="math notranslate nohighlight">\(N_{same}\)</span> is the number of animals in the same position as the animal.</p>
+<p>The weight of the newborn is calculated by a log-normal distribution from the python
+<code class="docutils literal notranslate"><span class="pre">random.lognormvariate(mu,</span> <span class="pre">sigma)</span></code>.
+Below is a figure of the log-normal distribution, and formulas for
+calculating the parameters mu and sigma.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}mu = \ln \left( \frac{w_{birth}^2}{\sqrt{w_{birth}^2 + \sigma_{birth}^2}}\right)\\sigma = \sqrt{\ln \left(1 + \frac{\sigma_{birth}^2}{w_{birth}^2} \right)}\end{aligned}\end{align} \]</div>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="_images/lognormdist.png"><img alt="lognormdist.png" src="_images/lognormdist.png" style="width: 400px;" /></a>
+<figcaption>
+<p><span class="caption-text">Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Log-normal_distribution">https://en.wikipedia.org/wiki/Log-normal_distribution</a></span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biosim.animals.Carnivore.set_parameters">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_parameters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animals.Carnivore.set_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Set adjusted parameters from user for the animal class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_parameters</strong> (<em>dict</em>) – Legal keys</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If any of the parameters are invalid.</p></li>
+<li><p><strong>ValueError</strong> – If any of the parameters are negative.</p></li>
+<li><p><strong>ValueError</strong> – If DeltaPhiMax is not strictly positive.</p></li>
+<li><p><strong>ValueError</strong> – If eta is not less than 1.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Legal keys are those in the default_parameters class attribute.</p>
+<ul class="simple">
+<li><p>‘w_birth’</p></li>
+<li><p>‘sigma_birth’</p></li>
+<li><p>‘beta’</p></li>
+<li><p>‘eta’</p></li>
+<li><p>‘a_half’</p></li>
+<li><p>‘phi_age’</p></li>
+<li><p>‘w_half’</p></li>
+<li><p>‘phi_weight’</p></li>
+<li><p>‘mu’</p></li>
+<li><p>‘gamma’</p></li>
+<li><p>‘zeta’</p></li>
+<li><p>‘xi’</p></li>
+<li><p>‘omega’</p></li>
+<li><p>‘F’</p></li>
+<li><p>‘DeltaPhiMax’</p></li>
+</ul>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="home.html" class="btn btn-neutral float-left" title="Biosim - A model of the ecosystem Rossumøya" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Kim Ly and Mathias Mollatt.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

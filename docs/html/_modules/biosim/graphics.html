@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>biosim.graphics &mdash; biosim-u22-kim-mathias 23.June.2023 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> biosim-u22-kim-mathias
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../home.html">Biosim - A model of the ecosystem Rossumøya</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../codedoc.html">Code documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../further.html">Further Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">biosim-u22-kim-mathias</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">biosim.graphics</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for biosim.graphics</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># Update these variables to point to your ffmpeg and convert binaries</span>
+<span class="c1"># If you installed ffmpeg using conda or installed both softwares in</span>
+<span class="c1"># standard ways on your computer, no changes should be required.</span>
+<span class="n">_FFMPEG_BINARY</span> <span class="o">=</span> <span class="s1">&#39;ffmpeg&#39;</span>
+<span class="n">_MAGICK_BINARY</span> <span class="o">=</span> <span class="s1">&#39;magick&#39;</span>
+
+<span class="c1"># update this to the directory and file-name beginning</span>
+<span class="c1"># for the graphics files</span>
+<span class="n">_DEFAULT_GRAPHICS_NAME</span> <span class="o">=</span> <span class="s1">&#39;dv&#39;</span>
+<span class="n">_DEFAULT_IMG_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;png&#39;</span>
+<span class="n">_DEFAULT_MOVIE_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;mp4&#39;</span>  <span class="c1"># alternatives: gif</span>
+
+
+<div class="viewcode-block" id="Graphics"><a class="viewcode-back" href="../../codedoc.html#biosim.graphics.Graphics">[docs]</a><span class="k">class</span> <span class="nc">Graphics</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Graphics class for BioSim used data from the island class to create</span>
+<span class="sd">    visualizations of the island and it&#39;s inhabitants.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Default values for visualization parameters</span>
+    <span class="n">default_ymax_animals</span> <span class="o">=</span> <span class="mi">30000</span>
+    <span class="n">default_cmax_animals</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Herbivore&#39;</span><span class="p">:</span> <span class="mi">140</span><span class="p">,</span> <span class="s1">&#39;Carnivore&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
+    <span class="n">default_hist_specs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span> <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+                          <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+                          <span class="s1">&#39;fitness&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">}}</span>
+    <span class="n">age_y_max</span> <span class="o">=</span> <span class="mf">.2</span>
+    <span class="n">weight_y_max</span> <span class="o">=</span> <span class="mf">.15</span>
+    <span class="n">fitness_y_max</span> <span class="o">=</span> <span class="mf">.3</span>
+    <span class="n">hist_update_y_ax</span> <span class="o">=</span> <span class="mi">48</span>
+
+    <span class="n">rgb_value</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;W&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.13</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">),</span>  <span class="c1"># blue</span>
+                 <span class="s1">&#39;L&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.62</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">),</span>  <span class="c1"># dark green</span>
+                 <span class="s1">&#39;H&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.42</span><span class="p">),</span>  <span class="c1"># light green</span>
+                 <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">)}</span>  <span class="c1"># light yellow</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img_fmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img_years</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vis_years</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">ymax_animals</span><span class="o">=</span><span class="mi">1200</span><span class="p">,</span> <span class="n">cmax_animals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hist_specs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialization of a new visualization object.</span>
+
+<span class="sd">        :param img_dir: directory for image files; no images if None</span>
+<span class="sd">        :type img_dir: str</span>
+<span class="sd">        :param img_name: beginning of name for image files</span>
+<span class="sd">        :type img_name: str</span>
+<span class="sd">        :param img_fmt: image file format suffix</span>
+<span class="sd">        :type img_fmt: str</span>
+<span class="sd">        :img_years: Years between visualizations saved to files (default: `vis_years`)</span>
+<span class="sd">        :type img_years: int</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># check if ymax_animals is a positive number</span>
+        <span class="k">if</span> <span class="n">ymax_animals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ymax_animals</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ymax_animals must be a positive number, not </span><span class="si">{</span><span class="n">ymax_animals</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ymax_animals</span> <span class="o">=</span> <span class="n">ymax_animals</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ymax_animals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_ymax_animals</span>
+
+        <span class="k">if</span> <span class="n">vis_years</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">vis_years</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vis_years</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">vis_years</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;vis_years must be a positive integer, not </span><span class="si">{</span><span class="n">vis_years</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">vis_years</span> <span class="o">=</span> <span class="n">vis_years</span>
+
+        <span class="k">if</span> <span class="n">vis_years</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># check if cmax_animals is a dictionary with valid keys</span>
+        <span class="k">if</span> <span class="n">cmax_animals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">animals_species</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_cmax_animals</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cmax_animals</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cmax_animals</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">animals_species</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid key in cmax_animals: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">. Valid keys are: </span><span class="si">{</span><span class="n">animals_species</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">cmax_animals</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">cmax_animals</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cmax_animals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_cmax_animals</span>
+
+        <span class="c1"># check if hist_specs is a dictionary with valid keys and values</span>
+        <span class="k">if</span> <span class="n">hist_specs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">histograms</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_hist_specs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hist_specs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_hist_specs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">hist_specs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">histograms</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid key in hist_specs: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">. Valid keys are: </span><span class="si">{</span><span class="n">histograms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">hist_specs</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                    <span class="n">specs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_hist_specs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                    <span class="k">if</span> <span class="n">spec</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">specs</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid key in hist_specs[</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">]: </span><span class="si">{</span><span class="n">spec</span><span class="si">}</span><span class="s1">. Valid keys are: </span><span class="si">{</span><span class="n">specs</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">hist_specs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">spec</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">hist_specs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">spec</span><span class="p">]</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;hist_specs[</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">][</span><span class="si">{</span><span class="n">spec</span><span class="si">}</span><span class="s1">] must be a positive number, not </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">hist_specs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">spec</span><span class="p">]</span> <span class="o">=</span> <span class="n">hist_specs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">spec</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hist_specs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_hist_specs</span>
+
+        <span class="k">if</span> <span class="n">img_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">img_name</span> <span class="o">=</span> <span class="n">_DEFAULT_GRAPHICS_NAME</span>
+
+        <span class="k">if</span> <span class="n">img_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_img_base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">img_dir</span><span class="p">,</span> <span class="n">img_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_img_base</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">img_years</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">img_years</span> <span class="o">=</span> <span class="n">img_years</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">img_years</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">img_fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">img_fmt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="s1">&#39;jpg&#39;</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid image format: </span><span class="si">{</span><span class="n">img_fmt</span><span class="si">}</span><span class="s1">. Valid formats are: png, jpg&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_img_fmt</span> <span class="o">=</span> <span class="n">img_fmt</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_img_fmt</span> <span class="o">=</span> <span class="n">_DEFAULT_IMG_FORMAT</span>
+
+        <span class="c1"># Image counter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_img_ctr</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Frame counter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_frame_ctr</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># the following will be initialized by _setup_graphics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_map_ax</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_map_img</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dim_x</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dim_y</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_ax</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_img</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_heatmap_ax</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_heatmap_img</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_population_ax</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">herbivore_population_line</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_population_line</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hist_age_ax</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hist_age_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hist_weight_ax</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hist_weight_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hist_fitness_ax</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hist_fitness_data</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_year_ax</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_year_str</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_year_text</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_year</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Graphics.update"><a class="viewcode-back" href="../../codedoc.html#biosim.graphics.Graphics.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span>
+               <span class="n">herbivore_population</span><span class="p">,</span>
+               <span class="n">carnivore_population</span><span class="p">,</span>
+               <span class="n">herbivore_dict_map</span><span class="o">=</span><span class="p">{},</span>
+               <span class="n">carnivore_dict_map</span><span class="o">=</span><span class="p">{},</span>
+               <span class="n">herbivore_age_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">carnivore_age_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">herbivore_weight_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">carnivore_weight_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">herbivore_fitness_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">carnivore_fitness_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates graphics with current data and save to file if necessary.</span>
+
+<span class="sd">        :param year: current year.</span>
+<span class="sd">        :type year: int</span>
+<span class="sd">        :param herbivore_population: current herbivore population.</span>
+<span class="sd">        :type herbivore_population: int</span>
+<span class="sd">        :param carnivore_population: current carnivore population.</span>
+<span class="sd">        :type carnivore_population: int</span>
+<span class="sd">        :param herbivore_dict_map: current herbivore population distribution.</span>
+<span class="sd">        :type herbivore_dict_map: dict</span>
+<span class="sd">        :param carnivore_dict_map: current carnivore population distribution.</span>
+<span class="sd">        :type carnivore_dict_map: dict</span>
+<span class="sd">        :param herbivore_age_list: current herbivore age distribution.</span>
+<span class="sd">        :type herbivore_age_list: list</span>
+<span class="sd">        :param carnivore_age_list: current carnivore age distribution.</span>
+<span class="sd">        :type carnivore_age_list: list</span>
+<span class="sd">        :param herbivore_weight_list: current herbivore weight distribution.</span>
+<span class="sd">        :type herbivore_weight_list: list</span>
+<span class="sd">        :param carnivore_weight_list: current carnivore weight distribution.</span>
+<span class="sd">        :type carnivore_weight_list: list</span>
+<span class="sd">        :param herbivore_fitness_list: current herbivore fitness distribution.</span>
+<span class="sd">        :type herbivore_fitness_list: list</span>
+<span class="sd">        :param carnivore_fitness_list: current carnivore fitness distribution.</span>
+<span class="sd">        :type carnivore_fitness_list: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">=</span> <span class="n">year</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_year_counter</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_population_graph</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">herbivore_population</span><span class="p">,</span> <span class="n">carnivore_population</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_herbivore_heatmap</span><span class="p">(</span><span class="n">herbivore_dict_map</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_carnivore_heatmap</span><span class="p">(</span><span class="n">carnivore_dict_map</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_histogram_age</span><span class="p">(</span><span class="n">herbivore_age_list</span><span class="p">,</span> <span class="n">carnivore_age_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_histogram_weight</span><span class="p">(</span><span class="n">herbivore_weight_list</span><span class="p">,</span> <span class="n">carnivore_weight_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_histogram_fitness</span><span class="p">(</span><span class="n">herbivore_fitness_list</span><span class="p">,</span> <span class="n">carnivore_fitness_list</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">flush_events</span><span class="p">()</span>  <span class="c1"># ensure every thing is drawn</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">)</span>  <span class="c1"># pause required to pass control to GUI</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_frame_ctr</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_save_graphics</span><span class="p">(</span><span class="n">year</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Graphics.make_movie"><a class="viewcode-back" href="../../codedoc.html#biosim.graphics.Graphics.make_movie">[docs]</a>    <span class="k">def</span> <span class="nf">make_movie</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">movie_fmt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates MPEG4 movie from visualization images saved.</span>
+
+<span class="sd">        :param movie_fmt: Video format, either mp4 (default) or gif.</span>
+<span class="sd">        :type movie_fmt: str</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_img_base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No filename defined.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">movie_fmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">movie_fmt</span> <span class="o">=</span> <span class="n">_DEFAULT_MOVIE_FORMAT</span>
+
+        <span class="k">if</span> <span class="n">movie_fmt</span> <span class="o">==</span> <span class="s1">&#39;mp4&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Parameters chosen according to http://trac.ffmpeg.org/wiki/Encode/H.264,</span>
+                <span class="c1"># section &quot;Compatibility&quot;</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="n">_FFMPEG_BINARY</span><span class="p">,</span>
+                                       <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">%05d</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_img_base</span><span class="p">),</span>
+                                       <span class="s1">&#39;-y&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;-profile:v&#39;</span><span class="p">,</span> <span class="s1">&#39;baseline&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;-level&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;-pix_fmt&#39;</span><span class="p">,</span> <span class="s1">&#39;yuv420p&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_img_base</span><span class="p">,</span> <span class="n">movie_fmt</span><span class="p">)])</span>
+            <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;ERROR: ffmpeg failed with: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">movie_fmt</span> <span class="o">==</span> <span class="s1">&#39;gif&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="n">_MAGICK_BINARY</span><span class="p">,</span>
+                                       <span class="s1">&#39;-delay&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;-loop&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_*.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_img_base</span><span class="p">),</span>
+                                       <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_img_base</span><span class="p">,</span> <span class="n">movie_fmt</span><span class="p">)])</span>
+            <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;ERROR: convert failed with: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown movie format: &#39;</span> <span class="o">+</span> <span class="n">movie_fmt</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Graphics.setup"><a class="viewcode-back" href="../../codedoc.html#biosim.graphics.Graphics.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geography</span><span class="p">,</span> <span class="n">final_year</span><span class="p">,</span> <span class="n">vis_years</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare graphics with population history, histograms and heatmaps for the island.</span>
+
+<span class="sd">        :param geography: A list of lists containing the landscape. From Island.processed_map</span>
+<span class="sd">        :type geography: list</span>
+<span class="sd">        :param final_year: last time step to be visualised (upper limit of x-axis)</span>
+<span class="sd">        :type final_year: int</span>
+
+
+<span class="sd">        .. note::</span>
+<span class="sd">            Call this before calling :meth:`update()` for the first time after</span>
+<span class="sd">            the final time step has changed.</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_year</span> <span class="o">=</span> <span class="n">final_year</span>
+
+        <span class="c1"># create new figure window</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">scale_factor</span> <span class="o">=</span> <span class="mf">.8</span>
+            <span class="n">img_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span> <span class="o">*</span> <span class="n">scale_factor</span><span class="p">,</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">scale_factor</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">img_size</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_gridspec</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+        <span class="c1"># Add year counter in upper left corner</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_year_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_year_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">.2</span><span class="p">,</span> <span class="mf">.9</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mf">.06</span><span class="p">])</span>  <span class="c1"># llx, lly, w, h</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">year_counter</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_year_ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Add landscape patches</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">.4</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mf">.22</span><span class="p">,</span> <span class="mf">.09</span><span class="p">])</span>  <span class="c1"># llx, lly, w, h</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.6</span><span class="p">),</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                                                       <span class="n">facecolor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rgb_value</span><span class="p">[</span><span class="s1">&#39;W&#39;</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">.22</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="s1">&#39;Water&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.0</span><span class="p">),</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                                                       <span class="n">facecolor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rgb_value</span><span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">.22</span><span class="p">,</span> <span class="mf">0.16</span><span class="p">,</span> <span class="s1">&#39;Desert&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">.6</span><span class="p">),</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                                                       <span class="n">facecolor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rgb_value</span><span class="p">[</span><span class="s1">&#39;L&#39;</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">.73</span><span class="p">,</span> <span class="mf">.7</span><span class="p">,</span> <span class="s1">&#39;Lowland&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">.0</span><span class="p">),</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                                                       <span class="n">facecolor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rgb_value</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">.73</span><span class="p">,</span> <span class="mf">0.16</span><span class="p">,</span> <span class="s1">&#39;Highland&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_landscape_ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+
+        <span class="c1"># Add left subplot for images created with imshow().</span>
+        <span class="c1"># We cannot create the actual ImageAxis object before we know</span>
+        <span class="c1"># the size of the image, so we delay its creation.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">color_map</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">self</span><span class="o">.</span><span class="n">rgb_value</span><span class="p">[</span><span class="n">landscape</span><span class="p">]</span> <span class="k">for</span> <span class="n">landscape</span> <span class="ow">in</span> <span class="n">row</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">geography</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dim_x</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">geography</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dim_y</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">geography</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_map_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="p">[</span><span class="mi">8</span><span class="p">:,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_map_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">color_map</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">geography</span> <span class="o">=</span> <span class="n">geography</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_map_ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Map&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_map_ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_map_title_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.12</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.25</span><span class="p">])</span>  <span class="c1"># llx, lly, w, h</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_map_title_ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Population</span><span class="se">\n</span><span class="s1">density&#39;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                                    <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_map_title_ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Repeat for heatmap of the animals</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="p">[</span><span class="mi">8</span><span class="p">:,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_img</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Herbivores&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_heatmap_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_heatmap_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="p">[</span><span class="mi">8</span><span class="p">:,</span> <span class="mi">2</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_heatmap_ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Carnivores&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_heatmap_ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Setting up the population plot</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_population_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_population_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_population_ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_population_ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymax_animals</span><span class="p">)</span>
+            <span class="c1"># self._population_ax.set_title(&#39;Population&#39;)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_population_ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_population_title_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.7</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.18</span><span class="p">])</span>  <span class="c1"># llx, lly, w, h</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_population_title_ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Population</span><span class="se">\n</span><span class="s1">History&#39;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                                           <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_population_title_ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_population_ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">final_year</span><span class="p">)</span>
+        <span class="n">xdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">final_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vis_years</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">herbivore_population_line</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">herbivore_population_plot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_population_ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span>
+                                                                 <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xdata</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
+                                                                 <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Herbivores&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">herbivore_population_line</span> <span class="o">=</span> <span class="n">herbivore_population_plot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">herbivore_population_line</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+            <span class="n">x_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">vis_years</span><span class="p">,</span> <span class="n">final_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vis_years</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_new</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">y_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">x_new</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">herbivore_population_line</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">x_data</span><span class="p">,</span> <span class="n">x_new</span><span class="p">)),</span>
+                                                        <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">y_data</span><span class="p">,</span> <span class="n">y_new</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_population_line</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">carnivore_population_plot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_population_ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span>
+                                                                 <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xdata</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
+                                                                 <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Carnivores&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_population_line</span> <span class="o">=</span> <span class="n">carnivore_population_plot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_population_line</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+            <span class="n">x_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">vis_years</span><span class="p">,</span> <span class="n">final_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vis_years</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_new</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">y_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">x_new</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_population_line</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">x_data</span><span class="p">,</span> <span class="n">x_new</span><span class="p">)),</span>
+                                                         <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">y_data</span><span class="p">,</span> <span class="n">y_new</span><span class="p">)))</span>
+
+        <span class="c1"># Setting up the histogram</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hist_age_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hist_age_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hist_age_ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Age distribution&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">age_bin_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_specs</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">][</span><span class="s2">&quot;max&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">age_bin_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_specs</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">][</span><span class="s2">&quot;delta&quot;</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">age_bin_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">age_bin_max</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">age_bin_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">age_bin_width</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">age_hist_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">age_bin_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">age_herbivore_hist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hist_age_ax</span><span class="o">.</span><span class="n">stairs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">age_hist_counts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">age_bin_edges</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+                                                               <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Hebivore&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">age_carnivore_hist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hist_age_ax</span><span class="o">.</span><span class="n">stairs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">age_hist_counts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">age_bin_edges</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
+                                                               <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Carnivore&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hist_age_ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">age_y_max</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hist_weight_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hist_weight_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hist_weight_ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Weight distribution&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_bin_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_specs</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">][</span><span class="s2">&quot;max&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_bin_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_specs</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">][</span><span class="s2">&quot;delta&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_y_max</span> <span class="o">=</span> <span class="mf">.15</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_bin_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_bin_max</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_bin_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_bin_width</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_hist_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_bin_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_herbivore_hist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hist_weight_ax</span><span class="o">.</span><span class="n">stairs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_hist_counts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_bin_edges</span><span class="p">,</span>
+                                                                     <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+                                                                     <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Hebivore&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_carnivore_hist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hist_weight_ax</span><span class="o">.</span><span class="n">stairs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_hist_counts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_bin_edges</span><span class="p">,</span>
+                                                                     <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
+                                                                     <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Carnivore&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hist_weight_ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_y_max</span><span class="p">)</span>
+
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">.36</span><span class="p">,</span> <span class="mf">.895</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower left&quot;</span><span class="p">,</span>
+                       <span class="n">bbox_transform</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">transFigure</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hist_title_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.44</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.18</span><span class="p">])</span>  <span class="c1"># llx, lly, w, h</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hist_title_ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Normalized</span><span class="se">\n</span><span class="s1">histograms&#39;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                                     <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hist_title_ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hist_fitness_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hist_fitness_ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hist_fitness_ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Fitness distribution&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitness_bin_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_specs</span><span class="p">[</span><span class="s2">&quot;fitness&quot;</span><span class="p">][</span><span class="s2">&quot;max&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitness_bin_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_specs</span><span class="p">[</span><span class="s2">&quot;fitness&quot;</span><span class="p">][</span><span class="s2">&quot;delta&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitness_y_max</span> <span class="o">=</span> <span class="mf">.6</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitness_bin_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitness_bin_max</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitness_bin_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                                               <span class="bp">self</span><span class="o">.</span><span class="n">fitness_bin_width</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitness_hist_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness_bin_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitness_herbivore_hist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hist_fitness_ax</span><span class="o">.</span><span class="n">stairs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness_hist_counts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitness_bin_edges</span><span class="p">,</span>
+                                                                       <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+                                                                       <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Hebivore&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitness_carnivore_hist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hist_fitness_ax</span><span class="o">.</span><span class="n">stairs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness_hist_counts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitness_bin_edges</span><span class="p">,</span>
+                                                                       <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
+                                                                       <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Carnivore&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hist_fitness_ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitness_y_max</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_update_year_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the year counter.</span>
+
+<span class="sd">        :param year: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">year_txt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Year: </span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">year_counter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">year_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_year_ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">year_txt</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                                                   <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">year_counter</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year: </span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_population_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">herbivore_population</span><span class="p">,</span> <span class="n">carnivore_population</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the population graph.</span>
+
+<span class="sd">        :param year: Current year</span>
+<span class="sd">        :type year: int</span>
+<span class="sd">        :param herbivore_population: Current herbivore population</span>
+<span class="sd">        :type herbivore_population: int</span>
+<span class="sd">        :param carnivore_population: Current carnivore population</span>
+<span class="sd">        :type carnivore_population: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">year</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">vis_years</span>
+        <span class="n">herbivore_y_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">herbivore_population_line</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">()</span>
+        <span class="n">herbivore_y_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">herbivore_population</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">herbivore_population_line</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">herbivore_y_data</span><span class="p">)</span>
+
+        <span class="n">carnivore_y_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_population_line</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">()</span>
+        <span class="n">carnivore_y_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">carnivore_population</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_population_line</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">carnivore_y_data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_herbivore_heatmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">herbivore_dict_map</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the herbivore heatmap.</span>
+
+<span class="sd">        :param herbivore_dict_map: Dictionary with herbivore population history</span>
+<span class="sd">        :type herbivore_dict_map: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">herbivore_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_dim_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dim_y</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">location</span><span class="p">,</span> <span class="n">population_history</span> <span class="ow">in</span> <span class="n">herbivore_dict_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">herbivore_map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">population_history</span>
+            <span class="n">cmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmax_animals</span><span class="p">[</span><span class="s2">&quot;Herbivore&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">herbivore_map</span><span class="p">,</span>
+                                                                            <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+                                                                            <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">cmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;YlGnBu&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_img</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_ax</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">.05</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">location</span><span class="p">,</span> <span class="n">population_history</span> <span class="ow">in</span> <span class="n">herbivore_dict_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">herbivore_map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">population_history</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_herbivore_heatmap_img</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">herbivore_map</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_carnivore_heatmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">carnivore_dict_map</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the carnivore heatmap.</span>
+
+<span class="sd">        :param carnivore_dict_map: Dictionary with carnivore population history</span>
+<span class="sd">        :type carnivore_dict_map: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_heatmap_img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">carnivore_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_dim_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dim_y</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">carnivore_dict_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">carnivore_map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="n">cmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmax_animals</span><span class="p">[</span><span class="s2">&quot;Carnivore&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_heatmap_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_heatmap_ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">carnivore_map</span><span class="p">,</span>
+                                                                            <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+                                                                            <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">cmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;YlOrBr&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_heatmap_img</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_heatmap_ax</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">carnivore_dict_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">carnivore_map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_carnivore_heatmap_img</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">carnivore_map</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_histogram_age</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">herbivore_age_list</span><span class="p">,</span> <span class="n">carnivore_age_list</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the age histogram.</span>
+
+<span class="sd">        :param herbivore_age_list: List of herbivore ages</span>
+<span class="sd">        :type herbivore_age_list: list</span>
+<span class="sd">        :param carnivore_age_list: List of carnivore ages</span>
+<span class="sd">        :type carnivore_age_list: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">herbivore_age_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">herbivore_age_list</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="n">hist_counts_age_herbivore</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">herbivore_age_list</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">age_bin_edges</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">hist_counts_age_herbivore_norm</span> <span class="o">=</span> <span class="n">hist_counts_age_herbivore</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">hist_counts_age_herbivore</span><span class="p">)</span>
+
+            <span class="c1"># Update y-axis</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_ctr</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_update_y_ax</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">y_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">age_y_max</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">hist_counts_age_herbivore_norm</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hist_age_ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_max</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">age_herbivore_hist</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">hist_counts_age_herbivore_norm</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">carnivore_age_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">carnivore_age_list</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="n">hist_counts_age_carnivore</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">carnivore_age_list</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">age_bin_edges</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">hist_counts_age_carnivore_norm</span> <span class="o">=</span> <span class="n">hist_counts_age_carnivore</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">hist_counts_age_carnivore</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_ctr</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_update_y_ax</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">y_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">age_y_max</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">hist_counts_age_herbivore_norm</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">,</span>
+                            <span class="nb">max</span><span class="p">(</span><span class="n">hist_counts_age_carnivore_norm</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hist_age_ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_max</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">age_carnivore_hist</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">hist_counts_age_carnivore_norm</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_histogram_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">herbivore_weight_list</span><span class="p">,</span> <span class="n">carnivore_weight_list</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the weight histogram.</span>
+
+<span class="sd">        :param herbivore_weight_list: List of herbivore weights</span>
+<span class="sd">        :type herbivore_weight_list: list</span>
+<span class="sd">        :param carnivore_weight_list: List of carnivore weights</span>
+<span class="sd">        :type carnivore_weight_list: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">herbivore_weight_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">herbivore_weight_list</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="n">hist_counts_weight_herbivore</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">herbivore_weight_list</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_bin_edges</span><span class="p">,</span>
+                                                           <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">hist_counts_weight_herbivore_norm</span> <span class="o">=</span> <span class="n">hist_counts_weight_herbivore</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">hist_counts_weight_herbivore</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_ctr</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_update_y_ax</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">y_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_y_max</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">hist_counts_weight_herbivore_norm</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hist_weight_ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_max</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_herbivore_hist</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">hist_counts_weight_herbivore_norm</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">carnivore_weight_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">carnivore_weight_list</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="n">hist_counts_weight_carnivore</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">carnivore_weight_list</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_bin_edges</span><span class="p">,</span>
+                                                           <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">hist_counts_weight_carnivore_norm</span> <span class="o">=</span> <span class="n">hist_counts_weight_carnivore</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">hist_counts_weight_carnivore</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_ctr</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_update_y_ax</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">y_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_y_max</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">hist_counts_weight_herbivore_norm</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">,</span>
+                            <span class="nb">max</span><span class="p">(</span><span class="n">hist_counts_weight_carnivore_norm</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hist_weight_ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_max</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_carnivore_hist</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">hist_counts_weight_carnivore_norm</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_histogram_fitness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">herbivore_fitness_list</span><span class="p">,</span> <span class="n">carnivore_fitness_list</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the histogram of fitness for herbivores and carnivores.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Normalized the histogram with the help from:</span>
+<span class="sd">            https://stackoverflow.com/questions/21532667/numpy-histogram-cumulative-density-does-not-sum-to-1</span>
+
+<span class="sd">        :param herbivore_fitness_list: List of herbivore fitness</span>
+<span class="sd">        :type herbivore_fitness_list: list</span>
+<span class="sd">        :param carnivore_fitness_list: List of carnivore fitness</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">herbivore_fitness_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">herbivore_fitness_list</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="n">hist_counts_fitness_herbivore</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">herbivore_fitness_list</span><span class="p">,</span>
+                                                            <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness_bin_edges</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">hist_counts_fitness_herbivore_norm</span> <span class="o">=</span> <span class="n">hist_counts_fitness_herbivore</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">hist_counts_fitness_herbivore</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_ctr</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_update_y_ax</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">y_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness_y_max</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">hist_counts_fitness_herbivore_norm</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hist_fitness_ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_max</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitness_herbivore_hist</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">hist_counts_fitness_herbivore_norm</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">carnivore_fitness_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">carnivore_fitness_list</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="n">hist_counts_fitness_carnivore</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">carnivore_fitness_list</span><span class="p">,</span>
+                                                            <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness_bin_edges</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">hist_counts_fitness_carnivore_norm</span> <span class="o">=</span> <span class="n">hist_counts_fitness_carnivore</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">hist_counts_fitness_carnivore</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_ctr</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_update_y_ax</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">y_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness_y_max</span><span class="p">,</span>
+                            <span class="nb">max</span><span class="p">(</span><span class="n">hist_counts_fitness_herbivore_norm</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">,</span>
+                            <span class="nb">max</span><span class="p">(</span><span class="n">hist_counts_fitness_carnivore_norm</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hist_fitness_ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_max</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitness_carnivore_hist</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">hist_counts_fitness_carnivore_norm</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_save_graphics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves graphics to file if file name given.</span>
+
+<span class="sd">        :param year: Year of simulation</span>
+<span class="sd">        :type year: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># check if file name is given and if year is a multiple of img_years</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_img_base</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">year</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_years</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{base}</span><span class="s1">_</span><span class="si">{num:05d}</span><span class="s1">.</span><span class="si">{type}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_img_base</span><span class="p">,</span>
+                                                     <span class="n">num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_img_ctr</span><span class="p">,</span>
+                                                     <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_img_fmt</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_img_ctr</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Kim Ly and Mathias Mollatt.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
